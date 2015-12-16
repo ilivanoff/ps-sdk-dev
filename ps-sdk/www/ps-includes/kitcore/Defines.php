@@ -418,11 +418,11 @@ function to_win_path($path) {
     return normalize_path($path, '\\');
 }
 
-function ensure_dir_endswith_DIRECTORY_SEPARATOR($dirpath) {
+function ensure_dir_endswith_dir_separator($dirpath) {
     return next_level_dir($dirpath, DIRECTORY_SEPARATOR);
 }
 
-function ensure_dir_startswith_DIRECTORY_SEPARATOR($dirpath) {
+function ensure_dir_startswith_dir_separator($dirpath) {
     return next_level_dir(DIRECTORY_SEPARATOR, $dirpath);
 }
 

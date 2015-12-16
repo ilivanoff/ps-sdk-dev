@@ -52,7 +52,7 @@ ExceptionHandler::register4errors();
  * 
  */
 //Подключим обработчик эксепшенов. Позднее мы подключим "красивый" обработчик ошибок.
-//ExceptionHandler::register();
+ExceptionHandler::register();
 /*
  * 
  */
