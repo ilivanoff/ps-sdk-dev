@@ -9,11 +9,11 @@
 
 class DirManager {
 
-    const DIR_CLASSES = 'classes';
     const DIR_CONFIG = 'config';
     const DIR_AUTO = 'auto';
     const DIR_LIB = 'lib';
     const DIR_KIT = 'kit';
+    const DIR_SRC = 'src';
     const DIR_UPLOAD = 'upload';
 
     private $relPath;

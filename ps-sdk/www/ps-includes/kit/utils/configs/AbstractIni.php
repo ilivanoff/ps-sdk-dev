@@ -32,7 +32,7 @@ abstract class AbstractIni {
     }
 
     /**
-     * Название файла конфига
+     * Название файла конфига: 'config.ini'
      */
     public static function getConfigName() {
         $class = self::getClass();
@@ -51,9 +51,9 @@ abstract class AbstractIni {
     private static function getIniDi($scope) {
         switch ($scope) {
             case ENTITY_SCOPE_SDK:
-                return DirManagerSdk::sdk()->getDirItem(DirManagerSdk::DIR_CONFIG, self::getConfigName());
+                return DirManager::inst(PS_DIR_INCLUDES)->getDirItem(DirManager::DIR_CONFIG, self::getConfigName());
             case ENTITY_SCOPE_PROJ:
-                return DirManagerSdk::inst()->getDirItem(DirManagerSdk::DIR_CONFIG, self::getConfigName());
+                return DirManager::inst(PS_DIR_ADDON)->getDirItem(DirManager::DIR_CONFIG, self::getConfigName());
         }
         PsUtil::raise('Invalid scope [{}] for method {}::{}', $scope, __CLASS__, __FUNCTION__);
     }
