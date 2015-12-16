@@ -6,11 +6,11 @@ define('SCRIPT_EXECUTION_START', microtime(true));
 //Корневая папка (DocumentRoot) - C:\WEB\postupayu.ru\www
 define('PATH_BASE_DIR', dirname(__DIR__));
 
-//Название папки с включениями sdk
-define('PS_SDK_DIR_INCLUDES', 'ps-includes');
+//Название папки с включениями sdk (классы, библиотеки и т.д.)
+define('PS_DIR_INCLUDES', 'ps-includes');
 
 //Проверим, что данный файл лежит в папке с включениями
-if (PS_SDK_DIR_INCLUDES != basename(__DIR__)) {
+if (PS_DIR_INCLUDES != basename(__DIR__)) {
     die('Invalid ps-sdk includes dir: ' . basename(__DIR__));
 }
 

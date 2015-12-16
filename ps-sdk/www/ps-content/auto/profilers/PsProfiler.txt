@@ -1,9 +1,0 @@
-ScriptExecution|1|2.0271158218384
-ScriptExecution|1|0.053003072738647
-ScriptExecution|1|0.054003000259399
-ScriptExecution|1|2.0181159973145
-ScriptExecution|1|1.9241101741791
-ScriptExecution|1|0.090005874633789
-ScriptExecution|1|0.055002927780151
-ScriptExecution|1|0.058002948760986
-ScriptExecution|1|0.061002969741821
