@@ -1,0 +1,18 @@
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ CLASS PATH DIR [C:/www/ps-sdk-dev/ps-sdk/www/ps-includes/kit/] REGISTERED +
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Class loader is REGISTERED, spl functions count: 1
+
+Searching path for class [PSForm].
+Class [PSForm] not found for AutoloadDir [C:/www/ps-sdk-dev/ps-sdk/www/ps-includes/kit/].
+
+Searching path for class [Handlers].
+Class [Handlers] found for AutoloadDir [C:/www/ps-sdk-dev/ps-sdk/www/ps-includes/kit/].
+Path [C:/www/ps-sdk-dev/ps-sdk/www/ps-includes/kit/utils/handlers/Handlers.php] returned.
+
+Searching path for class [FoldedResources].
+Class [FoldedResources] found for AutoloadDir [C:/www/ps-sdk-dev/ps-sdk/www/ps-includes/kit/].
+Path [C:/www/ps-sdk-dev/ps-sdk/www/ps-includes/kit/foldings/FoldedResources.php] returned.
+
+Searching path for class [AbstractSingleton].
+Class [AbstractSingleton] not found for AutoloadDir [C:/www/ps-sdk-dev/ps-sdk/www/ps-includes/kit/].
