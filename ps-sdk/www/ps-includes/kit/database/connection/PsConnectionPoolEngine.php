@@ -49,7 +49,7 @@ abstract class PsConnectionPoolEngine extends AbstractSingleton {
     protected final function __construct() {
         $this->LOGGER = PsLogger::inst(__CLASS__);
         /*
-         * Подкобчаться к БД будем в MainImport, чтобы не подключиться заранее
+         * Подключаться к БД будем в MainImport, чтобы не подключиться заранее
          */
         //Поумолчанию коннектимся на продуктив
         //$this->CONNECTION_PARAMS = PsConnectionParams::get(PsConnectionParams::CONN_PRODUCTION);

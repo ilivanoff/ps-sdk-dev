@@ -11,7 +11,6 @@ define('MOSAIC_ANS_MAX_LEN', 150);
 define('PS_DEFAULT_TZ', 'Europe/Moscow');
 //define('PS_DEFAULT_TZ', 'Asia/Dubai');
 
-/* Разделитель директорий */
 define('DIR_SEPARATOR', '/');
 
 /* Формат для спрайтов изображений */
@@ -377,7 +376,7 @@ function get_sex($sex) {
  */
 function ensure_file_ext($file, $ext) {
     $file = normalize_path($file);
-    if (!$file || ends_with($file, DIR_SEPARATOR)) {
+    if (!$file || ends_with($file, DIRECTORY_SEPARATOR)) {
         return $file;
     }
     $ext = trim($ext);
@@ -393,7 +392,7 @@ function ensure_file_ext($file, $ext) {
  * "Нормализует" путь к директории
  * [a///b\\c\\\\d/e/f] -> [a/b/c/d/e/f]
  */
-function normalize_path($path, $separator = DIR_SEPARATOR) {
+function normalize_path($path, $separator = DIRECTORY_SEPARATOR) {
     $path = str_replace('\\', $separator, $path);
     $path = str_replace('/', $separator, $path);
     $double = $separator . $separator;
@@ -404,7 +403,7 @@ function normalize_path($path, $separator = DIR_SEPARATOR) {
 }
 
 function next_level_dir($dirs1, $dirs2 = null, $dirs3 = null, $dirs4 = null) {
-    return normalize_path(concat(func_get_args(), DIR_SEPARATOR), DIR_SEPARATOR);
+    return normalize_path(concat(func_get_args(), DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR);
 }
 
 function file_path($path, $name, $ext = null) {
@@ -412,19 +411,19 @@ function file_path($path, $name, $ext = null) {
 }
 
 function unique_from_path($dirs1, $dirs2 = null, $dirs3 = null, $dirs4 = null) {
-    return str_replace(DIR_SEPARATOR, '-', cut_string_start(cut_string_end(/**/next_level_dir(func_get_args())/**/, DIR_SEPARATOR), DIR_SEPARATOR));
+    return str_replace(DIRECTORY_SEPARATOR, '-', cut_string_start(cut_string_end(/**/next_level_dir(func_get_args())/**/, DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR));
 }
 
 function to_win_path($path) {
     return normalize_path($path, '\\');
 }
 
-function ensure_dir_endswith_dir_separator($dirpath) {
-    return next_level_dir($dirpath, DIR_SEPARATOR);
+function ensure_dir_endswith_DIRECTORY_SEPARATOR($dirpath) {
+    return next_level_dir($dirpath, DIRECTORY_SEPARATOR);
 }
 
-function ensure_dir_startswith_dir_separator($dirpath) {
-    return next_level_dir(DIR_SEPARATOR, $dirpath);
+function ensure_dir_startswith_DIRECTORY_SEPARATOR($dirpath) {
+    return next_level_dir(DIRECTORY_SEPARATOR, $dirpath);
 }
 
 function is_valid_file_name($name) {

@@ -1,3 +1,4 @@
 /ps-sdk/www/ps-content/auto
 /ps-sdk/*.log
 /ps-sdk/error.log
+/ps-sdk/www/ps-content/uploads

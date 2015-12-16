@@ -33,7 +33,7 @@ final class PsDbCahce {
      */
     public static function clear($class) {
         if (array_key_exists($class, self::$CACHES)) {
-            PsLogger::inst(__CLASS__)->info('~ Clear for [{}]', $class);
+            PsLogger::inst(__CLASS__)->info('~ Clear cache for [{}]', $class);
             self::$CACHES[$class]->clear();
         }
     }

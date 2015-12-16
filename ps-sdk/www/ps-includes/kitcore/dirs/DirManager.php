@@ -9,15 +9,24 @@
 
 class DirManager {
 
-    const PS_INCLIDES = 'ps-includes';
-    const PS_CONTENT = 'ps-content';
+    const DIR_CLASSES = 'classes';
+    const DIR_CONFIG = 'config';
+    const DIR_AUTO = 'auto';
+    const DIR_LIB = 'lib';
+    const DIR_KIT = 'kit';
+    const DIR_UPLOAD = 'upload';
 
     private $relPath;
     private $absPath;
 
     //autogen
     public static function autogen($dirs = null) {
-        return self::inst(self::PS_CONTENT, array('auto', $dirs));
+        return self::inst(PS_DIR_CONTENT, array(self::DIR_AUTO, $dirs));
+    }
+
+    //uploads
+    public static function uploads($dirs = null) {
+        return self::inst(PS_DIR_CONTENT, array(self::DIR_UPLOAD, $dirs));
     }
 
     /*
@@ -32,11 +41,6 @@ class DirManager {
     //images
     public static function images($subDirs = null) {
         return self::instShifted('resources/images', $subDirs);
-    }
-
-    //icons
-    public static function icons($subDirs = null) {
-        return self::instShifted('resources/images/icons', $subDirs);
     }
 
     //sprites
@@ -67,11 +71,6 @@ class DirManager {
     //smarty
     public static function smarty($notCkeckDirs = null, $dirs = null) {
         return self::instShifted('stuff/smarty/', $notCkeckDirs, $dirs);
-    }
-
-    //uploads
-    public static function uploads($dirs = null) {
-        return self::instShifted('stuff', null, array('upload', $dirs));
     }
 
     //database

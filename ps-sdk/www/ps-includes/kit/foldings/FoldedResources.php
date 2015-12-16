@@ -120,7 +120,7 @@ abstract class FoldedResources extends AbstractSingleton {
         return cut_string_start($className, $this->CLASS_PREFIX);
     }
 
-    //Метод проверяет, может ли переданная последовательность служиьт префиксом класса.
+    //Метод проверяет, может ли переданная последовательность служить префиксом класса.
     //Она должна сосотоять из больших букв и заканчиваться подчёркиванием, например: PL_
     private static function isValidClassPrefix($prefix) {
         return $prefix && preg_match('/[A-Z]+\_/', $prefix, $matches) == 1 && $matches[0] === $prefix;

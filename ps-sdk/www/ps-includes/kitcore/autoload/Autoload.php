@@ -242,7 +242,14 @@ final class Autoload {
         $this->LOGGER = self::getLogger();
         $this->AUTOLOAD = array($this, 'load');
         $this->COMMON_EXCLUDED_DI = DirManager::autogen('classpath')->getDirItem(null, 'excluded');
-        $this->registerBaseDir(DirManager::PS_INCLIDES . DIR_SEPARATOR . 'kit');
+        /*
+         * Директория kit должна быть подключена всегда
+         */
+        $this->registerBaseDir(PS_DIR_INCLUDES . DIR_SEPARATOR . DirManager::DIR_KIT);
+        /*
+         * Если мы работаем в рамках проекта, то подключим папку classes из PS_DIR_ADDON
+         */
+        $this->registerBaseDir(PS_DIR_ADDON . DIR_SEPARATOR . DirManager::DIR_CLASSES, false);
     }
 
 }

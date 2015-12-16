@@ -3,28 +3,51 @@
 //Засекаем время начала выполнения скрипта. Далее будет использовано в профайлере.
 define('SCRIPT_EXECUTION_START', microtime(true));
 
-//Корневая папка (DocumentRoot) - C:\WEB\postupayu.ru\www
+/*
+ * Корневая папка (DocumentRoot) - C:\WEB\postupayu.ru\www
+ */
 define('PATH_BASE_DIR', dirname(__DIR__));
 
-//Название папки с включениями sdk (классы, библиотеки и т.д.)
+/*
+ * Название папки с содержимым (временные файлы, загрузки и т.д.)
+ */
+define('PS_DIR_ADDON', 'ps-addon');
+
+/*
+ * Название папки с включениями sdk (классы, библиотеки и т.д.)
+ */
 define('PS_DIR_INCLUDES', 'ps-includes');
 
-//Проверим, что данный файл лежит в папке с включениями
+/*
+ * Название папки с содержимым (временные файлы, загрузки и т.д.)
+ */
+define('PS_DIR_CONTENT', 'ps-content');
+
+/*
+ * Проверим, что данный файл лежит в папке с включениями
+ */
 if (PS_DIR_INCLUDES != basename(__DIR__)) {
     die('Invalid ps-sdk includes dir: ' . basename(__DIR__));
 }
 
-//Стартуем сессию
+/*
+ * Стартуем сессию 
+ * TODO - надо ли?
+ */
 if (!isset($_SESSION)) {
     session_start();
 }
 
-//Подключим загрузчик базовых классов
+/*
+ * Подключим все классы из kitcore
+ */
 include_once __DIR__ . '/kitcore/PsCoreIncluder.php';
 PsCoreIncluder::inst()->includeCore();
 
-//Зарегистрируем наш обработчие для php ошибок
-//ExceptionHandler::register4errors();
+/*
+ * Зарегистрируем наш обработчие для php ошибок
+ */
+ExceptionHandler::register4errors();
 /*
  * 
  */
@@ -33,10 +56,10 @@ PsCoreIncluder::inst()->includeCore();
 /*
  * 
  */
-//Подключим загрузчик служебных классов
+/*
+ * Подключим загрузчик служебных классов
+ */
 Autoload::inst()->register();
-
-PSForm::inst();
 
 /*
   //Подключаемся к продуктиву, если автоконнект разрещён
