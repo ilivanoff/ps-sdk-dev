@@ -33,10 +33,10 @@ class PsMathRebusSolver {
     /*
      * Пропускаем ли первые символы
      */
-    private $SCIP_FIRST_CHARS = true;
+    private $SKIP_FIRST_CHARS = true;
 
-    private function isScip($num, $char) {
-        return $this->SCIP_FIRST_CHARS && $num == 0 && in_array($char, $this->FIRST_CHARS);
+    private function isSkip($num, $char) {
+        return $this->SKIP_FIRST_CHARS && $num == 0 && in_array($char, $this->FIRST_CHARS);
     }
 
     private function isEnChar($char) {
@@ -57,7 +57,7 @@ class PsMathRebusSolver {
     }
 
     private function doSolve($rebus) {
-        $this->LOGGER->info("Обрабатываем ребус: [$rebus], пропускать первые символы={$this->SCIP_FIRST_CHARS}");
+        $this->LOGGER->info("Обрабатываем ребус: [$rebus], пропускать первые символы={$this->SKIP_FIRST_CHARS}");
 
         $this->COMBINATIONS = array();
 
@@ -149,7 +149,7 @@ class PsMathRebusSolver {
         for ($i = 0; $i <= 9; $i++) {
             $letter = reset($enCh);
 
-            if ($this->isScip($i, $letter)) {
+            if ($this->isSkip($i, $letter)) {
                 continue;
             }
 
@@ -158,17 +158,11 @@ class PsMathRebusSolver {
             $this->doCheckIteration($enCh, $next, $numbers);
             $numbers[$i] = false;
         }
-        $secundomer->stop();
-
-        $parsed = DatesTools::inst()->parseSeconds(round($secundomer->getTotalTime()));
-        $min = $parsed['mf'];
-        $sec = pad_zero_left($parsed['s'], 2);
-        $parsed = "$min:$sec";
-
+        $totalTime = $secundomer->stop()->getTotalTime();
 
         $combCnt = count($this->COMBINATIONS);
         $this->LOGGER->info("Перебор закончен. Обработано операций: {$this->cnt}, найдено решений: $combCnt.");
-        $this->LOGGER->info("Общее время обработки: $parsed.");
+        $this->LOGGER->info("Общее время обработки: $totalTime sec.");
 
         return $this->COMBINATIONS;
     }
@@ -177,7 +171,7 @@ class PsMathRebusSolver {
         if ($letter !== false) {
             $next = next($letters);
             for ($i = 0; $i <= 9; $i++) {
-                if ($this->isScip($i, $letter)) {
+                if ($this->isSkip($i, $letter)) {
                     continue;
                 }
                 if ($numbers[$i] !== false) {
@@ -229,7 +223,7 @@ class PsMathRebusSolver {
     public static function solve($rebus, $skipFirstChars = true) {
         $rebus = PsMathRebus::inst()->normalize($rebus);
         $solver = new PsMathRebusSolver();
-        $solver->SCIP_FIRST_CHARS = $skipFirstChars;
+        $solver->SKIP_FIRST_CHARS = $skipFirstChars;
         return $solver->doSolve($rebus);
     }
 

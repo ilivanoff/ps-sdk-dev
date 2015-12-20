@@ -40,8 +40,5 @@ echo PsConnectionPool::params();
 //print_r(PSDB::getRec('select * from blog_post where id_post=1'));
 //print_r(InflectsManager::inst()->getInflections('корыто'));
 
-PsLock::lock(PsRand::string());
-echo 'LOCKED';
-sleep(10);
-PsLock::unlock();
+print_r(PsMathRebusSolver::solve('корова+корова=молоко'));
 ?>
