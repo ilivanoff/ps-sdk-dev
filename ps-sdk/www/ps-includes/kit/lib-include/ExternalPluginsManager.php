@@ -6,13 +6,13 @@ define('PATH_PLUGINS', PATH_BASE_DIR . '/plugins');
  * Класс для подключения внешних плагинов.
  * @author azazello
  */
-class ExternalPluginsManager extends ExternalPluginsSdk {
+class ExternalPluginsManager {
 
     /**
      * Метод проверит - относится ли файл к файлам внешних плагинов
      */
     public static function isExternalFile($fileAbsPath) {
-        return parent::isExternalFile($fileAbsPath) || starts_with(normalize_path($fileAbsPath), normalize_path(PATH_PLUGINS . '/'));
+        return starts_with(normalize_path($fileAbsPath), normalize_path(PATH_PLUGINS . '/'));
     }
 
     /**
@@ -30,15 +30,6 @@ class ExternalPluginsManager extends ExternalPluginsSdk {
     public static function MathEvaluator() {
         if (self::isInclude(__FUNCTION__)) {
             require_once PATH_PLUGINS . '/evalmath/evalmath.class.php';
-        }
-    }
-
-    /**
-     * 
-     */
-    public static function Smarty() {
-        if (self::isInclude(__FUNCTION__)) {
-            require_once PATH_PLUGINS . '/Smarty-3.1.21/libs/Smarty.class.php';
         }
     }
 
@@ -97,6 +88,23 @@ class ExternalPluginsManager extends ExternalPluginsSdk {
         if (self::isInclude(__FUNCTION__)) {
             require_once PATH_PLUGINS . '/css-sprite-generator-v4.1/includes/ps-css-sprite-gen.inc.php';
         }
+    }
+
+    /*
+     * 
+     * УТИЛИТЫ
+     * 
+     */
+
+    private static $included = array();
+
+    protected static final function isInclude($key) {
+        if (array_key_exists($key, self::$included)) {
+            return false;
+        }
+        self::$included[$key] = true;
+        PsLogger::inst(__CLASS__)->info('+ {}', $key);
+        return true;
     }
 
 }

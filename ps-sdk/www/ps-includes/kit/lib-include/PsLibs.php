@@ -33,7 +33,9 @@ class PsLibs {
     private $INCLUDED = array();
 
     /**
-     * Библиотека http://adodb.sourceforge.net для работы с базой
+     * Библиотека для работы с базой
+     * 
+     * @link http://adodb.sourceforge.net
      */
     public function AdoDb() {
         if ($this->isAlreadyIncluded(__FUNCTION__)) {
@@ -47,6 +49,18 @@ class PsLibs {
 
         $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
         $ADODB_COUNTRECS = false;
+    }
+
+    /**
+     * Шаблонизатор Смарти
+     * 
+     * @link http://www.smarty.net/
+     */
+    public function Smarty() {
+        if ($this->isAlreadyIncluded(__FUNCTION__)) {
+            return; //---
+        }
+        require_once $this->SDK_LIB_DIR . 'Smarty/Smarty-3.1.21/libs/Smarty.class.php';
     }
 
     /**

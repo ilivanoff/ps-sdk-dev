@@ -6,7 +6,7 @@ final class PSSmarty extends AbstractSingleton {
     private $smarty;
 
     protected function __construct() {
-        ExternalPluginsManager::Smarty();
+        PsLibs::inst()->Smarty();
 
         /**
          * Начиная с версии 5.4 в функции htmlentities параметр encoding был изменён на UTF-8, 
