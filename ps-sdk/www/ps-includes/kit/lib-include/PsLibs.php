@@ -64,6 +64,18 @@ class PsLibs {
     }
 
     /**
+     * Плагин для проверки цензуры в сообщении
+     */
+    public function Censure() {
+        if ($this->isAlreadyIncluded(__FUNCTION__)) {
+            return; //---
+        }
+        require_once $this->SDK_LIB_DIR . 'Censure/Censure-3.2.7/UTF8.php';
+        require_once $this->SDK_LIB_DIR . 'Censure/Censure-3.2.7/ReflectionTypehint.php';
+        require_once $this->SDK_LIB_DIR . 'Censure/Censure-3.2.7/Text/Censure.php';
+    }
+
+    /**
      * Метод должен быть вызван перед подключением библиотеки для предотвращения повторного подключения
      * Пример использования:
      * 

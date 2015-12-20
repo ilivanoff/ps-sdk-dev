@@ -37,5 +37,8 @@ PsConnectionPool::disconnect();
 
 echo PsConnectionPool::params();
 
-print_r(PSDB::getRec('select * from blog_post where id_post=1'));
+//print_r(PSDB::getRec('select * from blog_post where id_post=1'));
+
+
+print_r(InflectsManager::inst()->getInflections('корыто'));
 ?>

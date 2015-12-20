@@ -45,17 +45,6 @@ class ExternalPluginsManager {
     /**
      * 
      */
-    public static function Censure() {
-        if (self::isInclude(__FUNCTION__)) {
-            require_once PATH_PLUGINS . '/Censure-3.2.7/UTF8.php';
-            require_once PATH_PLUGINS . '/Censure-3.2.7/ReflectionTypehint.php';
-            require_once PATH_PLUGINS . '/Censure-3.2.7/Text/Censure.php';
-        }
-    }
-
-    /**
-     * 
-     */
     public static function Pear() {
         if (self::isInclude(__FUNCTION__)) {
             require_once PATH_PLUGINS . '/PEAR-1.9.4/PEAR.php';
