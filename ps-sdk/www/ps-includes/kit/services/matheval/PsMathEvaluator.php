@@ -18,7 +18,8 @@ class PsMathEvaluator extends AbstractSingleton {
     }
 
     protected function __construct() {
-        ExternalPluginsManager::MathEvaluator();
+        PsLibs::inst()->MathEvaluator();
+
         $this->EVALUATOR = new EvalMath();
         $this->EVALUATOR->suppress_errors = false;
     }

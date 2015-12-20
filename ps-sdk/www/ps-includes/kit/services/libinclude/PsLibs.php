@@ -86,7 +86,17 @@ class PsLibs {
         if ($this->isAlreadyIncluded(__FUNCTION__)) {
             return; //---
         }
-        require_once $this->SDK_LIB_DIR . '/GifEncoder/GIFEncoder-2.0/GIFEncoder.class.php';
+        require_once $this->SDK_LIB_DIR . 'GifEncoder/GIFEncoder-2.0/GIFEncoder.class.php';
+    }
+
+    /**
+     * Библиотека для выполнения математических операций
+     */
+    public function MathEvaluator() {
+        if ($this->isAlreadyIncluded(__FUNCTION__)) {
+            return; //---
+        }
+        require_once $this->SDK_LIB_DIR . 'MathEvaluator/evalmath.class.php';
     }
 
     /**
