@@ -16,6 +16,10 @@ final class ConfigIni extends AbstractIni {
         return self::getProp(self::GROUP_CORE, 'project');
     }
 
+    public static function libsIncluder() {
+        return self::getProp(self::GROUP_CORE, 'libs');
+    }
+
     public static function isSdk() {
         return self::projectName() == 'sdk';
     }

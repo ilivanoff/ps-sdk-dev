@@ -454,6 +454,8 @@ final class PsUtil {
             $msg = PsStrings::replaceWithParams('{}', $msg, $params);
         }
         raise_error($msg);
+        //For a while
+        die($msg);
     }
 
 }
