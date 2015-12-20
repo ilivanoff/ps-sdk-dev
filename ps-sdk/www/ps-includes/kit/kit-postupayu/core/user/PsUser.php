@@ -83,7 +83,8 @@ class PsUser extends PsUserBase {
             return PsImgEditor::resize($srcDi, $dim);
         }
         if (is_numeric($avtarId) || $this->hasAvatar()) {
-            return PsImgEditor::resizeBase('noimage.png', $dim);
+            return null; //--
+            //return PsImgEditor::resizeBase('noimage.png', $dim);
         }
         return $this->getDefaultAvatarDi($dim);
     }
@@ -93,7 +94,8 @@ class PsUser extends PsUserBase {
      * @return DirItem
      */
     public function getDefaultAvatarDi($dim = '100x100') {
-        return PsImgEditor::resizeBase($this->isBoy() ? 'male.jpg' : 'female.jpg', $dim);
+        return null;
+        //return PsImgEditor::resizeBase($this->isBoy() ? 'male.jpg' : 'female.jpg', $dim);
     }
 
     /**

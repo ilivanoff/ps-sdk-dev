@@ -111,6 +111,12 @@ class DirItem implements Spritable {
         return PsImg::assertIsImg($this->absPath, $text);
     }
 
+    public function assertExtension($ext) {
+        if (PsCheck::notEmptyString($ext) !== $this->getExtension()) {
+            PsUtil::raise('File with extention [.{}] is expected', $ext);
+        }
+    }
+
     public function isDir() {
         return is_dir($this->absPath);
     }

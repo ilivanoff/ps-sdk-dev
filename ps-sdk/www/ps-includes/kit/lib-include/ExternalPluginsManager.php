@@ -36,15 +36,6 @@ class ExternalPluginsManager {
     /**
      * 
      */
-    public static function GifEncored() {
-        if (self::isInclude(__FUNCTION__)) {
-            require_once PATH_PLUGINS . '/gifencoder/GIFEncoder.class.php';
-        }
-    }
-
-    /**
-     * 
-     */
     public static function Pear() {
         if (self::isInclude(__FUNCTION__)) {
             require_once PATH_PLUGINS . '/PEAR-1.9.4/PEAR.php';

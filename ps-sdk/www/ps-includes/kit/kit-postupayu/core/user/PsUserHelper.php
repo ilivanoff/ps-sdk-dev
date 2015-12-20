@@ -28,7 +28,7 @@ final class PsUserHelper {
      * @return DirItem
      */
     public static function getDefaultAvatarDi(PsUser $user = null, $dim = null) {
-        return $user ? $user->getDefaultAvatarDi($dim) : PsImgEditor::resizeBase('anonymous.jpg', $dim);
+        return $user ? $user->getDefaultAvatarDi($dim) : null/* PsImgEditor::resizeBase('anonymous.jpg', $dim) */;
     }
 
     /**

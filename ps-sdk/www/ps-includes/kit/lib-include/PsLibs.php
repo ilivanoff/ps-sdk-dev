@@ -65,6 +65,8 @@ class PsLibs {
 
     /**
      * Плагин для проверки цензуры в сообщении
+     * 
+     * @link http://code.google.com/p/php-censure/
      */
     public function Censure() {
         if ($this->isAlreadyIncluded(__FUNCTION__)) {
@@ -73,6 +75,18 @@ class PsLibs {
         require_once $this->SDK_LIB_DIR . 'Censure/Censure-3.2.7/UTF8.php';
         require_once $this->SDK_LIB_DIR . 'Censure/Censure-3.2.7/ReflectionTypehint.php';
         require_once $this->SDK_LIB_DIR . 'Censure/Censure-3.2.7/Text/Censure.php';
+    }
+
+    /**
+     * Плагин для создания .gif анимации
+     * 
+     * @link http://code.google.com/p/php-censure/
+     */
+    public function GifEncoder() {
+        if ($this->isAlreadyIncluded(__FUNCTION__)) {
+            return; //---
+        }
+        require_once $this->SDK_LIB_DIR . '/GifEncoder/GIFEncoder-2.0/GIFEncoder.class.php';
     }
 
     /**
@@ -122,8 +136,8 @@ class PsLibs {
         /*
          * Подготовим директории
          */
-        $SDK_LIB_DIR = DirItem::inst(PS_DIR_INCLUDES, DirManager::DIR_LIB . DIRECTORY_SEPARATOR)->getAbsPath();
-        $PROJ_LIB_DIR = DirItem::inst(PS_DIR_ADDON, DirManager::DIR_LIB . DIRECTORY_SEPARATOR)->getAbsPath();
+        $SDK_LIB_DIR = DirItem::inst(PS_DIR_INCLUDES, DirManager::DIR_LIB . DIR_SEPARATOR)->getAbsPath();
+        $PROJ_LIB_DIR = DirItem::inst(PS_DIR_ADDON, DirManager::DIR_LIB . DIR_SEPARATOR)->getAbsPath();
 
         /*
          * Класс подключения библиотек совпадает с базовым

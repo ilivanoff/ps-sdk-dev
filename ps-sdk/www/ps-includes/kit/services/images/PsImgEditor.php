@@ -11,11 +11,6 @@ final class PsImgEditor extends AbstractSingleton {
     private $CAHCE;
 
     /** @return DirItem */
-    public static function resizeBase($file, $dim) {
-        return self::inst()->doResize(DirManager::images()->getDirItem('base', $file), $dim);
-    }
-
-    /** @return DirItem */
     public static function resize(DirItem $src, $dim, DirItem $dflt = null) {
         return self::inst()->doResize($src, $dim, $dflt);
     }
