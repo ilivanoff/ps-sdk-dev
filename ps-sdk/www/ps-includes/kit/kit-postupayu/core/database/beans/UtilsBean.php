@@ -114,28 +114,6 @@ select dt_event
         return $this->getInt('select unix_timestamp()');
     }
 
-    /*
-     * ====================================
-     * ==== НАСТРОЙКИ, ХРАНИМЫЕ В БАЗЕ ====
-     * ====================================
-     */
-
-    public function getDbProp($col, $name, $default) {
-        return $this->getValue(Query::select($col, 'ps_props', array('v_prop' => $name)), null, $default);
-    }
-
-    public function setDbProp($col, $name, $val) {
-        if ($this->hasRec('ps_props', array('v_prop' => $name))) {
-            $this->update("update ps_props set $col=? where v_prop=?", array($val, $name));
-        } else {
-            $this->update("insert into ps_props ($col, v_prop) values (?, ?)", array($val, $name));
-        }
-    }
-
-    public function delDbProp($name) {
-        $this->update('delete from ps_props where v_prop=?', $name);
-    }
-
     /** @return UtilsBean */
     public static function inst() {
         return parent::inst();
