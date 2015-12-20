@@ -31,4 +31,11 @@ B::test();
 //print_r(B::$a);
 
 PsLibs::inst();
+
+PsConnectionPool::configure(PsConnectionParams::production());
+
+echo PsConnectionPool::params();
+
+print_r(PSDB::getArray('select * from blog_post'));
+
 ?>

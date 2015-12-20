@@ -35,13 +35,13 @@ class PsLibs {
     /**
      * Библиотека http://adodb.sourceforge.net для работы с базой
      */
-    public final static function AdoDb() {
+    public function AdoDb() {
         if ($this->isAlreadyIncluded(__FUNCTION__)) {
             return; //---
         }
 
-        require_once PATH_PLUGINS_SDK . 'adodb5/adodb.inc.php';
-        require_once PATH_PLUGINS_SDK . 'adodb5/drivers/adodb-mysql.inc.php';
+        require_once $this->SDK_LIB_DIR . 'Adodb/adodb5/adodb.inc.php';
+        require_once $this->SDK_LIB_DIR . 'Adodb/adodb5/drivers/adodb-mysql.inc.php';
 
         GLOBAL $ADODB_FETCH_MODE, $ADODB_COUNTRECS;
 
@@ -96,8 +96,8 @@ class PsLibs {
         /*
          * Подготовим директории
          */
-        $SDK_LIB_DIR = DirItem::inst(PS_DIR_INCLUDES, DirManager::DIR_LIB . DIRECTORY_SEPARATOR);
-        $PROJ_LIB_DIR = DirItem::inst(PS_DIR_ADDON, DirManager::DIR_LIB . DIRECTORY_SEPARATOR);
+        $SDK_LIB_DIR = DirItem::inst(PS_DIR_INCLUDES, DirManager::DIR_LIB . DIRECTORY_SEPARATOR)->getAbsPath();
+        $PROJ_LIB_DIR = DirItem::inst(PS_DIR_ADDON, DirManager::DIR_LIB . DIRECTORY_SEPARATOR)->getAbsPath();
 
         /*
          * Класс подключения библиотек совпадает с базовым
@@ -108,7 +108,7 @@ class PsLibs {
 
             self::$inst->LOGGER = PsLogger::inst($class);
             self::$inst->LOGGER->info('Libs includer  SDK: [{}]', __FILE__);
-            self::$inst->LOGGER->info('Libs directory SDK: [{}]', $SDK_LIB_DIR->getAbsPath());
+            self::$inst->LOGGER->info('Libs directory SDK: [{}]', $SDK_LIB_DIR);
 
             return self::$inst; //---
         }
@@ -134,8 +134,8 @@ class PsLibs {
 
         self::$inst->LOGGER = PsLogger::inst($class);
         self::$inst->LOGGER->info('Libs includer  CUSTOM: [{}]', $classPath);
-        self::$inst->LOGGER->info('Libs directory    SDK: [{}]', $SDK_LIB_DIR->getAbsPath());
-        self::$inst->LOGGER->info('Libs directory CUSTOM: [{}]', $PROJ_LIB_DIR->getAbsPath());
+        self::$inst->LOGGER->info('Libs directory    SDK: [{}]', $SDK_LIB_DIR);
+        self::$inst->LOGGER->info('Libs directory CUSTOM: [{}]', $PROJ_LIB_DIR);
 
         return self::$inst; //---
     }

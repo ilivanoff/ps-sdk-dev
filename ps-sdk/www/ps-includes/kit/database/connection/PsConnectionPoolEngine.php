@@ -131,7 +131,7 @@ abstract class PsConnectionPoolEngine extends AbstractSingleton {
         $this->LOGGER->info('+  Establishing connection {}', $this->CONNECTION_PARAMS);
 
         //Подключаем adodb
-        ExternalPluginsSdk::AdoDb();
+        PsLibs::inst()->AdoDb();
 
         //Подключаемся
         $this->CONNECTION = ADONewConnection($URL);
