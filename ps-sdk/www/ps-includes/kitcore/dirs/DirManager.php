@@ -11,6 +11,7 @@ class DirManager {
 
     const DIR_CONFIG = 'config';
     const DIR_AUTO = 'auto';
+    const DIR_AUTO_NO_DEL = 'auto-no-del';
     const DIR_LIB = 'lib';
     const DIR_KIT = 'kit';
     const DIR_SRC = 'src';
@@ -19,9 +20,14 @@ class DirManager {
     private $relPath;
     private $absPath;
 
-    //autogen
+    //auto
     public static function autogen($dirs = null) {
         return self::inst(PS_DIR_CONTENT, array(self::DIR_AUTO, $dirs));
+    }
+
+    //auto-no-del
+    public static function autoNoDel($dirs = null) {
+        return self::inst(PS_DIR_CONTENT, array(self::DIR_AUTO_NO_DEL, $dirs));
     }
 
     //uploads

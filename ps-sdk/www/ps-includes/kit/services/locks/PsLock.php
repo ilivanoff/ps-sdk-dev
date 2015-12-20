@@ -44,6 +44,8 @@ final class PsLock extends AbstractSingleton implements Destructable {
      * Метод выполняет фактическое получение лока
      */
     private function doLock($lockname, $wait) {
+        PsCheck::notEmptyString($lockname);
+
         if ($this->lockName == $lockname) {
             $this->lockCnt++;
             $this->LOGGER->info('Lock ident [{}] counter inreased to {}.', $lockname, $this->lockCnt);
@@ -58,10 +60,10 @@ final class PsLock extends AbstractSingleton implements Destructable {
         $this->LOGGER->info("Trying to get lock with ident [$lockname], mode: {}. Lock file name=[$filename].", $wait ? 'WAIT' : 'NOWAIT');
 
         /**
-         * Храним в stuff, а не в autogen, так как можем потерять локи при удалении autogen
+         * Храним в auto-no-del, а не в autogen, так как можем потерять локи при удалении autogen
          * или вообще не иметь возможности удалить папку autogen.
          */
-        $di = DirManager::stuff(null, 'locks')->getDirItem(null, $filename, 'lock');
+        $di = DirManager::autoNoDel('locks')->getDirItem(null, $filename, 'lock');
 
         /*
          * Файл будет создан при открытии
