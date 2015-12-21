@@ -123,7 +123,7 @@ abstract class IdIdentDataLoader {
             }
 
             if (!method_exists($entity, 'getId') || !method_exists($entity, 'getIdent')) {
-                check_condition(false, "Контент сущности {$this->entityTitle()} не имеет методов getId и getIdent");
+                return PsUtil::raise('Контент сущности {} не имеет методов getId и getIdent', $this->entityTitle());
             }
 
             $id = $entity->getId();
