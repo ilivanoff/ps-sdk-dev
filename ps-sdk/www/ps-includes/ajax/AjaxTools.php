@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__DIR__) . '/sdk/MainImport.php';
+require_once dirname(__DIR__) . '/MainImport.php';
 
 //Подключим его здесь, так как он ещё понадобится в админских приложениях
 require_once 'actions/AbstractAjaxAction.php';
