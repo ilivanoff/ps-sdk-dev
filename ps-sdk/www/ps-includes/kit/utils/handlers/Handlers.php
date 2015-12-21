@@ -7,7 +7,6 @@ final class Handlers {
     private $postsProcessors = array();
     private $commentProcessors = array();
     private $discussionControllers = array();
-    private $pagePreloadListeners = array();
     private $foldings = array();
     private $libs = array();
     private $bubbles = array();
@@ -43,9 +42,6 @@ final class Handlers {
             if ($manager instanceof CommentsProcessor) {
                 $this->commentProcessors[$manager->getPostType()] = $manager;
                 $this->discussionControllers[$manager->getDiscussionController()->getDiscussionUnique()] = $manager->getDiscussionController();
-            }
-            if ($manager instanceof PagePreloadListener) {
-                $this->pagePreloadListeners[] = $manager;
             }
             if ($manager instanceof NewsProvider) {
                 $this->newsProviders[$manager->getNewsEventType()] = $manager;
@@ -148,10 +144,6 @@ final class Handlers {
 
     public function walkCommentProcessors($callback) {
         $this->walk($this->commentProcessors, $callback);
-    }
-
-    public function getPagePreloadListeners() {
-        return $this->pagePreloadListeners;
     }
 
     /*

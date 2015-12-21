@@ -194,10 +194,10 @@ final class AuthManager {
 
             try {
                 if ($afterRegistration) {
-                    ApplicationListener::afterUserRegistered($user);
+                    //ApplicationListener::afterUserRegistered($user);
                 }
                 //Оповещаем слушатель об успешной авторизации пользователя.
-                ApplicationListener::afterLogin($user);
+                //ApplicationListener::afterLogin($user);
             } catch (Exception $ex) {
                 //Сделаем дамп ошибки
                 ExceptionHandler::dumpError($ex);
@@ -240,8 +240,7 @@ final class AuthManager {
     public static function logout() {
         if (self::isAuthorized()) {
             //Оповещаем слушатель о разлогинивании пользователя.
-            ApplicationListener::beforeLogout(PsUser::inst());
-
+            //ApplicationListener::beforeLogout(PsUser::inst());
             //Сбросим код пользователя в сессии
             SessionArrayHelper::reset(SESSION_USER_PARAM);
         }
@@ -261,6 +260,31 @@ final class AuthManager {
 
     public static function checkUserSessionMarker($marker) {
         return self::checkAuthorized() && (self::getUserSessoinMarker() === $marker);
+    }
+
+    /*
+     * TODO - вынесено из ApplicationListener для наглядности
+     */
+
+    private static function afterUserRegistered(PsUser $user) {
+        //Отправим приветственное сообщение
+        MSG_UserRegistered::inst()->sendSystemMsg($user);
+        //Дадим очки за регистрацию
+        UP_registration::inst()->givePoints($user);
+        //Привяжем ему набор дефолтных страниц - плагинов
+        PopupPagesManager::inst()->bindDefaultPages2User($user->getId());
+    }
+
+    private static function afterLogin(PsUser $user) {
+        //Проверим, а нет ли у пользователя очков, которые он заслужил
+        UserPointsManager::inst()->checkAllUserPoints($user);
+        //Аудит
+        UserAudit::inst()->afterLogin($user->getId());
+    }
+
+    private static function beforeLogout(PsUser $user) {
+        //Аудит
+        UserAudit::inst()->beforeLogout($user->getId());
     }
 
 }
