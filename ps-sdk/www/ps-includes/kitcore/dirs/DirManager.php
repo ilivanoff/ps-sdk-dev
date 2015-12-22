@@ -10,6 +10,7 @@
 class DirManager {
 
     const DIR_CONFIG = 'config';
+    const DIR_AJAX_ACTIONS = 'actions';
     const DIR_AUTO = 'auto';
     const DIR_AUTO_NO_DEL = 'auto-no-del';
     const DIR_LIB = 'lib';
@@ -250,7 +251,6 @@ class DirManager {
     /**
      * Тип получения содержимого директории
      */
-
     const DC_MAP = 1; // Карта: название элемента->DirItem
     const DC_NAMES = 2; // Только названия файлов
     const DC_NAMES_NO_EXT = 3; // Только названия файлов без расширения

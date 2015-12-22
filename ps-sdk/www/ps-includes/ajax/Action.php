@@ -8,9 +8,21 @@ require_once 'AjaxTools.php';
 function psExecuteAjaxAction() {
 
     /*
-     * Получаем объект действия
+     * Название действия должно быть в переменной запроса. Оно же - название класса, который будет выполнен.
      */
-    $action = Classes::getClassInstance(__DIR__, 'actions', RequestArrayAdapter::inst()->str(AJAX_ACTION_PARAM), AbstractAjaxAction::getClassName());
+    $actionName = RequestArrayAdapter::inst()->str(AJAX_ACTION_PARAM);
+
+    /*
+     * Получаем объект действия. Сначала ищём в SDK
+     */
+    $action = Classes::getClassInstance(__DIR__, DirManager::DIR_AJAX_ACTIONS, $actionName, AbstractAjaxAction::getClassName());
+
+    /*
+     * Теперь поищем в проектных действиях
+     */
+    if (!$action) {
+        $action = Classes::getClassInstance(PATH_BASE_DIR . DIR_SEPARATOR . PS_DIR_ADDON . 'ajax', DirManager::DIR_AJAX_ACTIONS, $actionName, AbstractAjaxAction::getClassName());
+    }
 
     /*
      * Проверим, существует ли действие.
