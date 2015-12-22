@@ -25,7 +25,7 @@ class Classes {
 
         $INST = null;
 
-        $classPath = file_path(array($__DIR__, $subDir), $className, 'php');
+        $classPath = file_path(array($__DIR__, $subDir), $className, PsConst::EXT_PHP);
         if (is_file($classPath)) {
             //Подключим данный класс
             require_once $classPath;

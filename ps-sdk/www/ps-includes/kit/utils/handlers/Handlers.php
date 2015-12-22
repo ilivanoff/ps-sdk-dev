@@ -15,41 +15,10 @@ final class Handlers {
     private $folding2smartyPrefix = array();
     private $folding2classPrefix = array();
     private $postProcessorFoldings = array();
-    private $newsProviders = array();
     private $pageFinaliseFoldings = array();
 
     private function __construct() {
         PsProfiler::inst(__CLASS__)->start(__FUNCTION__);
-
-        $managers = array(
-            MagManager::inst(),
-            BlogManager::inst(),
-            TrainManager::inst()
-        );
-
-        foreach ($managers as $manager) {
-            //Соберём типы постов
-            $this->postTypes[] = $manager->getPostType();
-
-            if ($manager instanceof RubricsProcessor) {
-                $this->rubricsProcessors[$manager->getPostType()] = $manager;
-                $this->foldings[] = $manager->getRubricsFolding();
-            }
-            if ($manager instanceof PostsProcessor) {
-                $this->postsProcessors[$manager->getPostType()] = $manager;
-                $this->foldings[] = $manager->getFolding();
-            }
-            if ($manager instanceof CommentsProcessor) {
-                $this->commentProcessors[$manager->getPostType()] = $manager;
-                $this->discussionControllers[$manager->getDiscussionController()->getDiscussionUnique()] = $manager->getDiscussionController();
-            }
-            if ($manager instanceof NewsProvider) {
-                $this->newsProviders[$manager->getNewsEventType()] = $manager;
-            }
-        }
-
-        //Контроллеры дискуссий
-        $this->discussionControllers[FeedbackManager::inst()->getDiscussionUnique()] = FeedbackManager::inst();
 
         //Фолдинги
         $this->foldings[] = PopupPagesManager::inst();
@@ -68,14 +37,8 @@ final class Handlers {
         $this->foldings[] = ScientistsManager::inst();
         //Админские страницы
         $this->foldings[] = APagesResources::inst();
-        //Базовые страницы
-        $this->foldings[] = BasicPagesManager::inst();
-        //Построитель страниц
-        $this->foldings[] = PageBuilder::inst();
         //Управление списком предпросмотра постов
         $this->foldings[] = ShowcasesCtrlManager::inst();
-        //Элементы в правой панели навигации
-        $this->foldings[] = ClientBoxManager::inst();
 
         /*
          * Выделим различные подклассы фолдингов
@@ -112,38 +75,6 @@ final class Handlers {
         }
 
         PsProfiler::inst(__CLASS__)->stop();
-    }
-
-    public function getRubricsProcessors() {
-        return $this->rubricsProcessors;
-    }
-
-    public function walkRubricsProcessors($callback) {
-        $this->walk($this->rubricsProcessors, $callback);
-    }
-
-    public function getPostsProcessors() {
-        return $this->postsProcessors;
-    }
-
-    public function getNewsProviders() {
-        return $this->newsProviders;
-    }
-
-    public function getPostProcessorFoldings() {
-        return $this->postProcessorFoldings;
-    }
-
-    public function walkPostsProcessors($callback) {
-        $this->walk($this->postsProcessors, $callback);
-    }
-
-    public function getCommentProcessors() {
-        return $this->commentProcessors;
-    }
-
-    public function walkCommentProcessors($callback) {
-        $this->walk($this->commentProcessors, $callback);
     }
 
     /*
@@ -336,22 +267,6 @@ final class Handlers {
     public function getDiscussionController($unique) {
         check_condition(array_key_exists($unique, $this->discussionControllers), "Неизвестный тип дискуссии: [$unique]");
         return $this->discussionControllers[$unique];
-    }
-
-    /** @return DiscussionController Контроллер дискуссии */
-    public function getDiscussionControllers() {
-        return $this->discussionControllers;
-    }
-
-    /** Фолдинги, производящие финализацию страницы */
-    public function getPageFinaliseFoldings() {
-        return $this->pageFinaliseFoldings;
-    }
-
-    /** @return NewsProvider */
-    public function getNewsProviderByNewsType($newsType) {
-        check_condition(array_key_exists($newsType, $this->newsProviders), "Неизвестный тип новости: [$newsType]");
-        return $this->newsProviders[$newsType];
     }
 
     private static $inst;

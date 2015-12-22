@@ -1,27 +1,38 @@
 <?php
 
+//Подключаем ресурсы проекта
 require_once dirname(__DIR__) . '/MainImport.php';
 
-//Подключим его здесь, так как он ещё понадобится в админских приложениях
-require_once 'actions/AbstractAjaxAction.php';
-
-//Подключим путь для класслоадера
-//Autoload::inst()->addBaseDir('ajax');
 //Поставим признак ajax-запроса
 PageContext::inst()->setAjaxContext();
 
-function check_user_session_marker($marker) {
-    if (!AuthManager::checkUserSessionMarker($marker)) {
-        json_error('Передан некорректный маркер сессии');
-    }
+/**
+ * Метод вызывается для завершения успешного выполнения Ajax-запроса
+ * 
+ * @param mixed $data - данные, которые будут возвращены на клиента
+ */
+function json_success($data) {
+    exit(json_encode(array('res' => $data)));
 }
 
+/**
+ * Метод вызывается для завершения выполнения Ajax-запроса с ошибкой
+ * 
+ * @param mixed $error - данные, которые будут возвращены на клиента
+ */
 function json_error($error) {
     exit(json_encode(array('err' => $error)));
 }
 
-function json_success($data) {
-    exit(json_encode(array('res' => $data)));
+/**
+ * Метод проверяет маркер сессии пользователя
+ * 
+ * @param string $marker
+ */
+function check_user_session_marker($marker) {
+    if (!AuthManager::checkUserSessionMarker($marker)) {
+        json_error('Передан некорректный маркер сессии');
+    }
 }
 
 /**

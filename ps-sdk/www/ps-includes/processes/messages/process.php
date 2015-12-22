@@ -32,9 +32,9 @@ function executeProcess(array $argv) {
     //$exceptDirs = array();
 
     $items = DirManager::inst()->getDirContentFull(null, function(DirItem $di) {
-                dolog($di->getAbsPath());
-                return $di->isFile() && ends_with($di->getName(), 'Messages.msgs');
-            }, $exceptDirs);
+        dolog($di->getAbsPath());
+        return $di->isFile() && ends_with($di->getName(), 'Messages.msgs');
+    }, $exceptDirs);
 
     dolog('Message files for processing: {}', count($items));
 

@@ -11,10 +11,8 @@ abstract class FoldedResources extends AbstractSingleton {
     const RTYPE_PHP = 'php';
     const RTYPE_TPL = 'tpl';
     const RTYPE_TXT = 'txt';
-
     //Директория с информациооными шаблонами
     const INFO_PATTERNS = 'tpl';
-
     //Название шаблона
     const PATTERN_NAME = '!PATTERN';
 

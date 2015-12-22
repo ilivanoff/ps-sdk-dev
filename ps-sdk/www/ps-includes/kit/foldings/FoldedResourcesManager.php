@@ -139,7 +139,6 @@ final class FoldedResourcesManager extends AbstractSingleton implements Destruct
 
     const ACTION_FOLDING_ALL_CHECKED = 'Фолдинги, для которых все сущности проверены на изменеие';
     const ACTION_FOLDING_ONCE_CHENGED = 'Фолдинги, для которых был вызван onFoldingChanged';
-
     //Действия над сущностями
     const ACTION_ENTITY_CHECK_CHANGED = 'Сущности, проверенные на изменение';
     const ACTION_ENTITY_CHANGED_DB = 'Список изменённых в БД';

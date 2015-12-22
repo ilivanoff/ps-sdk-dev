@@ -259,7 +259,7 @@ final class AuthManager {
     }
 
     public static function checkUserSessionMarker($marker) {
-        return self::checkAuthorized() && (self::getUserSessoinMarker() === $marker);
+        return PsCheck::isMd5($marker) && self::checkAuthorized() && (self::getUserSessoinMarker() === $marker);
     }
 
     /*

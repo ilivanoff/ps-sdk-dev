@@ -37,8 +37,7 @@ abstract class AbstractAjaxAction {
         AuthManager::checkAccess($this->getAuthType());
 
         //Если пользователь зарегистрирован, как администратор - подключим ресурсы админа
-        ps_admin_on();
-
+        //ps_admin_on();
         //Проверка обязательных параметров
         foreach (to_array($this->getRequiredParamKeys()) as $key) {
             if (!$params->has($key)) {
@@ -46,6 +45,7 @@ abstract class AbstractAjaxAction {
             }
         }
 
+        //Проверка активности
         if ($this->isCheckActivity() && !ActivityWatcher::isCanMakeAction()) {
             return 'Таймаут не закончился.';
         }
@@ -68,6 +68,15 @@ abstract class AbstractAjaxAction {
         }
 
         return $result;
+    }
+
+    /**
+     * Метод возвращает название класса
+     * 
+     * @return type
+     */
+    public static final function getClassName() {
+        return get_called_class();
     }
 
 }
