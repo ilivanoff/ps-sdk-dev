@@ -17,25 +17,32 @@ class Classes {
             return null;
         }
 
+        //Абсолютный путь к классу
+        $classPath = file_path(array($__DIR__, $subDir), $className, PsConst::EXT_PHP);
+
+        //Ключ кеширования
+        $cacheKey = md5($classPath);
+
         $CACHE = $caching ? SimpleDataCache::inst(__CLASS__, __FUNCTION__) : null;
 
-        if ($CACHE && $CACHE->has($className)) {
-            return $CACHE->get($className);
+        if ($CACHE && $CACHE->has($cacheKey)) {
+            return $CACHE->get($cacheKey);
         }
 
         $INST = null;
 
-        $classPath = file_path(array($__DIR__, $subDir), $className, PsConst::EXT_PHP);
         if (is_file($classPath)) {
+
             //Подключим данный класс
             require_once $classPath;
 
+            //Проверим, существует ли класс
             $rc = PsUtil::newReflectionClass($className, false);
             $INST = $rc && $rc->isSubclassOf($parent) ? $rc->newInstance() : null;
         }
 
         if ($CACHE && $INST) {
-            $CACHE->set($className, $INST);
+            $CACHE->set($cacheKey, $INST);
         }
 
         return $INST;

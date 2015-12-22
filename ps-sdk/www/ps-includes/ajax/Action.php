@@ -13,16 +13,17 @@ function psExecuteAjaxAction() {
     $actionName = RequestArrayAdapter::inst()->str(AJAX_ACTION_PARAM);
 
     /*
-     * Получаем объект действия. Сначала ищём в SDK
+     * Поищем в проектных действиях, они для нас имеют больший приоритет
      */
-    $action = Classes::getClassInstance(__DIR__, DirManager::DIR_AJAX_ACTIONS, $actionName, AbstractAjaxAction::getClassName());
+    $action = Classes::getClassInstance(next_level_dir(PATH_BASE_DIR, PS_DIR_ADDON, 'ajax'), DirManager::DIR_AJAX_ACTIONS, $actionName, AbstractAjaxAction::getClassName(), false);
 
     /*
-     * Теперь поищем в проектных действиях
+     * Поищем объект ajax действия в SDK
      */
     if (!$action) {
-        $action = Classes::getClassInstance(PATH_BASE_DIR . DIR_SEPARATOR . PS_DIR_ADDON . 'ajax', DirManager::DIR_AJAX_ACTIONS, $actionName, AbstractAjaxAction::getClassName());
+        $action = Classes::getClassInstance(__DIR__, DirManager::DIR_AJAX_ACTIONS, $actionName, AbstractAjaxAction::getClassName());
     }
+
 
     /*
      * Проверим, существует ли действие.
