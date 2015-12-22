@@ -35,24 +35,4 @@ function check_user_session_marker($marker) {
     }
 }
 
-/**
- * Выполнение ajax действия
- * 
- * @param AjaxClassProvider $provider
- */
-function execute_ajax_action(AbstractAjaxAction $action = null) {
-    /* Для безопасности не будем писать детали обработки */
-    if (!$action) {
-        json_error('Действие не опеределено');
-    }
-
-    $result = $action->execute();
-    $result = $result ? $result : 'Ошибка выполнения действия';
-
-    if ($result instanceof AjaxSuccess) {
-        json_success($result->getJsParams());
-    }
-    json_error($result);
-}
-
 ?>
