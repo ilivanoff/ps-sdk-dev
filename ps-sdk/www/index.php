@@ -4,7 +4,7 @@ header('Content-Type: text/html; charset=utf-8');
 
 require_once 'ps-includes/MainImport.php';
 
-//print_r(ConfigIni::getIni());
+print_r($_SERVER);
 
 class A {
 
