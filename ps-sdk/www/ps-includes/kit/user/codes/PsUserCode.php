@@ -143,6 +143,19 @@ class PsUserCode implements PsUserCodeController {
         return self::code('R', $code);
     }
 
+    /*
+     * Пример использования:
+     */
+    /*
+      public static function changePassWithCode($code, $newPlainPass) {
+      return PsUserCode::passRecoverCode($code)->markAsUsed()->getUser()->updatePassword($newPlainPass, false);
+      }
+
+      public static function getCantUseReason($code) {
+      return PsUserCode::passRecoverCode($code)->getCantUseReason();
+      }
+
+     */
 }
 
 ?>
