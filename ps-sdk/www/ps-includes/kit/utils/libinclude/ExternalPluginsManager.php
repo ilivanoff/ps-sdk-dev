@@ -46,15 +46,6 @@ class ExternalPluginsManager {
     /**
      * 
      */
-    public static function SimpleHtmlDom() {
-        if (self::isInclude(__FUNCTION__)) {
-            require_once PATH_PLUGINS . '/simplehtmldom_1_5/simple_html_dom.php';
-        }
-    }
-
-    /**
-     * 
-     */
     public static function SpriteGenerator() {
         if (self::isInclude(__FUNCTION__)) {
             require_once PATH_PLUGINS . '/css-sprite-generator-v4.1/includes/ps-css-sprite-gen.inc.php';
