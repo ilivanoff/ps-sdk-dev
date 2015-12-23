@@ -1,5 +1,6 @@
 <?php
 
+//Определим название функции, которая должна быть определена в файле процесса
 define('PROCESS_FUNCTION_NAME', 'executeProcess');
 
 //Включаем логирование, перенаправляем его в консоль и устанавливаем логгеры
@@ -14,25 +15,35 @@ $PROFILING_ENABLED = true;
 //Установим глобальный массив, чтобы не получать ошибку в момент попытки стартовать сессию
 $_SESSION = array();
 
+//Подключаем ресурсы проета
 require_once 'MainImportAdmin.php';
 
+//Параметр $CALLED_FILE должен установлен запущенным процессом
 check_condition($CALLED_FILE, 'Global property $CALLED_FILE is not set');
+
+//Функция должна быть определена запущенным процессом
 check_condition(is_callable(PROCESS_FUNCTION_NAME), PROCESS_FUNCTION_NAME . ' is not callable');
 
-//В необязательном режиме подключим папку classes нашего процесса
-Autoload::inst()->registerBaseDir(array(dirname($CALLED_FILE), 'classes'), false);
+//ПРоверим, что программа вызвана из командной строки
+check_condition(is_array($argv), "Programm $CALLED_FILE can be runned only from console");
 
+//В необязательном режиме подключим папку src нашего процесса
+Autoload::inst()->registerBaseDir(array(dirname($CALLED_FILE), DirManager::DIR_SRC), false);
+
+//Определим вспомогательную функцию логирования
 function dolog($info = '') {
     call_user_func_array(array(PsLogger::inst('PROCESS'), 'info'), func_get_args());
 }
 
 $__logBoxNum = 0;
 
+//Сброс блока логирования
 function LOGBOX_INIT($num = 0) {
     global $__logBoxNum;
     $__logBoxNum = $num;
 }
 
+//Метод логирует новый заметный блок
 function LOGBOX($msg) {
     $args = func_get_args();
     global $__logBoxNum;
@@ -44,6 +55,7 @@ function LOGBOX($msg) {
     call_user_func_array(dolog, $args);
 }
 
+//Базовый обработчик ошибок, который распечатает стек
 function print_stack(Exception $exception) {
     dolog('');
     dolog("ERROR occured: " . $exception->getMessage());
@@ -57,6 +69,7 @@ function print_stack(Exception $exception) {
 restore_exception_handler();
 set_exception_handler('print_stack');
 
+//Заругистрируем функцию, которая после окончания процесса запишет лог в файл
 function dimpConsoleLog() {
     global $CALLED_FILE;
     if ($CALLED_FILE) {
@@ -69,18 +82,11 @@ function dimpConsoleLog() {
 
 register_shutdown_function('dimpConsoleLog');
 
-
-/*
+/**
  * Возвращает параметры командной строки.
  * Нумерация параметров начинается с единицы.
+ * TODO - разобраться после Smarty
  */
-
-function getCmdParam($idx = 0, $assert = true) {
-    global $argv;
-    check_condition(is_array($argv) || !$assert, 'Programm can be runned only from console');
-    return array_get_value($idx, to_array($argv));
-}
-
 function saveResult2Html($tplName, $params = null, $__DIR__ = __DIR__, $htmlName = 'results.html', $title = null) {
     $tplName = ensure_file_ext($tplName, 'tpl');
     $pageClass = cut_string_end($tplName, '.tpl');
@@ -95,12 +101,10 @@ function saveResult2Html($tplName, $params = null, $__DIR__ = __DIR__, $htmlName
     DirItem::inst($__DIR__, $htmlName)->writeToFile($html, true);
 }
 
-/*
+/**
  * После того, как мы определили все глобальные функции, вызовем функцию 
  * обработки, передав на вход параметры командной строки
  */
-check_condition(is_array($argv), "Programm $CALLED_FILE can be runned only from console");
-
 $PROCESS_FUNCTION_NAME = PROCESS_FUNCTION_NAME;
 $PROCESS_FUNCTION_NAME($argv);
 ?>

@@ -64,18 +64,18 @@ Autoload::inst()->register();
   if (!isset($PS_NO_AUTO_CONNECT) || !$PS_NO_AUTO_CONNECT) {
   PsConnectionPool::configure(PsConnectionParams::production());
   }
-
-  //Зарегистрируем функцию, подключающую админские ресурсы
-  function ps_admin_on($force = false) {
-  if ($force || AuthManager::isAuthorizedAsAdmin()) {
-  Autoload::inst()->registerAdminBaseDir();
-  }
-  }
-
-  //Ну и сразу попытаемся подключить админские ресурсы
-  ps_admin_on();
-
-  //Получим экземпляр профайлера, чтобы подписаться на PsShotdown, если профилирование включено
-  PsProfiler::inst()->add('ScriptInit', Secundomer::inst()->add(1, microtime(true) - SCRIPT_EXECUTION_START));
  */
+
+//Зарегистрируем функцию, подключающую админские ресурсы
+function ps_admin_on($force = false) {
+    if ($force || AuthManager::isAuthorizedAsAdmin()) {
+        //Autoload::inst()->registerAdminBaseDir();
+    }
+}
+
+//Ну и сразу попытаемся подключить админские ресурсы
+ps_admin_on();
+
+//Получим экземпляр профайлера, чтобы подписаться на PsShotdown, если профилирование включено
+PsProfiler::inst()->add('ScriptInit', Secundomer::inst()->add(1, microtime(true) - SCRIPT_EXECUTION_START));
 ?>

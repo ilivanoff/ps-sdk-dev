@@ -5,8 +5,8 @@
  * так что регистрируем его первым.
  */
 final class Autoload {
-    /** Директории подключаемых классов */
 
+    /** Директории подключаемых классов */
     const DIR_KIT = 'sdk/kit';
     const DIR_ADMIN = 'admin';
     const DIR_TESTS = 'tests';

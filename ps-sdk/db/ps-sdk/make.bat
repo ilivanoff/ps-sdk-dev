@@ -9,10 +9,10 @@ echo Sdk  db dir: [%SDK_DB_DIR%]
 echo Main db dir: [%MAIN_DB_DIR%]
 
 echo.
-echo Updating main db directory
+rem echo Updating main db directory
 rem svn update
 
-cd ..\www\sdk\processes\makeschema
+cd ..\www\ps-includes\processes\makeschema
 set MAKESCHEMA_DIR=%CD%
 set MAKESCHEMA_DIR_TMP=%CD%\temp
 
@@ -25,10 +25,11 @@ md %MAKESCHEMA_DIR_TMP%
 
 echo.
 echo Exporting [%MAIN_DB_DIR%] to [%MAKESCHEMA_DIR_TMP%]
-svn export %MAIN_DB_DIR% %MAKESCHEMA_DIR_TMP% --force
+git export %MAIN_DB_DIR% %MAKESCHEMA_DIR_TMP% --force
 
 echo.
 echo Running dbexport.php
+goto :end
 php dbexport.php
 @if ERRORLEVEL 1 goto :error
 
