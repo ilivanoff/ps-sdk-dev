@@ -31,13 +31,13 @@ B::test();
 //print_r(B::$a);
 
 PsLibs::inst();
+/*
+  PsConnectionPool::configure(PsConnectionParams::production());
+  PsConnectionPool::disconnect();
 
-PsConnectionPool::configure(PsConnectionParams::production());
-PsConnectionPool::disconnect();
-
-echo PsConnectionPool::params();
-
-//print_r(PSDB::getRec('select * from blog_post where id_post=1'));
+  echo PsConnectionPool::params();
+ */
+print_r(PSDB::getRec('select * from blog_post where id_post=1'));
 //print_r(InflectsManager::inst()->getInflections('корыто'));
 
 print_r(PsMathRebusSolver::solve('a+df=1aa'));

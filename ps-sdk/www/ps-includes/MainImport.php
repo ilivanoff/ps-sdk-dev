@@ -59,12 +59,10 @@ ExceptionHandler::register();
  */
 Autoload::inst()->register();
 
-/*
-  //Подключаемся к продуктиву, если автоконнект разрещён
-  if (!isset($PS_NO_AUTO_CONNECT) || !$PS_NO_AUTO_CONNECT) {
-  PsConnectionPool::configure(PsConnectionParams::production());
-  }
- */
+//Подключаемся к продуктиву, если автоконнект разрещён
+if (!isset($PS_NO_AUTO_CONNECT) || !$PS_NO_AUTO_CONNECT) {
+    PsConnectionPool::configure(PsConnectionParams::production());
+}
 
 //Зарегистрируем функцию, подключающую админские ресурсы
 function ps_admin_on($force = false) {

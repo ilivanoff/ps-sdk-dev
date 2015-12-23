@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Процесс строит скрипты разворачивания БД
+ * 
+ * @param array $argv
+ */
 function executeProcess(array $argv) {
     PsConnectionPool::assertDisconnectied();
 
@@ -7,10 +12,9 @@ function executeProcess(array $argv) {
      * СОЗДАЁМ SQL
      * 
      * Нам нужны настройки таблиц, которые неоткуда взять, кроме как из базы, поэтому для экспорта данных нужна БД.
-     * Все данные из "редактируемых" таблиц также загружаются из этой БД.
      */
     $DB = DirManager::inst(__DIR__ . '/temp');
-    $SDK = DirManager::inst(__DIR__ . '/temp/sdk');
+    $SDK = DirManager::inst(__DIR__ . '/temp/ps-sdk');
 
     //Почистим файлы для удаления
     dolog('Clearing not .sql/.txt from temp dir');
@@ -21,6 +25,7 @@ function executeProcess(array $argv) {
         }
     }
     dolog();
+    return;
 
     /*
      * SDK
