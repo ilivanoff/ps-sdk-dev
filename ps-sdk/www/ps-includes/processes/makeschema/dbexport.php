@@ -25,7 +25,6 @@ function executeProcess(array $argv) {
         }
     }
     dolog();
-    return;
 
     /*
      * SDK
@@ -44,271 +43,207 @@ function executeProcess(array $argv) {
             continue; //---
         }
 
+        //Директория с системными объектами
         $DM_SYSOBJECTS = DirManager::inst($DM->absDirPath(), 'sysobjects');
 
-        /*
-         * Очищаем папку, в которой будет содержимое для автосгенерированных файлов
-         */
-        $DM_AUTO = DirManager::inst($DM_SYSOBJECTS->absDirPath(), 'auto')->clearDir();
+        //Директория, в которой будет содержимое для автосгенерированных файлов
+        $DM_BUILD = DirManager::inst($DM->absDirPath(), 'build')->clearDir();
 
-        /*
-         * Создадим ссылку на файл с данными, выгруженными из таблиц
-         */
-        $DI_AUTO_DATA = $DM_AUTO->getDirItem(null, 'data.sql');
+        //Создадим ссылку на файл с объектами
+        $DM_BUILD_OBJECTS_SQL = $DM_BUILD->getDirItem(null, 'objects', PsConst::EXT_SQL)->getSqlFileBuilder();
 
-        /*
-         * Сначала сделаем триггеры на таблицы, от которых зависит кеш и к которым привязаны фолдинги.
-         */
+        //Заново инициализируем блоки логов
         LOGBOX_INIT();
-        LOGBOX('Making cache and folding table triggers');
 
-        $DM_AUTO_TRIGGERS = $DM_AUTO->getDirItem('triggers')->makePath();
-        $DI_AUTO_TRIGGERS_SQL = $DM_AUTO->getDirItem(null, 'triggers', 'sql')->getSqlFileBuilder();
-
-        $triggerPattern = $SDK->getDirItem('sysobjects/patterns', 'ta_iud_pattern.sql')->getFileContents();
-        //BUILDIAN AND ADDING TRIGGERS
-        foreach (PsTriggersAware::getTriggeredTables($scope) as $table) {
-            foreach (PsTriggersAware::getActions() as $action) {
-                $actions = PsTriggersAware::getTriggerActions($table, $scope, $action);
-                if (empty($actions)) {
-                    continue; //---
-                }
-                $name = 'ta' . strtolower(first_char($action)) . '_' . $table;
-                $trigger = str_replace('<%NAME%>', $name, $triggerPattern);
-                $trigger = str_replace('<%TABLE%>', $table, $trigger);
-                $trigger = str_replace('<%ACTION%>', $action, $trigger);
-                $trigger = str_replace('<%CALL%>', implode("\n", $actions), $trigger);
-
-                dolog("+ $name");
-                foreach ($actions as $_action) {
-                    dolog($_action);
-                }
-
-                $DI_AUTO_TRIGGERS_SQL->appendFile($DM_AUTO_TRIGGERS->getDirItem(null, $name, 'sql')->putToFile($trigger));
-            }
-        }
-
-        //Все автоматически сгенерированные триггеры положим в отдельный файл
-        $DI_AUTO_TRIGGERS_SQL->save();
-
-        $autoTriggers = DirManager::inst($DM_AUTO_TRIGGERS->getAbsPath())->getDirContent(null, PsConst::EXT_SQL);
-        dolog('Triggers made: {}', count($autoTriggers));
-
-        /*
-         * objects.sql
-         */
-        $OBJECTS_SQL = $DM_AUTO->getDirItem(null, 'objects.sql')->getSqlFileBuilder();
-
-        /*
-         * Добавляем автосгенерированные триггеры
-         */
+        //Строим objects.sql
         LOGBOX('Processing objects.sql');
 
-        if (empty($autoTriggers)) {
-            dolog('No auto triggers');
-        } else {
-            dolog('Adding {} auto triggers', count($autoTriggers));
-
-            $OBJECTS_SQL->appendMlComment('AUTO TRIGGERS SECTION');
-            /* @var $triggerDi DirItem */
-            foreach ($autoTriggers as $triggerDi) {
-                dolog('+ {}', $triggerDi->getName());
-                $OBJECTS_SQL->appendFile($triggerDi);
-            }
-        }
-
         /*
-         * Получаем строки с включениями
+         * Получаем строки с включениями в objects.sql
          */
-        $ALL = $DM_SYSOBJECTS->getDirItem(null, 'all.txt')->getFileLines(false);
-        if (empty($ALL)) {
+        $ALL_LINES = $DM_SYSOBJECTS->getDirItem(null, 'all', PsConst::EXT_TXT)->getFileLines(false);
+        if (empty($ALL_LINES)) {
             dolog('No includes');
         } else {
-            dolog('Adding {} includes from all.txt', count($ALL));
+            dolog('Adding {} includes from all.txt', count($ALL_LINES));
 
-            $OBJECTS_SQL->appendMlComment('INCLUDES SECTION');
-            foreach ($ALL as $include) {
+            $DM_BUILD_OBJECTS_SQL->appendMlComment('INCLUDES SECTION');
+            foreach ($ALL_LINES as $include) {
                 dolog('+ {}', $include);
-                $OBJECTS_SQL->appendFile($DM_SYSOBJECTS->getDirItem($include));
+                $DM_BUILD_OBJECTS_SQL->appendFile($DM_SYSOBJECTS->getDirItem($include));
             }
         }
 
-
-        $OBJECTS_SQL->save();
+        // << Сохраняем objects.sql
+        $DM_BUILD_OBJECTS_SQL->save();
 
         /*
          * Создаём скрипты инициализации для схем
          */
         foreach (PsConnectionParams::getDefaultConnectionNames() as $connection) {
-            if (PsConnectionParams::has($connection, $scope)) {
-                $props = PsConnectionParams::get($connection, $scope);
-                $database = $props->database();
+            //Для данного скоупа не задан коннект? Пропускаем...
+            if (!PsConnectionParams::has($connection, $scope)) {
+                continue; //---
+            }
 
-                if (empty($database)) {
-                    continue; //Не задана БД - пропускаем (для root)
-                }
+            //Поработаем с настройками
+            $props = PsConnectionParams::get($connection, $scope);
+            $database = $props->database();
 
-                LOGBOX('Making schema script for {}', $props);
+            if (empty($database)) {
+                continue; //Не задана БД - пропускаем (для root)
+            }
 
-                $SCHEMA_SQL = $DM_AUTO->getDirItem('schemas', $database, 'sql')->makePath()->getSqlFileBuilder();
+            LOGBOX('Making schema script for {}', $props);
 
-                //DROP+USE
-                $SCHEMA_SQL->clean();
-                $SCHEMA_SQL->appendLine("DROP DATABASE IF EXISTS $database;");
-                $SCHEMA_SQL->appendLine("CREATE DATABASE $database CHARACTER SET utf8 COLLATE utf8_general_ci;");
-                $SCHEMA_SQL->appendLine("USE $database;");
+            $SCHEMA_DI = $DM_BUILD->getDirItem('schemas', $database, PsConst::EXT_SQL)->makePath();
+            check_condition(!$SCHEMA_DI->isFile(), 'Schema file for database "{}" is already exists. Dublicate database names?', $database);
+            $SCHEMA_SQL = $SCHEMA_DI->getSqlFileBuilder();
 
-                if ($scope == ENTITY_SCOPE_PROJ) {
-                    dolog('+ SDK PART');
+            //DROP+USE
+            $SCHEMA_SQL->clean();
+            $SCHEMA_SQL->appendLine("DROP DATABASE IF EXISTS $database;");
+            $SCHEMA_SQL->appendLine("CREATE DATABASE $database CHARACTER SET utf8 COLLATE utf8_general_ci;");
+            $SCHEMA_SQL->appendLine("USE $database;");
 
-                    //Добавим секцию в лог
-                    $SCHEMA_SQL->appendMlComment('>>> SDK');
+            if ($scope == ENTITY_SCOPE_PROJ) {
+                dolog('+ SDK PART');
 
-                    //CREATE CHEMA SCRIPT
-                    $SCHEMA_SQL->appendFile($SDK->getDirItem(null, 'schema.sql'));
-
-                    //OBJECTS SCRIPT
-                    $SCHEMA_SQL->appendFile($SDK->getDirItem('sysobjects/auto', 'objects.sql'));
-
-                    //Добавим секцию в лог
-                    $SCHEMA_SQL->appendMlComment('<<< SDK');
-                }
+                //Добавим секцию в лог
+                $SCHEMA_SQL->appendMlComment('>>> SDK');
 
                 //CREATE CHEMA SCRIPT
-                $SCHEMA_SQL->appendFile($SCHEMA);
+                $SCHEMA_SQL->appendFile($SDK->getDirItem(null, 'schema', PsConst::EXT_SQL));
 
                 //OBJECTS SCRIPT
-                $SCHEMA_SQL->appendFile($OBJECTS_SQL->getDi());
+                $SCHEMA_SQL->appendFile($SDK->getDirItem('build', 'objects', PsConst::EXT_SQL));
 
-                //CREATE USER
-                $grant = "grant all on {}.* to '{}'@'{}' identified by '{}';";
-                $SCHEMA_SQL->appendMlComment('Grants');
-                $SCHEMA_SQL->appendLine(PsStrings::replaceWithBraced($grant, $database, $props->user(), $props->host(), $props->password()));
+                //Добавим секцию в лог
+                $SCHEMA_SQL->appendMlComment('<<< SDK');
+            }
+
+            //CREATE CHEMA SCRIPT
+            $SCHEMA_SQL->appendFile($SCHEMA);
+
+            //OBJECTS SCRIPT
+            $SCHEMA_SQL->appendFile($DM_BUILD_OBJECTS_SQL->getDi());
+
+            //CREATE USER
+            $grant = "grant all on {}.* to '{}'@'{}' identified by '{}';";
+            $SCHEMA_SQL->appendMlComment('Create user with grants');
+            $SCHEMA_SQL->appendLine(PsStrings::replaceWithBraced($grant, $database, $props->user(), $props->host(), $props->password()));
+
+            /*
+             * Мы должны создать тестовую схему, чтобы убедиться, что всё хорошо и сконфигурировать db.ini
+             */
+            if ($connection == PsConnectionParams::CONN_TEST) {
+                /*
+                 * На тестовой схеме прогоняем скрипт
+                 */
+                dolog('Making physical schema {}', $props);
+
+                $rootProps = PsConnectionParams::get(PsConnectionParams::CONN_ROOT);
+                dolog('Root connection props: {}', $rootProps);
+
+                $rootProps->execureShell($SCHEMA_SQL->getDi());
+
+                dolog('Connecting to [{}]', $props);
+                PsConnectionPool::configure($props);
+
+                $tables = PsTable::all();
 
                 /*
-                 * Мы должны создать тестовую схему, чтобы убедиться, что всё хорошо и сконфигурировать db.ini
+                 * Нам нужно определить новый список таблиц SDK, чтобы по ним 
+                 * провести валидацию новых db.ini.
+                 * 
+                 * Если мы обрабатываем проект, то SDK-шный db.ini уже готов и 
+                 * можем положиться на него. Если мы подготавливаем SDK-шный db.ini,
+                 * но новый список таблиц возмём из развёрнутой тестовой БД.
                  */
-                if ($connection == PsConnectionParams::CONN_TEST) {
-                    dolog('Making physical schema {}', $props);
+                $sdkTableNames = $scope == ENTITY_SCOPE_SDK ? array_keys($tables) : $SDK->getDirItem('build', 'tables', PsConst::EXT_TXT)->getFileLines();
 
-                    $rootProps = PsConnectionParams::get(PsConnectionParams::CONN_ROOT);
-                    dolog('Root connection props: {}', $rootProps);
-
-                    $rootProps->execureShell($SCHEMA_SQL->getDi());
-
-                    dolog('Connecting to [{}]', $props);
-                    PsConnectionPool::configure($props);
-
-                    $tables = PsTable::all();
-
-                    /*
-                     * Нам нужно определить новый список таблиц SDK, чтобы по ним 
-                     * провести валидацию новых db.ini.
-                     * 
-                     * Если мы обрабатываем проект, то SDK-шный db.ini уже готов и 
-                     * можем положиться на него. Если мы подготавливаем SDK-шный db.ini,
-                     * но новый список таблиц возмём из развёрнутой тестовой БД.
-                     */
-                    $sdkTableNames = $scope == ENTITY_SCOPE_SDK ? array_keys($tables) : DbIni::getSdkTables();
-
-                    if ($scope == ENTITY_SCOPE_PROJ) {
-                        //Уберём из всех таблиц - SDK`шные
-                        array_remove_keys($tables, $sdkTableNames);
-                    }
-
-                    $scopeTableNames = array_keys($tables);
-                    sort($scopeTableNames);
-
-                    /*
-                     * Составим список таблиц.
-                     * Он нам особенно не нужен, но всёже будем его формировать для наглядности - какие таблицы добавились.
-                     */
-                    $tablesDi = $DM_AUTO->getDirItem(null, 'tables.txt')->putToFile(implode("\n", $scopeTableNames));
-                    dolog('Tables: {} saved to {}', print_r($scopeTableNames, true), $tablesDi->getAbsPath());
-
-                    /*
-                     * Загружаем полный список таблиц схемы и на основе имеющихся db.ini файлов строим новые, добавляя/удаляя 
-                     * таблицы, добавленные/удалённые из схемы.
-                     */
-                    $dbIniProps = PsDbIniHelper::makeDbIniForSchema($scope, $tables);
-                    dolog('db.ini props: {}', print_r($dbIniProps, true));
-                    $dbIniErrors = PsDbIniHelper::validateAndSaveDbIniTableProps($scope, $dbIniProps, $sdkTableNames);
-                    if ($dbIniErrors) {
-                        PsUtil::raise('db.ini errors for {}: {}', $scope, print_r($dbIniErrors, true));
-                    }
-
-                    /*
-                     * Для проекта выгружаем данные, хранящиеся в файлах
-                     */
-                    if ($scope == ENTITY_SCOPE_PROJ) {
-                        dolog('Exporting tables data from files');
-
-                        $DM_AUTO->getDirItem('data')->makePath();
-                        $AUTO_DATA_SQL = $DI_AUTO_DATA->touch()->getSqlFileBuilder();
-
-                        //Пробегаемся по таблицам
-                        foreach (DbIni::getTables() as $tableName) {
-                            $table = PsTable::inst($tableName);
-                            if ($table->isFilesync()) {
-                                $fileData = $table->exportFileAsInsertsSql();
-                                if ($fileData) {
-                                    dolog(' + {}', $tableName);
-                                    $AUTO_DATA_SQL->appendFile($DM_AUTO->getDirItem('data', $tableName, 'sql')->putToFile($fileData));
-                                } else {
-                                    dolog(' - {}', $tableName);
-                                }
-                            }
-                        }
-
-                        $AUTO_DATA_SQL->save();
-
-                        /*
-                         * Вставим данные в тестовую схему
-                         */
-                        dolog('Inserting data to test schema.');
-                        $props->execureShell($DI_AUTO_DATA);
-                    }
-
-                    /*
-                     * Теперь ещё создадим тестовые объекты.
-                     * Мы уверены, что для SDK тестовая часть есть всегда.
-                     */
-                    $TEST_SCHEMA_SQL = $DM_AUTO->getDirItem('test', 'schema', 'sql')->makePath()->getSqlFileBuilder();
-                    if ($scope == ENTITY_SCOPE_PROJ) {
-                        dolog('+ SDK TEST PART');
-
-                        //Добавим секцию в лог
-                        $TEST_SCHEMA_SQL->appendMlComment('>>> SDK');
-
-                        //CREATE CHEMA SCRIPT
-                        $TEST_SCHEMA_SQL->appendFile($SDK->getDirItem('sysobjects/auto/test', 'schema.sql'));
-
-                        //Добавим секцию в лог
-                        $TEST_SCHEMA_SQL->appendMlComment('<<< SDK');
-                    }
-                    $TEST_SCHEMA_SQL->appendFile($DM_SYSOBJECTS->getDirItem('test', 'schema.sql'), false);
-                    $TEST_SCHEMA_SQL->appendFile($DM_SYSOBJECTS->getDirItem('test', 'data.sql'), false);
-                    $TEST_SCHEMA_SQL->save();
-
-                    /*
-                     * На тестовой схеме прогоняем скрипты с тестовыми данными
-                     */
-                    dolog('Making test schema objects.');
-                    $props->execureShell($TEST_SCHEMA_SQL->getDi());
+                if ($scope == ENTITY_SCOPE_PROJ) {
+                    //Уберём из всех таблиц - SDK`шные
+                    array_remove_keys($tables, $sdkTableNames);
                 }
-                #end conn== TEST
+
+                $scopeTableNames = array_keys($tables);
+                sort($scopeTableNames);
 
                 /*
-                 * Если были сгенерированы данные из файлов - добавляем их
+                 * Составим список таблиц.
+                 * Он нам особенно не нужен, но всёже будем его формировать для наглядности - какие таблицы добавились.
                  */
-                if ($DI_AUTO_DATA->isFile() && ($DI_AUTO_DATA->getSize() > 0)) {
-                    dolog('Append data inserts to {}', $SCHEMA_SQL->getDi()->getName());
-                    $SCHEMA_SQL->appendFile($DI_AUTO_DATA);
-                }
+                $tablesDi = $DM_BUILD->getDirItem(null, 'tables', PsConst::EXT_TXT)->touch()->putToFile(implode("\n", $scopeTableNames));
+                dolog('Tables: {} saved to {}', print_r($scopeTableNames, true), $tablesDi->getAbsPath());
 
-                //SAVE .sql
+                /*
+                 * Для проекта выгружаем данные, хранящиеся в файлах
+                 * TODO - возможно имеет смысл выгружать данные в файл
+                 */
+                /*
+                  if ($scope == ENTITY_SCOPE_PROJ) {
+                  dolog('Exporting tables data from files');
+
+                  $DM_BUILD->getDirItem('data')->makePath();
+                  $AUTO_DATA_SQL = $DM_BUILD_DATA->touch()->getSqlFileBuilder();
+
+                  //Пробегаемся по таблицам
+                  foreach (DbIni::getTables() as $tableName) {
+                  $table = PsTable::inst($tableName);
+                  if ($table->isFilesync()) {
+                  $fileData = $table->exportFileAsInsertsSql();
+                  if ($fileData) {
+                  dolog(' + {}', $tableName);
+                  $AUTO_DATA_SQL->appendFile($DM_BUILD->getDirItem('data', $tableName, 'sql')->putToFile($fileData));
+                  } else {
+                  dolog(' - {}', $tableName);
+                  }
+                  }
+                  }
+
+                  $AUTO_DATA_SQL->save();
+
+                  //Вставим данные в тестовую схему
+                  dolog('Inserting data to test schema.');
+                  $props->execureShell($DM_BUILD_DATA);
+                  }
+                 */
+
+                /*
+                 * Теперь ещё создадим тестовые объекты.
+                 * Мы уверены, что для SDK тестовая часть есть всегда.
+                 */
+
+                dolog('Add test part');
+                $SCHEMA_SQL->appendMlComment('Test part');
+
+                if ($scope == ENTITY_SCOPE_PROJ) {
+                    dolog('+ SDK TEST PART');
+
+                    //Добавим секцию в лог
+                    $SCHEMA_SQL->appendMlComment('>>> SDK TEST PART');
+
+                    //CREATE CHEMA SCRIPT
+                    $SCHEMA_SQL->appendFile($SDK->getDirItem('sysobjects/test', 'schema.sql'));
+
+                    //ADD TEST DATA
+                    $SCHEMA_SQL->appendFile($SDK->getDirItem('sysobjects/test', 'data.sql'));
+
+                    //Добавим секцию в лог
+                    $SCHEMA_SQL->appendMlComment('<<< SDK TEST PART');
+                }
+                $SCHEMA_SQL->appendFile($DM_SYSOBJECTS->getDirItem('test', 'schema.sql'), false);
+                $SCHEMA_SQL->appendFile($DM_SYSOBJECTS->getDirItem('test', 'data.sql'), false);
                 $SCHEMA_SQL->save();
             }
+            #end conn== TEST
+
+            /*
+             * Всё, сохраняем финальный скрипт
+             */
+            //SAVE .sql
+            $SCHEMA_SQL->save();
         }
     }
 

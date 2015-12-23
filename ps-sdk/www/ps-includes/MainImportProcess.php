@@ -18,8 +18,25 @@ $_SESSION = array();
 //Подключаем ресурсы проета
 require_once 'MainImportAdmin.php';
 
+//Базовый обработчик ошибок, который распечатает стек
+function print_stack(Exception $exception) {
+    dolog('');
+    dolog("ERROR occured:");
+    dolog($exception->getMessage());
+    foreach ($exception->getTrace() as $num => $stackItem) {
+        $str = $num . '# ' . (array_key_exists('file', $stackItem) ? $stackItem['file'] : '') . ' (' . (array_key_exists('line', $stackItem) ? $stackItem['line'] : '') . ')';
+        dolog(pad_left('', $num, ' ') . $str);
+    }
+    dolog('');
+    die(1);
+}
+
+restore_exception_handler();
+set_exception_handler('print_stack');
+
 //Параметр $CALLED_FILE должен установлен запущенным процессом
-check_condition($CALLED_FILE, 'Global property $CALLED_FILE is not set');
+check_condition($CALLED_FILE, 'Global variable $CALLED_FILE is not set');
+check_condition(is_file($CALLED_FILE), "Programm file $CALLED_FILE is not found");
 
 //Функция должна быть определена запущенным процессом
 check_condition(is_callable(PROCESS_FUNCTION_NAME), PROCESS_FUNCTION_NAME . ' is not callable');
@@ -54,20 +71,6 @@ function LOGBOX($msg) {
     $args[0] = $__logBoxNum . ' ' . $args[0];
     call_user_func_array(dolog, $args);
 }
-
-//Базовый обработчик ошибок, который распечатает стек
-function print_stack(Exception $exception) {
-    dolog('');
-    dolog("ERROR occured: " . $exception->getMessage());
-    foreach ($exception->getTrace() as $num => $stackItem) {
-        $str = $num . '# ' . (array_key_exists('file', $stackItem) ? $stackItem['file'] : '') . ' (' . (array_key_exists('line', $stackItem) ? $stackItem['line'] : '') . ')';
-        dolog(pad_left('', $num, ' ') . $str);
-    }
-    die(1);
-}
-
-restore_exception_handler();
-set_exception_handler('print_stack');
 
 //Заругистрируем функцию, которая после окончания процесса запишет лог в файл
 function dimpConsoleLog() {

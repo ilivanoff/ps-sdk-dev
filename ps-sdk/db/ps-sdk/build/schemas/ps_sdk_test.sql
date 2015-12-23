@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS sdk;
-CREATE DATABASE sdk CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE sdk;
+DROP DATABASE IF EXISTS ps_sdk_test;
+CREATE DATABASE ps_sdk_test CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE ps_sdk_test;
 
 /*
  * + FILE [schema.sql]
@@ -366,250 +366,6 @@ ALTER TABLE ps_audit ADD CONSTRAINT Relationship92 FOREIGN KEY (id_user) REFEREN
  * + FILE [objects.sql]
  */
 /*
- * AUTO TRIGGERS SECTION
- */
-
-/*
- * + FILE [tad_ps_gallery.sql]
- */
-delimiter |
-
-DROP TRIGGER IF EXISTS tad_ps_gallery;
-
-CREATE TRIGGER tad_ps_gallery AFTER DELETE
-  ON ps_gallery FOR EACH ROW 
-BEGIN
-	CALL onDbChange('ps_gallery', 'T');
-END
-|
-
-delimiter ;
-
-/*
- * + FILE [tad_ps_gallery_images.sql]
- */
-delimiter |
-
-DROP TRIGGER IF EXISTS tad_ps_gallery_images;
-
-CREATE TRIGGER tad_ps_gallery_images AFTER DELETE
-  ON ps_gallery_images FOR EACH ROW 
-BEGIN
-	CALL onDbChange('ps_gallery_images', 'T');
-END
-|
-
-delimiter ;
-
-/*
- * + FILE [tad_ps_lib_item.sql]
- */
-delimiter |
-
-DROP TRIGGER IF EXISTS tad_ps_lib_item;
-
-CREATE TRIGGER tad_ps_lib_item AFTER DELETE
-  ON ps_lib_item FOR EACH ROW 
-BEGIN
-	CALL onDbChange('ps_lib_item', 'T');
-END
-|
-
-delimiter ;
-
-/*
- * + FILE [tad_ps_timeline.sql]
- */
-delimiter |
-
-DROP TRIGGER IF EXISTS tad_ps_timeline;
-
-CREATE TRIGGER tad_ps_timeline AFTER DELETE
-  ON ps_timeline FOR EACH ROW 
-BEGIN
-	CALL onDbChange('ps_timeline', 'T');
-END
-|
-
-delimiter ;
-
-/*
- * + FILE [tad_ps_timeline_item.sql]
- */
-delimiter |
-
-DROP TRIGGER IF EXISTS tad_ps_timeline_item;
-
-CREATE TRIGGER tad_ps_timeline_item AFTER DELETE
-  ON ps_timeline_item FOR EACH ROW 
-BEGIN
-	CALL onDbChange('ps_timeline_item', 'T');
-END
-|
-
-delimiter ;
-
-/*
- * + FILE [tai_ps_gallery.sql]
- */
-delimiter |
-
-DROP TRIGGER IF EXISTS tai_ps_gallery;
-
-CREATE TRIGGER tai_ps_gallery AFTER INSERT
-  ON ps_gallery FOR EACH ROW 
-BEGIN
-	CALL onDbChange('ps_gallery', 'T');
-END
-|
-
-delimiter ;
-
-/*
- * + FILE [tai_ps_gallery_images.sql]
- */
-delimiter |
-
-DROP TRIGGER IF EXISTS tai_ps_gallery_images;
-
-CREATE TRIGGER tai_ps_gallery_images AFTER INSERT
-  ON ps_gallery_images FOR EACH ROW 
-BEGIN
-	CALL onDbChange('ps_gallery_images', 'T');
-END
-|
-
-delimiter ;
-
-/*
- * + FILE [tai_ps_lib_item.sql]
- */
-delimiter |
-
-DROP TRIGGER IF EXISTS tai_ps_lib_item;
-
-CREATE TRIGGER tai_ps_lib_item AFTER INSERT
-  ON ps_lib_item FOR EACH ROW 
-BEGIN
-	CALL onDbChange('ps_lib_item', 'T');
-END
-|
-
-delimiter ;
-
-/*
- * + FILE [tai_ps_timeline.sql]
- */
-delimiter |
-
-DROP TRIGGER IF EXISTS tai_ps_timeline;
-
-CREATE TRIGGER tai_ps_timeline AFTER INSERT
-  ON ps_timeline FOR EACH ROW 
-BEGIN
-	CALL onDbChange('ps_timeline', 'T');
-END
-|
-
-delimiter ;
-
-/*
- * + FILE [tai_ps_timeline_item.sql]
- */
-delimiter |
-
-DROP TRIGGER IF EXISTS tai_ps_timeline_item;
-
-CREATE TRIGGER tai_ps_timeline_item AFTER INSERT
-  ON ps_timeline_item FOR EACH ROW 
-BEGIN
-	CALL onDbChange('ps_timeline_item', 'T');
-END
-|
-
-delimiter ;
-
-/*
- * + FILE [tau_ps_gallery.sql]
- */
-delimiter |
-
-DROP TRIGGER IF EXISTS tau_ps_gallery;
-
-CREATE TRIGGER tau_ps_gallery AFTER UPDATE
-  ON ps_gallery FOR EACH ROW 
-BEGIN
-	CALL onDbChange('ps_gallery', 'T');
-END
-|
-
-delimiter ;
-
-/*
- * + FILE [tau_ps_gallery_images.sql]
- */
-delimiter |
-
-DROP TRIGGER IF EXISTS tau_ps_gallery_images;
-
-CREATE TRIGGER tau_ps_gallery_images AFTER UPDATE
-  ON ps_gallery_images FOR EACH ROW 
-BEGIN
-	CALL onDbChange('ps_gallery_images', 'T');
-END
-|
-
-delimiter ;
-
-/*
- * + FILE [tau_ps_lib_item.sql]
- */
-delimiter |
-
-DROP TRIGGER IF EXISTS tau_ps_lib_item;
-
-CREATE TRIGGER tau_ps_lib_item AFTER UPDATE
-  ON ps_lib_item FOR EACH ROW 
-BEGIN
-	CALL onDbChange('ps_lib_item', 'T');
-END
-|
-
-delimiter ;
-
-/*
- * + FILE [tau_ps_timeline.sql]
- */
-delimiter |
-
-DROP TRIGGER IF EXISTS tau_ps_timeline;
-
-CREATE TRIGGER tau_ps_timeline AFTER UPDATE
-  ON ps_timeline FOR EACH ROW 
-BEGIN
-	CALL onDbChange('ps_timeline', 'T');
-END
-|
-
-delimiter ;
-
-/*
- * + FILE [tau_ps_timeline_item.sql]
- */
-delimiter |
-
-DROP TRIGGER IF EXISTS tau_ps_timeline_item;
-
-CREATE TRIGGER tau_ps_timeline_item AFTER UPDATE
-  ON ps_timeline_item FOR EACH ROW 
-BEGIN
-	CALL onDbChange('ps_timeline_item', 'T');
-END
-|
-
-delimiter ;
-
-/*
  * INCLUDES SECTION
  */
 
@@ -747,6 +503,43 @@ VALUES (100,
 		1);
 
 /*
- * Grants
+ * Create user with grants
  */
-grant all on sdk.* to 'sdk'@'localhost' identified by 'sdk';
+grant all on ps_sdk_test.* to 'sdk'@'localhost' identified by 'sdk';
+
+/*
+ * Test part
+ */
+
+/*
+ * + FILE [schema.sql]
+ */
+/*
+Created: 14.08.2010
+Modified: 20.01.2015
+Model: MySQL 5.1
+Database: MySQL 5.1
+*/
+
+-- Create tables section -------------------------------------------------
+
+-- Table ps_test_data_load
+
+CREATE TABLE ps_test_data_load
+(
+  v_key Varchar(255) NOT NULL,
+  v_value Varchar(255) NOT NULL
+)
+;
+
+ALTER TABLE ps_test_data_load ADD UNIQUE v_key (v_key)
+;
+
+/*
+ * + FILE [data.sql]
+ */
+-- ps_test_data_load
+INSERT INTO ps_test_data_load (v_key, v_value) VALUES ('key1', 'val1');
+INSERT INTO ps_test_data_load (v_key, v_value) VALUES ('key2', 'val2');
+INSERT INTO ps_test_data_load (v_key, v_value) VALUES ('key3', 'val3');
+INSERT INTO ps_test_data_load (v_key, v_value) VALUES ('key4', 'val4');
