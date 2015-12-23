@@ -46,7 +46,7 @@ var PsMathCore = {
         fetchAccuracy(Math.sin(-1*Math.PI/3));
         fetchAccuracy(180/Math.PI);
         
-        //#2. Определим минимальное число в мимтеме
+        //#2. Определим минимальное число в симтеме
         this.MIN_NUMBER = 1 * ('1e-' + this.CALC_ACCURACY);
     },
     

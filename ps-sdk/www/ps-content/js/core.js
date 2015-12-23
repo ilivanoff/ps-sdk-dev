@@ -236,7 +236,7 @@ var PsUtil = {
         };
         //Если есть jQuery, отложим совсем в сторонку
         if (PsCore.hasJquery) {
-            $(doCall);
+            jQuery(doCall);
         } else {
             doCall();
         }
