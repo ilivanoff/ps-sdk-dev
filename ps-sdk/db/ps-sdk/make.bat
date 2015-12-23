@@ -24,12 +24,12 @@ rd /S/Q %MAKESCHEMA_DIR_TMP%
 md %MAKESCHEMA_DIR_TMP%
 
 echo.
-echo Exporting [%MAIN_DB_DIR%] to [%MAKESCHEMA_DIR_TMP%]
-git export %MAIN_DB_DIR% %MAKESCHEMA_DIR_TMP% --force
+echo Copy [%MAIN_DB_DIR%] to [%MAKESCHEMA_DIR_TMP%]
+xcopy /s/y/Q %MAIN_DB_DIR% %MAKESCHEMA_DIR_TMP%
 
 echo.
 echo Running dbexport.php
-goto :end
+
 php dbexport.php
 @if ERRORLEVEL 1 goto :error
 
@@ -37,7 +37,7 @@ echo.
 echo Schema successfully made
 echo Copy [%MAKESCHEMA_DIR_TMP%] to [%MAIN_DB_DIR%]
 
-xcopy /s/y %MAKESCHEMA_DIR_TMP% %MAIN_DB_DIR%
+xcopy /s/y/Q %MAKESCHEMA_DIR_TMP% %MAIN_DB_DIR%
 
 echo.
 echo Database SUCCESSFULLY processed!
