@@ -4,16 +4,16 @@ var PsCore = {
     startTime: new Date().getTime(),
     
     //Проверяет, есть ли объект window
-    hasWindow: typeof(window) != 'undefined',
+    hasWindow: typeof(window) !== 'undefined',
     
     //Проверяет, подключен ли jQuery
-    hasJquery: typeof(jQuery) != 'undefined',
+    hasJquery: typeof(jQuery) !== 'undefined',
     
-    hasLocalStorage: typeof(localStorage) != 'undefined',
+    hasLocalStorage: typeof(localStorage) !== 'undefined',
     
-    hasConsole: typeof(console) != 'undefined' && typeof(console.log) != 'undefined',
+    hasConsole: typeof(console) !== 'undefined' && typeof(console.log) !== 'undefined',
     
-    hasWorker: typeof(Worker) != 'undefined',
+    hasWorker: typeof(Worker) !== 'undefined',
     
     //Английский алфавит
     EN_ALPHABET: 'abcdefghijklmnopqrstuxyvwz',
@@ -37,7 +37,7 @@ var PsCore = {
     
     //Проверяет тип переменной
     isType: function(ob, type) {
-        return PsCore.type(ob) == type;
+        return PsCore.type(ob) === type;
     }
 }
 
