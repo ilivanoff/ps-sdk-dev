@@ -363,7 +363,7 @@ ALTER TABLE ps_audit ADD CONSTRAINT Relationship92 FOREIGN KEY (id_user) REFEREN
 ;
 
 /*
- * + FILE [objects.sql]
+ * + FILE [all.sql]
  */
 /*
  * INCLUDES SECTION

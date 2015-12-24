@@ -32,9 +32,9 @@ function executeProcess(array $argv) {
     //$exceptDirs = array();
 
     $items = DirManager::inst()->getDirContentFull(null, function(DirItem $di) {
-        dolog($di->getAbsPath());
-        return $di->isFile() && ends_with($di->getName(), 'Messages.msgs');
-    }, $exceptDirs);
+                dolog($di->getAbsPath());
+                return $di->isFile() && ends_with($di->getName(), 'Messages.msgs');
+            }, $exceptDirs);
 
     dolog('Message files for processing: {}', count($items));
 
@@ -47,7 +47,7 @@ function executeProcess(array $argv) {
 
     /* @var $msgsDi DirItem */
     foreach ($items as $msgsDi) {
-        LOGBOX('PROCESSING [{}]', $msgsDi->getAbsPath());
+        dolog('PROCESSING [{}]', $msgsDi->getAbsPath());
 
         //Сбросим методы
         $METHODS = array();

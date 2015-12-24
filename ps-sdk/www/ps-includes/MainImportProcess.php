@@ -52,26 +52,6 @@ function dolog($info = '') {
     call_user_func_array(array(PsLogger::inst('PROCESS'), 'info'), func_get_args());
 }
 
-$__logBoxNum = 0;
-
-//Сброс блока логирования
-function LOGBOX_INIT($num = 0) {
-    global $__logBoxNum;
-    $__logBoxNum = $num;
-}
-
-//Метод логирует новый заметный блок
-function LOGBOX($msg) {
-    $args = func_get_args();
-    global $__logBoxNum;
-    ++$__logBoxNum;
-    if ($__logBoxNum > 1) {
-        dolog('');
-    }
-    $args[0] = $__logBoxNum . ' ' . $args[0];
-    call_user_func_array(dolog, $args);
-}
-
 //Заругистрируем функцию, которая после окончания процесса запишет лог в файл
 function dimpConsoleLog() {
     global $CALLED_FILE;
