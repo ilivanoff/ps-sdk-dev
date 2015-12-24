@@ -3,6 +3,11 @@ CREATE DATABASE ps_sdk_test CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE ps_sdk_test;
 
 /*
+ * Create user with grants
+ */
+grant all on ps_sdk_test.* to 'sdk'@'localhost' identified by 'sdk';
+
+/*
  * + FILE [schema.sql]
  */
 /*
@@ -501,11 +506,6 @@ VALUES (100,
         '96e79218965eb72c92a549dd5a330112',
         UNIX_TIMESTAMP(),
 		1);
-
-/*
- * Create user with grants
- */
-grant all on ps_sdk_test.* to 'sdk'@'localhost' identified by 'sdk';
 
 /*
  * Test part
