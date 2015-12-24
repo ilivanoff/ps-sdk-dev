@@ -71,12 +71,20 @@ function executeProcess(array $argv) {
         /*
          * Создаём скрипты инициализации для схем
          */
+        dolog('Processing default connection names: {}', array_to_string(array_values(PsConnectionParams::getDefaultConnectionNames())));
+
         foreach (PsConnectionParams::getDefaultConnectionNames() as $connection) {
             //На момент обработки скоупа мы не должны быть подключены никуда
             PsConnectionPool::assertDisconnectied();
 
             //Для данного скоупа не задан коннект? Пропускаем...
-            if (!PsConnectionParams::has($connection, $scope) || (PsConnectionParams::CONN_ROOT == $connection)) {
+            if (PsConnectionParams::CONN_ROOT == $connection) {
+                dolog('Skip {}', $connection);
+                continue; //---
+            }
+
+            if (!PsConnectionParams::has($connection, $scope)) {
+                dolog('No connection properties for {}', $connection);
                 continue; //---
             }
 
@@ -181,7 +189,7 @@ function executeProcess(array $argv) {
              * Выгрузим данные из таблиц в файл, чтобы убедиться, что всё корректно вставилось.
              */
             if ($scopeTableNames) {
-                dolog('Exporting "{}" schema tables data to file', $props->database());
+                dolog("Exporting '{}' schema tables data to file", $database);
 
                 $DATA_DI_SQL = $DM_BUILD->getDirItem(null, 'data', PsConst::EXT_SQL)->getSqlFileBuilder();
 
@@ -189,7 +197,7 @@ function executeProcess(array $argv) {
 
                 //Пробегаемся по таблицам
                 foreach ($scopeTableNames as $tableName) {
-                    $fileData = PsTable::inst($tableName)->exportFileAsInsertsSql();
+                    $fileData = PsTable::inst($tableName)->exportDataAsInsertsSql();
                     if ($fileData) {
                         dolog(' + {} [not empty]', $tableName);
                         $DATA_DI_SQL->appendMlComment('+ table ' . $tableName);
@@ -236,6 +244,10 @@ function executeProcess(array $argv) {
              */
             //SAVE .sql
             $SCHEMA_SQL->save();
+
+            //Переразвернём тестовую схему с тестовыми таблицами
+            dolog("Rebuilding checma '{}'", $database);
+            $rootProps->execureShell($SCHEMA_SQL->getDi());
 
             //Отключимся от схемы
             PsConnectionPool::disconnect();
