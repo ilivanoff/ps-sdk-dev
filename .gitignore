@@ -7,3 +7,4 @@
 /ps-site/www/nbproject
 /ps-sdk/www/ps-includes/processes/makeschema/*.log
 /ps-sdk/www/ps-includes/processes/makeschema/temp
+/ps-sdk/db/ps-sdk/dbexport.log

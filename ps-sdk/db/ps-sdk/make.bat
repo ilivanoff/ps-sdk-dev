@@ -37,6 +37,7 @@ echo.
 echo Schema successfully made
 echo Copy [%MAKESCHEMA_DIR_TMP%] to [%MAIN_DB_DIR%]
 
+xcopy /Q %MAKESCHEMA_DIR%\dbexport.log %MAKESCHEMA_DIR_TMP%\ps-sdk
 xcopy /s/y/Q %MAKESCHEMA_DIR_TMP% %MAIN_DB_DIR%
 
 echo.
