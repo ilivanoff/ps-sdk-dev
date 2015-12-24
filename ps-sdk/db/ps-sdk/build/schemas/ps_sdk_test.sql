@@ -371,10 +371,6 @@ ALTER TABLE ps_audit ADD CONSTRAINT Relationship92 FOREIGN KEY (id_user) REFEREN
  * + FILE [all.sql]
  */
 /*
- * INCLUDES SECTION
- */
-
-/*
  * + FILE [v_ps_lib_item.sql]
  */
 CREATE OR REPLACE VIEW v_ps_lib_item
