@@ -59,8 +59,6 @@ function executeProcess(array $argv) {
             dolog('No includes');
         } else {
             dolog('Adding {} includes from all.txt', count($ALL_LINES));
-
-            $DM_BUILD_ALL_SQL->appendMlComment('INCLUDES SECTION');
             foreach ($ALL_LINES as $include) {
                 dolog('+ {}', $include);
                 $DM_BUILD_ALL_SQL->appendFile($DM_SYSOBJECTS->getDirItem($include));
@@ -183,7 +181,7 @@ function executeProcess(array $argv) {
              * Выгрузим данные из таблиц в файл, чтобы убедиться, что всё корректно вставилось.
              */
             if ($scopeTableNames) {
-                dolog('Exporting {} schema tables data to files', $props->database());
+                dolog('Exporting "{}" schema tables data to file', $props->database());
 
                 $DATA_DI_SQL = $DM_BUILD->getDirItem(null, 'data', PsConst::EXT_SQL)->getSqlFileBuilder();
 
@@ -191,16 +189,13 @@ function executeProcess(array $argv) {
 
                 //Пробегаемся по таблицам
                 foreach ($scopeTableNames as $tableName) {
-                    $table = PsTable::inst($tableName);
-                    if ($table->isFilesync()) {
-                        $fileData = $table->exportFileAsInsertsSql();
-                        if ($fileData) {
-                            dolog(' {} table is empty', $tableName);
-                        } else {
-                            dolog(' {} table is not empty', $tableName);
-                            $DATA_DI_SQL->appendMlComment('+ table ' . $tableName);
-                            $DATA_DI_SQL->appendLine($fileData);
-                        }
+                    $fileData = PsTable::inst($tableName)->exportFileAsInsertsSql();
+                    if ($fileData) {
+                        dolog(' + {} [not empty]', $tableName);
+                        $DATA_DI_SQL->appendMlComment('+ table ' . $tableName);
+                        $DATA_DI_SQL->appendLine($fileData);
+                    } else {
+                        dolog(' - {} [empty]', $tableName);
                     }
                 }
 
@@ -209,27 +204,28 @@ function executeProcess(array $argv) {
 
             /*
              * Теперь ещё создадим тестовые объекты.
-             * Мы уверены, что для SDK тестовая часть есть всегда.
+             * Для каждого скоупа свои тестовые данные, так что таблицы можно называть одинаково.
              */
-
             dolog('Add test part');
             $SCHEMA_SQL->appendMlComment('Test part');
 
-            if ($scope == ENTITY_SCOPE_PROJ) {
-                dolog('+ SDK TEST PART');
+            /*
+              if ($scope == ENTITY_SCOPE_PROJ) {
+              dolog('+ SDK TEST PART');
 
-                //Добавим секцию в лог
-                $SCHEMA_SQL->appendMlComment('>>> SDK TEST PART');
+              //Добавим секцию в лог
+              $SCHEMA_SQL->appendMlComment('>>> SDK TEST PART');
 
-                //CREATE CHEMA SCRIPT
-                $SCHEMA_SQL->appendFile($SDK->getDirItem('sysobjects/test', 'schema', PsConst::EXT_SQL));
+              //CREATE CHEMA SCRIPT
+              $SCHEMA_SQL->appendFile($SDK->getDirItem('sysobjects/test', 'schema', PsConst::EXT_SQL));
 
-                //ADD TEST DATA
-                $SCHEMA_SQL->appendFile($SDK->getDirItem('sysobjects/test', 'data', PsConst::EXT_SQL));
+              //ADD TEST DATA
+              $SCHEMA_SQL->appendFile($SDK->getDirItem('sysobjects/test', 'data', PsConst::EXT_SQL));
 
-                //Добавим секцию в лог
-                $SCHEMA_SQL->appendMlComment('<<< SDK TEST PART');
-            }
+              //Добавим секцию в лог
+              $SCHEMA_SQL->appendMlComment('<<< SDK TEST PART');
+              }
+             */
             $SCHEMA_SQL->appendFile($DM_SYSOBJECTS->getDirItem('test', 'schema', PsConst::EXT_SQL), false);
             $SCHEMA_SQL->appendFile($DM_SYSOBJECTS->getDirItem('test', 'data', PsConst::EXT_SQL), false);
             $SCHEMA_SQL->save();

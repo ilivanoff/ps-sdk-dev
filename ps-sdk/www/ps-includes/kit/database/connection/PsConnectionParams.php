@@ -159,7 +159,7 @@ final class PsConnectionParams {
 
         $output = shell_exec($command);
 
-        $LOGGER->info($output ? 'Output: ' . $output : 'No uotput');
+        $LOGGER->info($output ? 'Output: ' . $output : 'No output');
     }
 
 }
