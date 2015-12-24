@@ -2,16 +2,9 @@
 
 class PsTableColumn extends BaseDataStore {
     /*
-     * Настройка для колонки
-     */
-
-    const PROP_EXCLUDED = 'E'; //Столбец исключён - он никак не редактируется на форме (например rev_count)
-    const PROP_READONLY = 'R'; //Столбец не редактируется после создания
-    const PROP_PKEQUIVALENT = 'P'; //Столбец является заменой первичному ключу
-
-    /*
      * Тип поля
      */
+
     const TYPE_BIT = 'BIT';
     const TYPE_INT = 'INT';
     const TYPE_INT_DATE = 'INT_DATE';
@@ -71,10 +64,6 @@ class PsTableColumn extends BaseDataStore {
                 check_condition(false, "Неизвестный тип данных для столбца {$this->getName()}: {$this->getDataType()}.");
                 break;
         }
-    }
-
-    public function checkType($type) {
-        return in_array($this->coltype, to_array($type));
     }
 
     /**
@@ -147,10 +136,6 @@ class PsTableColumn extends BaseDataStore {
         return $this->isFk() ? TableExporter::inst()->getTable($this->getParentTableName())->getSelectOptions() : null;
     }
 
-    public function getParentTablePkReplacement($parentRowId) {
-        return $this->isFk() && $parentRowId ? TableExporter::inst()->getTable($this->getParentTableName())->getPkReplacement($parentRowId) : null;
-    }
-
     /**
      * Возвращает признак - содержится ли в данном столбце идентификатор переданного фолдинга
      */
@@ -168,41 +153,6 @@ class PsTableColumn extends BaseDataStore {
             }
         }
         return false;
-    }
-
-    /**
-     * Признак - сконфигурирована ли таблица
-     */
-    private function isTableConfigured() {
-        return PsTableColumnProps::TABLE_CONFIGURED()->isTableHasProperty($this->getTableName());
-    }
-
-    /**
-     * Проверка - задана ли настройка для столбца
-     */
-    public function isProperty($colProperty) {
-        return $this->isTableConfigured() && PsTableColumnProps::valueOf($colProperty)->isColumnHasProperty($this->getTableName(), $this->getName());
-    }
-
-    /**
-     * Признак - является ли столбец заменой ПК (или - одним из столбцов, заменяющих ПК)
-     */
-    public function isPkEquivalent() {
-        return $this->isProperty(PsTableColumnProps::COL_PK());
-    }
-
-    /**
-     * Признак исключённости столбца
-     */
-    public function isExcluded() {
-        return $this->isProperty(PsTableColumnProps::COL_EXCLUDED());
-    }
-
-    /**
-     * Признак readonly
-     */
-    public function isReadonly() {
-        return $this->isProperty(PsTableColumnProps::COL_READONLY());
     }
 
     /**
@@ -265,33 +215,6 @@ class PsTableColumn extends BaseDataStore {
     }
 
     /**
-     * Метод сохраняет значение перед выгрузкой его в файл
-     * !ВНИМАНИЕ! Нужно быть аккуратным с типами, так как они потом сериализуются в массив.
-     */
-    public function safe4export($val) {
-        if ($this->isFk()) {
-            return $this->getParentTablePkReplacement($val);
-        }
-
-        switch ($this->getType()) {
-            case self::TYPE_BIT:
-            case self::TYPE_INT:
-            case self::TYPE_INT_DATE:
-                return is_numeric($val) ? 1 * $val : null;
-
-            case self::TYPE_CHAR:
-            case self::TYPE_STRING:
-            case self::TYPE_STRING_DATE:
-            case self::TYPE_TEXT:
-                /*
-                 * Не нужно выполнять mysql_real_escape_string($val), так как строка будет передана в массив 
-                 * как есть, а затем уже сериализована средствами PHP.
-                 */
-                return trim($val);
-        }
-    }
-
-    /**
      * Сохраняет значение для вставки его в запрос
      */
     public function safe4insert($val) {
@@ -319,45 +242,6 @@ class PsTableColumn extends BaseDataStore {
     }
 
     /**
-     * Сохраняет значение для показа в таблице
-     */
-    public function safe4show($val) {
-        $allowed = $this->getColumnAllowedValues();
-        if (count($allowed)) {
-            $option = array_get_value($val, $allowed);
-            return is_array($option) ? PsHtml::nobr($val . ' (' . array_get_value('content', $option) . ')') : $val;
-        }
-
-        switch ($this->getType()) {
-            case self::TYPE_INT_DATE:
-                return is_numeric($val) ? PsHtml::nobr(DatesTools::inst()->uts2dateInCurTZ($val, DF_PS_HM)) : null;
-        }
-
-        return $val;
-    }
-
-    /**
-     * Валидирует значение, введённое пользователем на форме
-     */
-    public function validateFromForm($value, $action) {
-        if (!strlen(trim($value))) {
-            return $this->isMandatory() ? 'Требуется ввести значение' : null;
-        }
-        switch ($this->getType()) {
-            case self::TYPE_BIT:
-            case self::TYPE_INT:
-            case self::TYPE_INT_DATE:
-                return is_numeric($value) ? null : 'Требуется ввести число';
-            case self::TYPE_CHAR:
-            case self::TYPE_STRING:
-            case self::TYPE_STRING_DATE:
-            case self::TYPE_TEXT:
-                break;
-        }
-        return null;
-    }
-
-    /**
      * Типы редактирования столбца.
      */
 
@@ -367,10 +251,6 @@ class PsTableColumn extends BaseDataStore {
     const ET_EXCLUDED = 'EXCLUDED';
 
     private function checkEditType($action, $type) {
-        if ($this->isExcluded()) {
-            return $type == self::ET_EXCLUDED;
-        }
-
         switch ($action) {
             case PS_ACTION_CREATE:
                 if ($this->isPk()) {
@@ -387,8 +267,6 @@ class PsTableColumn extends BaseDataStore {
             case PS_ACTION_EDIT:
                 if ($this->isPk()) {
                     return in_array($type, array(self::ET_HIDDEN, self::ET_READONLY));
-                } else if ($this->isPkEquivalent() || $this->isReadonly() || $this->isHoldAnyFoldingIdent()) {
-                    return $type == self::ET_READONLY;
                 } else {
                     return $type == self::ET_EDITABLE;
                 }
@@ -409,54 +287,6 @@ class PsTableColumn extends BaseDataStore {
      */
     public function isUseOn($action) {
         return $this->checkEditType($action, PsTableColumn::ET_EDITABLE) || $this->checkEditType($action, PsTableColumn::ET_HIDDEN);
-    }
-
-    /**
-     * Html input, которым редактируется данное поле на форме.
-     */
-    public function htmlInput($val, $action) {
-        $label = $this->getName();
-        $fieldId = $this->getName();
-
-        $val = is_array($val) ? array_get_value($this->getName(), $val) : $val;
-
-        $attrs = array();
-
-        if ($this->checkEditType($action, self::ET_EXCLUDED)) {
-            return; //---
-        }
-
-        if ($this->checkEditType($action, self::ET_HIDDEN)) {
-            echo PsHtml::hidden($fieldId, $val);
-        }
-
-        if ($this->checkEditType($action, self::ET_READONLY)) {
-            $attrs['disabled'] = 'disabled';
-        }
-
-        if (!$this->checkEditType($action, self::ET_READONLY) && !$this->checkEditType($action, self::ET_EDITABLE)) {
-            return; //---
-        }
-
-        if ($this->hasColumnAllowedValues()) {
-            return PsHtmlForm::select($label, $fieldId, $attrs, $this->getColumnAllowedValues(), $val, false, $this->getComment());
-        }
-
-        switch ($this->getType()) {
-            case self::TYPE_STRING_DATE:
-                $attrs['class'] = 'ps-date-picker';
-                break;
-            case self::TYPE_INT_DATE:
-                $attrs['class'] = 'ps-datetime-picker';
-                break;
-        }
-
-        switch ($this->getType()) {
-            case self::TYPE_TEXT:
-                return PsHtmlForm::textarea($label, $fieldId, $val, null, false, null, $attrs, $this->getComment());
-            default:
-                return PsHtmlForm::text($label, $fieldId, $val, $attrs, $this->getComment());
-        }
     }
 
     /**

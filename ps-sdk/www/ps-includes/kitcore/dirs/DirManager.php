@@ -80,11 +80,6 @@ class DirManager {
         return self::instShifted('stuff/smarty/', $notCkeckDirs, $dirs);
     }
 
-    //database
-    public static function database($notCkeckDirs = null, $dirs = null) {
-        return self::instShifted('database', $notCkeckDirs, $dirs);
-    }
-
     /**
      * Фабрика экземпляров
      */
@@ -251,6 +246,7 @@ class DirManager {
     /**
      * Тип получения содержимого директории
      */
+
     const DC_MAP = 1; // Карта: название элемента->DirItem
     const DC_NAMES = 2; // Только названия файлов
     const DC_NAMES_NO_EXT = 3; // Только названия файлов без расширения

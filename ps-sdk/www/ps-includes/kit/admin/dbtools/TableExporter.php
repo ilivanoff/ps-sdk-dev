@@ -4,6 +4,12 @@ final class TableExporter extends AbstractSingleton {
 
     private $TABLES;
 
+    /**
+     * TODO - переписать
+     * 
+     * @param type $scope
+     * @return type
+     */
     public function getTables($scope = ENTITY_SCOPE_ALL) {
         if (!is_array($this->TABLES)) {
             $this->TABLES[ENTITY_SCOPE_ALL] = array();
@@ -50,29 +56,6 @@ final class TableExporter extends AbstractSingleton {
             return array_get_value($table, $this->getTables());
         }
         return check_condition(array_get_value($table, $this->getTables()), "Таблица [$table] не существует.");
-    }
-
-    private $MODIFIED_TABLES;
-
-    public function getModifiedTables() {
-        if (!is_array($this->MODIFIED_TABLES)) {
-            $this->MODIFIED_TABLES = array();
-            /* @var $table PsTable */
-            foreach (PsTable::configured() as $name => $table) {
-                if ($table->hasModified()) {
-                    $this->MODIFIED_TABLES[$name] = $table;
-                }
-            }
-        }
-        return $this->MODIFIED_TABLES;
-    }
-
-    public function getModifiedTablesCount() {
-        return count($this->getModifiedTables());
-    }
-
-    public function hasModifiedTables() {
-        return $this->getModifiedTablesCount() > 0;
     }
 
     //TODO - выкинуть

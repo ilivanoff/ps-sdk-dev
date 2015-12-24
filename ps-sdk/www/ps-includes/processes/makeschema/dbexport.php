@@ -197,7 +197,7 @@ function executeProcess(array $argv) {
 
                 //Пробегаемся по таблицам
                 foreach ($scopeTableNames as $tableName) {
-                    $fileData = PsTable::inst($tableName)->exportDataAsInsertsSql();
+                    $fileData = PsTable::inst($tableName)->exportAsSqlString();
                     if ($fileData) {
                         dolog(' + {} [not empty]', $tableName);
                         $DATA_DI_SQL->appendMlComment('+ table ' . $tableName);

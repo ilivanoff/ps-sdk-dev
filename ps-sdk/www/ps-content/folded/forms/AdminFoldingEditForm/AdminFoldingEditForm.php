@@ -47,8 +47,9 @@ class FORM_AdminFoldingEditForm extends BaseAjaxForm {
                 break;
 
             case self::BUTTON_DELETE_ALL:
-                //Удаляем строку из базы
-                TableExporter::inst()->getTable($folding->getTableName())->deleteFoldingDbRec($folding, $ident);
+            //Удаляем строку из базы
+            //TODO - выкинуто
+            //TableExporter::inst()->getTable($folding->getTableName())->deleteFoldingDbRec($folding, $ident);
             case self::BUTTON_DELETE:
                 $folding->deleteEntity($ident);
                 $result = AP_APFoldingEdit::urlFoldingEntitys($folding);

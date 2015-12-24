@@ -33,12 +33,15 @@ class FORM_AdminFoldingCreateForm extends BaseAjaxForm {
                 //Проставим руками идентификатор фолдинга для колонки из базы
                 $adapter->set($folding->getTableColumnIdent(), $fident);
 
-                $rec = $table->fetchRowFromForm($adapter->getData(), $action);
-                if (!is_array($rec)) {
-                    //Данные для создания записи в БД не прошли валидацию
-                    return $rec;
-                }
-                $table->saveRec($rec, $action);
+            //TODO - выкинуто
+            /*
+              $rec = $table->fetchRowFromForm($adapter->getData(), $action);
+              if (!is_array($rec)) {
+              //Данные для создания записи в БД не прошли валидацию
+              return $rec;
+              }
+              //$table->saveRec($rec, $action);
+             */
             //createFoldingDbRec($folding, $ident);
             case self::BUTTON_SAVE:
                 $folding->createEntity($fident);

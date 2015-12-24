@@ -36,7 +36,7 @@ SELECT LOWER(TABLE_NAME) as TABLE_NAME,
      * @param type $name
      */
     public function existsTable($name) {
-        return array_key_exists($name, $this->getTables());
+        return array_key_exists(lowertrim($name), $this->getTables());
     }
 
     /**

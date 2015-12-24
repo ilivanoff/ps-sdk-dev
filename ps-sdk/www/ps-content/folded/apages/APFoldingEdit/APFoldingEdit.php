@@ -247,7 +247,8 @@ class AP_APFoldingEdit extends BaseAdminPage {
                 $DBROW = null;
                 if ($folding->getTableName()) {
                     $TABLE = TableExporter::inst()->getTable($folding->getTableName());
-                    $DBROW = $TABLE->getFoldingDbRec($folding, $fident);
+                    //TODO - выкинуто
+                    //$DBROW = $TABLE->getFoldingDbRec($folding, $fident);
                 }
                 $FORM->setSmartyParam('table', $TABLE);
                 $FORM->setSmartyParam('row', $DBROW);
