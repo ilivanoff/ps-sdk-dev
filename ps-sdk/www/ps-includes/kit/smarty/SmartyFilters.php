@@ -80,7 +80,10 @@ class SmartyFilters {
      * Метод сделан статическим, чтобы его можно было вызвать отдельно, но ьез необходимости создавать объект Smarty.
      */
     public static function output($source) {
-        return TexImager::inst()->replaceInText($source);
+        if (PsDefines::isReplaceFormulesWithImages()) {
+            return TexImager::inst()->replaceInText($source);
+        }
+        return $source; //---
     }
 
 }

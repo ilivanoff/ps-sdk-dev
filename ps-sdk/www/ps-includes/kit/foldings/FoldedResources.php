@@ -1926,9 +1926,11 @@ abstract class FoldedResources extends AbstractSingleton {
          * Экспортировать будем всё содержимое + извлечём формулы из .tpl
          */
         $ITEMS = $this->getResourcesDm($ident)->getDirContentFull();
-        if ($this->isAllowedResourceType(self::RTYPE_TPL)) {
-            $ITEMS[] = TexImager::inst()->extractTexImages($this->getResourceDi($ident, self::RTYPE_TPL)->getFileContents(false), false, true);
-        }
+        /*
+          if ($this->isAllowedResourceType(self::RTYPE_TPL)) {
+          $ITEMS[] = TexImager::inst()->extractTexImages($this->getResourceDi($ident, self::RTYPE_TPL)->getFileContents(false), false, true);
+          }
+         */
 
         $this->addZipContents($zip, $ITEMS);
 
@@ -1985,7 +1987,7 @@ abstract class FoldedResources extends AbstractSingleton {
         }
 
         $exportToDirs[] = $dm->getDirItem()->getRelPathNoDs();
-        $exportToDirs[] = DirManager::formules()->getDirItem()->getRelPathNoDs();
+        //$exportToDirs[] = DirManager::formules()->getDirItem()->getRelPathNoDs();
 
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $path = $zip->getNameIndex($i);

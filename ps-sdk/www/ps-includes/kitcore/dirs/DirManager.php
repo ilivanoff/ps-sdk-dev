@@ -38,11 +38,6 @@ class DirManager {
         return self::inst(PS_DIR_CONTENT, array(self::DIR_UPLOAD, $dirs));
     }
 
-    //Формулы
-    public static function formules() {
-        return self::inst(null, PS_DIR_ADDON . DIR_SEPARATOR . self::DIR_FORMULES . DIR_SEPARATOR);
-    }
-
     /*
      * TODO - проверить
      */
@@ -248,6 +243,7 @@ class DirManager {
     /**
      * Тип получения содержимого директории
      */
+
     const DC_MAP = 1; // Карта: название элемента->DirItem
     const DC_NAMES = 2; // Только названия файлов
     const DC_NAMES_NO_EXT = 3; // Только названия файлов без расширения

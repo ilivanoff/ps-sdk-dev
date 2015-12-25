@@ -33,10 +33,7 @@ final class TexImager extends AbstractSingleton {
      *                                  на их представление, заменяемое на картинки
      */
     public function replaceInText($text, $replcaAllToImaged = false) {
-        if (PsDefines::isReplaceFormulesWithImages()) {
-            $text = TexTools::replaceTeX($text, array($this, '_replaceInTextImpl'), $replcaAllToImaged);
-        }
-        return $text;
+        return TexTools::replaceTeX($text, array($this, '_replaceInTextImpl'), $replcaAllToImaged);
     }
 
     /**
@@ -78,7 +75,7 @@ final class TexImager extends AbstractSingleton {
          * Логирование
          */
         if ($this->LOGGER->isEnabled()) {
-            $this->LOGGER->info( ++$this->replaced . ". Replacing $type TeX");
+            $this->LOGGER->info(++$this->replaced . ". Replacing $type TeX");
             $this->LOGGER->info("FULL:   $original");
             $this->LOGGER->info("CONTENT:  $formula");
             $this->LOGGER->info("SAVED:    $formula");
@@ -198,7 +195,7 @@ final class TexImager extends AbstractSingleton {
         $this->LOGGER = PsLogger::inst(__CLASS__);
         $this->PROFILER = PsProfiler::inst(__CLASS__);
         $this->CACHE = SimpleDataCache::inst();
-        $this->DM = DirManager::formules();
+        $this->DM = DirManager::autogen(DirManager::DIR_FORMULES);
     }
 
 }
