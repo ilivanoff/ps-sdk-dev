@@ -7,14 +7,8 @@
  */
 class PsCronProcessConfig {
 
-    private $lastExecuted;
-
-    function __construct($lastExecuted) {
-        $this->lastExecuted = $lastExecuted;
-    }
-
-    public function getLastExecuted() {
-        return $this->lastExecuted;
+    function __construct() {
+        
     }
 
 }

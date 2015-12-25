@@ -6,7 +6,7 @@
  * В будущем можно вынести на cron или на службу проверки доступности сайтов.
  * Но вообще, конечно, нужно иметь ввиду: http://habrahabr.ru/post/179399/
  */
-final class ExternalProcess extends AbstractSingleton {
+final class PsCron extends AbstractSingleton {
 
     /** Признак - была ли попытка вызова. Обработку выполняем всего 1 раз за время выполнения скрипта. */
     private $called = false;
@@ -33,7 +33,6 @@ final class ExternalProcess extends AbstractSingleton {
          * Получим список классов, которые нужно выполнить
          */
         $processes = ConfigIni::cronProcesses();
-        $LOGGER->info('Processes: {}', array_to_string($processes));
 
         if (empty($processes)) {
             $LOGGER->info('No cron processes configured, fast return...');
@@ -41,6 +40,7 @@ final class ExternalProcess extends AbstractSingleton {
         }
 
         $processes = array_unique($processes);
+        $LOGGER->info('Configured processes: {}', array_to_string($processes));
 
         foreach ($processes as $class) {
             if (!PsUtil::isInstanceOf($class, 'PsCronProcess')) {
@@ -61,16 +61,20 @@ final class ExternalProcess extends AbstractSingleton {
         $MAX_LIFETIME = 5 * 60;
         $NED_PROCESS = $LOCKFILE_LIFETIME === null || ($LOCKFILE_LIFETIME > $MAX_LIFETIME);
 
-        $LOGGER->info('Process lock file: {} [{}]. Last modified: {} seconds ago. Max process delay: {} seconds.', //
-                $LOCKFILE->getRelPath(), //
+        $LOGGER->info("Lock file {}: {}", //
                 $LOCKFILE_LIFETIME === null ? 'NOT EXISTS' : 'EXISTS', //
-                var_export($LOCKFILE_LIFETIME, true), //
-                $MAX_LIFETIME//
+                $LOCKFILE->getRelPath() //
         );
 
-        $LOGGER->info('Need actual execute ? {}', var_export($NED_PROCESS, true));
+        if ($LOCKFILE_LIFETIME !== null) {
+            $LOGGER->info('Last modified: {} seconds ago. Max process delay: {} seconds.', //
+                    $LOCKFILE_LIFETIME, //
+                    $MAX_LIFETIME); //
+        }
 
         if (!$NED_PROCESS) {
+            $LOGGER->info('Skip execution.');
+
             //Отпустим лок
             PsLock::unlock();
 
@@ -84,7 +88,8 @@ final class ExternalProcess extends AbstractSingleton {
         //Отпустим лок, так как внутри он может потребоваться для выполнения других действий, например для перестройки спрайтов
         PsLock::unlock();
 
-        $LOGGER->info('Start external process actual execution...');
+        $LOGGER->info();
+        $LOGGER->info('External process execution started...');
 
         //Запускаем режим неограниченного выполнения
         PsUtil::startUnlimitedMode();
@@ -96,7 +101,7 @@ final class ExternalProcess extends AbstractSingleton {
         $PROFILER = PsProfiler::inst(__CLASS__);
 
         //Создадим конфиг выполнения процесса
-        $config = new PsCronProcessConfig($LOCKFILE_LIFETIME);
+        $config = new PsCronProcessConfig();
 
         //Пробегаемся по процессам и выполняем. При первой ошибке - выходим.
         foreach ($processes as $class) {
@@ -106,12 +111,16 @@ final class ExternalProcess extends AbstractSingleton {
                 $inst = new $class();
                 $inst->onCron($config);
                 $secundomer = $PROFILER->stop();
-                $LOGGER->info("Cron process {} executed in {} seconds", $class, $secundomer->getTotalTime());
+                $LOGGER->info(" > Cron process '{}' executed in {} seconds", $class, $secundomer->getTotalTime());
             } catch (Exception $ex) {
                 $PROFILER->stop();
-                $LOGGER->info("Cron process {} execution error: {}", $class, $ex->getMessage());
+                $LOGGER->info(" > Cron process '{}' execution error: '{}'", $class, $ex->getMessage());
             }
         }
+
+        $LOGGER->info('Removing cron lock file.');
+
+        $LOCKFILE->remove();
 
         return $this->executed;
     }
