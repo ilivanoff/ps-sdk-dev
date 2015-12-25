@@ -45,7 +45,8 @@ ps_admin_on(true);
 //echo TexImager::inst()->getImgDi('\alpha');
 //echo TexImager::inst()->getImgDi('\sqrt{4}=2');
 
-echo CssSprite::inst(DirItem::inst('ps-content/sprites/ico'))->getImgDi()->getRelPath();
+$sprite = CssSprite::inst(DirItem::inst('ps-content/sprites/ico'));
+echo $sprite->getSpriteSpan('calendar');
 
 //print_r(ConfigIni::cronProcesses());
 ?>

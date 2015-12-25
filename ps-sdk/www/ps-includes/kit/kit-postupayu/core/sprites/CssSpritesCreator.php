@@ -49,6 +49,7 @@ final class CssSpritesCreator {
 
     private function __construct(array $params) {
         PsLibs::inst()->SpriteGenerator();
+
         $this->CssSpriteGen = new CssSpriteGen($params);
         $this->LOGGER = PsLogger::inst(__CLASS__);
         $this->PROFILER = PsProfiler::inst(__CLASS__);
