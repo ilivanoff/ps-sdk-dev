@@ -1,7 +1,6 @@
 <?php
 
 class PSCache extends AbstractSingleton {
-
     /**
      * СУЩНОСТИ, ОТ КОТОРЫХ ВООБЩЕ МОГУТ ЗАВИСИТЬ ГРУППЫ КЕШИРОВАНИЯ
      * 
@@ -10,6 +9,7 @@ class PSCache extends AbstractSingleton {
      * Сами зависимости задаются обычно при помощи механизма маппингов.
      * 
      */
+
     const CHILD_FOLDING = 'Фолдинги';
     const CHILD_DBENTITY = 'Сущности базы';
 
@@ -114,16 +114,6 @@ class PSCache extends AbstractSingleton {
         }
 
         $this->LOGGER->info(" > Валидируем группу кешей [$group]");
-
-        /*
-         * Проверим, можно ли выполнить процесс и, если можно, выполним. 
-         * После выполнения о свежести логов можно будет не заботиться.
-         */
-        $this->LOGGER->info(" ! Пытаемся выполнить внейший процесс");
-        if (ExternalProcess::inst()->executeFromClient()) {
-            $this->TREE->setTypeValidated(self::CHILD_FOLDING, 'Выполнен внешний процесс от имени клиента');
-            return; //---
-        }
 
         /*
          * Если мы в продакшене - прекращаем дальнейшие проверки.

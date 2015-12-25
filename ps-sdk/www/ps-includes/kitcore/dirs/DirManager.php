@@ -19,6 +19,7 @@ class DirManager {
     const DIR_SRC = 'src';
     const DIR_UPLOAD = 'upload';
     const DIR_FORMULES = 'formules';
+    const DIR_SERVICE = 'service';
 
     private $relPath;
     private $absPath;

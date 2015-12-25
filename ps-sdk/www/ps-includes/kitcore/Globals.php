@@ -1,11 +1,6 @@
 <?php
 
 /*
- * Промежуток между вызовами внешнего процесса (в секундах)
- */
-define('EXTERNAL_PROCESS_CALL_DELAY', 600);
-
-/*
  * Время жизни кешей (в минутах)
  */
 define('CACHE_LITE_LIFE_TIME', 720);

@@ -24,6 +24,7 @@ final class PsConst {
     const EXT_GIF = 'gif';
     const EXT_PNG = 'png';
     const EXT_MSGS = 'msgs';
+    const EXT_LOCK = 'lock';
 
     /**
      * Массив всех зарегистрированных расширений

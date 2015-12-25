@@ -140,7 +140,12 @@ class DirItem implements Spritable {
      * DatesTools - не подключается в kitcore!
      */
     public function getModificationTime($format = null) {
+        if (!is_file($this->absPath)) {
+            return null; //--
+        }
+
         clearstatcache();
+
         $time = @filemtime($this->absPath);
         if ($time === false) {
             return null;

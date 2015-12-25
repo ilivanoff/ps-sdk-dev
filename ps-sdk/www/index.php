@@ -43,6 +43,8 @@ ps_admin_on(true);
 //print_r(PsMathRebusSolver::solve('a+df=1aa'));
 //print_r(PsTable::inst('users')->getColumns());
 
-echo TexImager::inst()->getImgDi('\alpha');
-echo TexImager::inst()->getImgDi('\sqrt{4}=2');
+//echo TexImager::inst()->getImgDi('\alpha');
+//echo TexImager::inst()->getImgDi('\sqrt{4}=2');
+
+print_r(ConfigIni::cronProcesses());
 ?>

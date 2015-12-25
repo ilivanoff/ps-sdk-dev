@@ -8,6 +8,7 @@
 final class ConfigIni extends AbstractIni {
 
     const GROUP_CORE = 'core';
+    const CRON_PROCESS = 'cron-pocess';
     const GROUP_CONNECTIONS = 'connection-pool';
     const GROUP_FOLDINGS = 'foldings';
     const GROUP_TABLE_CHANGE_TRIGGERS = 'table-change-triggers';
@@ -18,6 +19,10 @@ final class ConfigIni extends AbstractIni {
 
     public static function libsIncluder() {
         return self::getProp(self::GROUP_CORE, 'libs');
+    }
+
+    public static function cronProcesses() {
+        return self::getPropCheckType(self::CRON_PROCESS, 'cron', array(PsConst::PHP_TYPE_ARRAY, PsConst::PHP_TYPE_NULL));
     }
 
     public static function isSdk() {
