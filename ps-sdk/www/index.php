@@ -32,6 +32,8 @@ PsLibs::inst();
 
 PsConnectionPool::configure(PsConnectionParams::sdkTest());
 
+ps_admin_on(true);
+
 /*
 
   echo PsConnectionPool::params();
@@ -40,5 +42,5 @@ PsConnectionPool::configure(PsConnectionParams::sdkTest());
 //print_r(InflectsManager::inst()->getInflections('корыто'));
 //print_r(PsMathRebusSolver::solve('a+df=1aa'));
 
-print_r(PsTable::inst('users')->exportAsSqlString());
+print_r(PsTable::inst('users')->getColumns());
 ?>

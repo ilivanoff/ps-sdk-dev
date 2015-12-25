@@ -67,7 +67,7 @@ if (!isset($PS_NO_AUTO_CONNECT) || !$PS_NO_AUTO_CONNECT) {
 //Зарегистрируем функцию, подключающую админские ресурсы
 function ps_admin_on($force = false) {
     if ($force || AuthManager::isAuthorizedAsAdmin()) {
-        //Autoload::inst()->registerAdminBaseDir();
+        Autoload::inst()->registerAdminBaseDir();
     }
 }
 

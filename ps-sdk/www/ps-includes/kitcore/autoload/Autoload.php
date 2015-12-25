@@ -8,9 +8,7 @@ final class Autoload {
 
     /** Директории подключаемых классов */
     const DIR_KIT = 'sdk/kit';
-    const DIR_ADMIN = 'admin';
     const DIR_TESTS = 'tests';
-    const DIR_CLASSES = 'classes';
 
     /** @var PsLoggerInterface */
     private $LOGGER;
@@ -105,8 +103,11 @@ final class Autoload {
         $this->DIRS[$di->getRelPath()] = new AutoloadDir($di);
     }
 
+    /**
+     * Метод подключает админскую директорию
+     */
     public function registerAdminBaseDir() {
-        $this->registerBaseDir(self::DIR_ADMIN, false);
+        $this->registerBaseDir(PS_DIR_INCLUDES . DIR_SEPARATOR . DirManager::DIR_ADMIN);
     }
 
     public function registerTestsBaseDir() {
