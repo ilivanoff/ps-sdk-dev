@@ -41,6 +41,8 @@ ps_admin_on(true);
 //print_r(PSDB::getRec('select * from blog_post where id_post=1'));
 //print_r(InflectsManager::inst()->getInflections('корыто'));
 //print_r(PsMathRebusSolver::solve('a+df=1aa'));
+//print_r(PsTable::inst('users')->getColumns());
 
-print_r(PsTable::inst('users')->getColumns());
+echo TexImager::inst()->getImgDi('\alpha');
+echo TexImager::inst()->getImgDi('\sqrt{4}=2');
 ?>

@@ -1,6 +1,7 @@
 <?php
 
 class PSCache extends AbstractSingleton {
+
     /**
      * СУЩНОСТИ, ОТ КОТОРЫХ ВООБЩЕ МОГУТ ЗАВИСИТЬ ГРУППЫ КЕШИРОВАНИЯ
      * 
@@ -9,7 +10,6 @@ class PSCache extends AbstractSingleton {
      * Сами зависимости задаются обычно при помощи механизма маппингов.
      * 
      */
-
     const CHILD_FOLDING = 'Фолдинги';
     const CHILD_DBENTITY = 'Сущности базы';
 
@@ -101,7 +101,8 @@ class PSCache extends AbstractSingleton {
          * показать изменение сущностей фолдинга или самих фолдингов, работающих
          * с изменёнными таблицами/представлениями.
          */
-        DbChangeListener::check();
+        //Проверка в БД - выкинута
+        //DbChangeListener::check();
         $this->TREE->setTypeValidated(self::CHILD_DBENTITY, 'Выполнена проверка изменений в БД');
 
         /**

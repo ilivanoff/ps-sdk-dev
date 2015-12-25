@@ -78,7 +78,7 @@ final class TexImager extends AbstractSingleton {
          * Логирование
          */
         if ($this->LOGGER->isEnabled()) {
-            $this->LOGGER->info(++$this->replaced . ". Replacing $type TeX");
+            $this->LOGGER->info( ++$this->replaced . ". Replacing $type TeX");
             $this->LOGGER->info("FULL:   $original");
             $this->LOGGER->info("CONTENT:  $formula");
             $this->LOGGER->info("SAVED:    $formula");
@@ -119,20 +119,19 @@ final class TexImager extends AbstractSingleton {
         //Создаём структуру директорий
         $imgDI->makePath();
 
+        $contents = '';
+
         //Запрашиваем графическое представление
         $this->PROFILER->start($formula);
         try {
             //TODO - делать это локально, чтобы не зависить от стороннего сервиса
             $handle = fopen('http://latex.codecogs.com/gif.latex?' . rawurlencode($formula), 'r');
-            $contents = '';
             while (!feof($handle)) {
                 $contents .= fread($handle, 8192);
             }
             fclose($handle);
-            $this->PROFILER->stop();
 
-            //Сохраняем картинку в файл
-            $imgDI->writeToFile($contents, true);
+            $this->PROFILER->stop();
         } catch (Exception $ex) {
             //Останавливаем профайлер без сохранения
             $this->PROFILER->stop(false);
@@ -144,8 +143,11 @@ final class TexImager extends AbstractSingleton {
             throw $ex;
         }
 
+        //Сохраняем картинку в файл
+        $imgDI->putToFile($contents);
+
         //Сохраним текстовое представление
-        $this->DM->getHashedDirItem(null, $hash, $hash, 'gif.tex')->writeToFile($formula, true);
+        $this->DM->getHashedDirItem(null, $hash, $hash, 'gif.tex')->putToFile($formula);
 
         $this->CACHE->set($formula, $imgDI);
 

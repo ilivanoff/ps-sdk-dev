@@ -18,6 +18,7 @@ class DirManager {
     const DIR_KIT = 'kit';
     const DIR_SRC = 'src';
     const DIR_UPLOAD = 'upload';
+    const DIR_FORMULES = 'formules';
 
     private $relPath;
     private $absPath;
@@ -35,6 +36,11 @@ class DirManager {
     //uploads
     public static function uploads($dirs = null) {
         return self::inst(PS_DIR_CONTENT, array(self::DIR_UPLOAD, $dirs));
+    }
+
+    //Формулы
+    public static function formules() {
+        return self::inst(null, PS_DIR_ADDON . DIR_SEPARATOR . self::DIR_FORMULES . DIR_SEPARATOR);
     }
 
     /*
@@ -59,11 +65,6 @@ class DirManager {
     //stuff
     public static function stuff($notCkeckDirs = null, $dirs = null) {
         return self::instShifted('stuff/', $notCkeckDirs, $dirs);
-    }
-
-    //stuff
-    public static function formules($notCkeckDirs = null, $dirs = null) {
-        return self::instShifted('stuff/formules', $notCkeckDirs, $dirs);
     }
 
     //mmedia

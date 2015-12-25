@@ -523,8 +523,8 @@ abstract class FoldedResources extends AbstractSingleton {
             return false; //Не проверяем изменение для сущностей, которые пока не видны
         }
 
-        //Проверим изменения сущностей по БД
-        DbChangeListener::check();
+        //Проверим изменения сущностей по БД - выкинуто
+        //DbChangeListener::check();
 
         if (in_array($ident, $this->CHANGE_CHECKED)) {
             return in_array($ident, $this->CHANGED_ENTITYS); //---
