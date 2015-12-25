@@ -11,7 +11,6 @@ final class ConfigIni extends AbstractIni {
     const CRON_PROCESS = 'cron-pocess';
     const GROUP_CONNECTIONS = 'connection-pool';
     const GROUP_FOLDINGS = 'foldings';
-    const GROUP_TABLE_CHANGE_TRIGGERS = 'table-change-triggers';
 
     public static function projectName() {
         return self::getProp(self::GROUP_CORE, 'project');
