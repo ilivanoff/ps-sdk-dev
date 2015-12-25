@@ -48,12 +48,12 @@ class PsTable extends BaseDataStore {
     }
 
     public function hasColumn($colName) {
-        return array_key_exists($colName, $this->getColumns());
+        return array_key_exists(lowertrim($colName), $this->getColumns());
     }
 
     /** @return PsTableColumn */
     public function getColumn($column) {
-        return check_condition(array_get_value($column, $this->getColumns()), "Столбец {$this->getName()}.$column не существует.");
+        return check_condition(array_get_value(lowertrim($column), $this->getColumns()), "Столбец {$this->getName()}.$column не существует.");
     }
 
     /** @return PsTableColumn */
@@ -95,7 +95,10 @@ class PsTable extends BaseDataStore {
     private $triggers;
 
     public function getTriggers() {
-        return $this->triggers = is_array($this->triggers) ? $this->triggers : AdminDbBean::inst()->getTableTriggers($this->getName());
+        if (is_array($this->triggers)) {
+            return $this->triggers;
+        }
+        return $this->triggers = AdminDbBean::inst()->getTableTriggers($this->getName());
     }
 
     public function hasTriggers() {

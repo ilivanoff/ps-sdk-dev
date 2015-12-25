@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Столбец таблицы
+ */
 class PsTableColumn extends BaseDataStore {
     /*
      * Тип поля
@@ -61,7 +64,7 @@ class PsTableColumn extends BaseDataStore {
                 break;
 
             default:
-                check_condition(false, "Неизвестный тип данных для столбца {$this->getName()}: {$this->getDataType()}.");
+                PsUtil::raise('Неизвестный тип данных для столбца {}.{}: {}.', $this->getTableName(), $this->getName(), $this->getDataType());
                 break;
         }
     }
@@ -105,13 +108,6 @@ class PsTableColumn extends BaseDataStore {
         return strtoupper($this->IS_NULLABLE) == 'YES';
     }
 
-    /**
-     * Признак необходимости заполнения параметра при редактировании
-     */
-    private function isMandatory() {
-        return !$this->isNullable() || $this->isPkEquivalent();
-    }
-
     public function getDefault() {
         return $this->COLUMN_DEFAULT;
     }
@@ -134,25 +130,6 @@ class PsTableColumn extends BaseDataStore {
 
     public function getParentTableSelectOptions() {
         return $this->isFk() ? TableExporter::inst()->getTable($this->getParentTableName())->getSelectOptions() : null;
-    }
-
-    /**
-     * Возвращает признак - содержится ли в данном столбце идентификатор переданного фолдинга
-     */
-    public function isHoldFoldingIdent(FoldedResources $folding) {
-        return $folding->getTableColumnIdent() == $this->getName();
-    }
-
-    /**
-     * Возвращает признак - содержится ли в данном столбце идентификатор какого-либо фолдинга, хранимого в данной таблице
-     */
-    private function isHoldAnyFoldingIdent() {
-        foreach (FoldedResourcesManager::inst()->getTableFoldings($this->getTableName()) as $folding) {
-            if ($this->isHoldFoldingIdent($folding)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -185,36 +162,6 @@ class PsTableColumn extends BaseDataStore {
     }
 
     /**
-     * Получение списка допустимых значений для комбо-бокса
-     */
-    private $allowed;
-
-    private function getColumnAllowedValues() {
-        if (!is_array($this->allowed)) {
-            $this->allowed = array();
-            switch ($this->getType()) {
-                case self::TYPE_BIT:
-                    $this->allowed[0] = array('value' => 0, 'content' => 'Нет');
-                    $this->allowed[1] = array('value' => 1, 'content' => 'Да');
-                    break;
-                case self::TYPE_INT:
-                    if ($this->isFk()) {
-                        $this->allowed = $this->getParentTableSelectOptions();
-                        break;
-                    }
-                default:
-                    $this->allowed = $this->getColumnAllowedValuesManual();
-                    break;
-            }
-        }
-        return $this->allowed;
-    }
-
-    public function hasColumnAllowedValues() {
-        return count($this->getColumnAllowedValues()) > 0;
-    }
-
-    /**
      * Сохраняет значение для вставки его в запрос
      */
     public function safe4insert($val) {
@@ -244,7 +191,6 @@ class PsTableColumn extends BaseDataStore {
     /**
      * Типы редактирования столбца.
      */
-
     const ET_HIDDEN = 'HIDDEN';
     const ET_EDITABLE = 'ENABLED';
     const ET_READONLY = 'DISABLED';
@@ -287,21 +233,6 @@ class PsTableColumn extends BaseDataStore {
      */
     public function isUseOn($action) {
         return $this->checkEditType($action, PsTableColumn::ET_EDITABLE) || $this->checkEditType($action, PsTableColumn::ET_HIDDEN);
-    }
-
-    /**
-     * Метод возвращает признак - выгружать ли данное поле при экспорте.
-     */
-    public function isTake4Export() {
-        return !$this->isAi() && ($this->isUseOn(PS_ACTION_CREATE) || $this->isUseOn(PS_ACTION_EDIT));
-    }
-
-    /**
-     * Метод проверяет - нужно ли показывать столбец в таблице.
-     * Отображаем только в том случае, если поле видимо на форме при редактировании
-     */
-    public function isVisibleInTable() {
-        return $this->isUseOn(PS_ACTION_CREATE) || $this->isUseOn(PS_ACTION_EDIT);
     }
 
 }

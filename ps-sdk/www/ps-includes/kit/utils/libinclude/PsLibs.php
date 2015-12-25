@@ -110,7 +110,7 @@ class PsLibs {
      * @param string $libName - название подключаемой библиотеки
      * @return boolean - признак, нужно ли подключать данную библиотеку
      */
-    private final function isAlreadyIncluded($libName) {
+    protected final function isAlreadyIncluded($libName) {
         if (in_array($libName, $this->INCLUDED)) {
             return true;
         }
