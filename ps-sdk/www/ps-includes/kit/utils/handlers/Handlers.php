@@ -5,8 +5,6 @@ final class Handlers {
     private $postTypes = array();
     private $rubricsProcessors = array();
     private $postsProcessors = array();
-    private $commentProcessors = array();
-    private $discussionControllers = array();
     private $foldings = array();
     private $libs = array();
     private $bubbles = array();
@@ -256,17 +254,6 @@ final class Handlers {
     /** @return PostsProcessor */
     public function getPostsProcessorByPostType($postType, $isEnsure = true) {
         return $this->getHandlerImpl($this->postsProcessors, $postType, $isEnsure);
-    }
-
-    /** @return CommentsProcessor */
-    public function getCommentsProcessorByPostType($postType, $isEnsure = true) {
-        return $this->getHandlerImpl($this->commentProcessors, $postType, $isEnsure);
-    }
-
-    /** @return DiscussionController Контроллер дискуссии */
-    public function getDiscussionController($unique) {
-        check_condition(array_key_exists($unique, $this->discussionControllers), "Неизвестный тип дискуссии: [$unique]");
-        return $this->discussionControllers[$unique];
     }
 
     private static $inst;

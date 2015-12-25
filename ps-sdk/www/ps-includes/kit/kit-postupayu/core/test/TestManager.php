@@ -26,15 +26,6 @@ final class TestManager extends AbstractSingleton {
         }
     }
 
-    private function getCommentsProcessor($postType) {
-        if ($postType) {
-            $proc = Handlers::getInstance()->getCommentsProcessorByPostType($postType, false);
-            return $proc ? array($postType => $proc) : array();
-        } else {
-            return Handlers::getInstance()->getCommentProcessors();
-        }
-    }
-
     /*
      * 
      * 
@@ -154,43 +145,6 @@ final class TestManager extends AbstractSingleton {
         $cnt = count($matches);
         $text = trim($cnt == 0 ? getRandomString(TestManager::RND_STRING_LEN) : $matches[rand(0, $cnt - 1)]);
         return $text ? UserInputTools::safeLongText($text) : getRandomString(TestManager::RND_STRING_LEN);
-    }
-
-    /**
-     * Генерация комментариев к постам.
-     * rootCount - кол-во root комментариев
-     * childCount - кол-во дочерних комментариев, при этом они привязываются случайным образом
-     * postType - если передан, то комментарии будут сгенерированы только к постам этого типа
-     * postId - для генерации комменариев к конкретному посту
-     * takeTextFromPost - признак, брать ли текст комментариев из тела поста
-     */
-    public final function generateComments($rootCount = 20, $childCount = 50, $postType = null, $postId = null, $takeTextFromPost = true) {
-        $cproc = $this->getCommentsProcessor($postType);
-
-        /* @var $proc PostsProcessor */
-        foreach ($cproc as $proc) {
-            $this->LOGGER->info("<<<CREATING COMMENTS FOR POSTS OF TYPE [" . $proc->getPostType() . "]>>>");
-
-            if ($postId) {
-                $posts[] = $proc->getPost($postId);
-            } else {
-                $posts = $proc->getPosts();
-            }
-
-            /* @var $post AbstractPost */
-            foreach ($posts as $post) {
-                $this->LOGGER->info("Creating comments for post " . $post->getPostType() . '|' . $post->getName());
-                for ($i = 1; $i <= $rootCount; $i++) {
-                    $proc->getDiscussionController()->saveMessage($post->getId(), null, $this->getText($proc, $post->getId(), $takeTextFromPost), null, PsUser::inst(TESTBean::inst()->getRandomUserId()));
-                }
-
-                for ($i = 1; $i <= $childCount; $i++) {
-                    $commentsTable = $proc->dbBean()->getCommentsTable();
-                    $parentId = TESTBean::inst()->getRandomCommentId($commentsTable, $post->getId());
-                    $proc->getDiscussionController()->saveMessage($post->getId(), $parentId, $this->getText($proc, $post->getId(), $takeTextFromPost), null, PsUser::inst(TESTBean::inst()->getRandomUserId()));
-                }
-            }
-        }
     }
 
     /**
