@@ -140,28 +140,6 @@ class PsTableColumn extends BaseDataStore {
     }
 
     /**
-     * Допустимые значения, введённые руками
-     */
-    private $manuallyAllowed;
-
-    public function getColumnAllowedValuesManual() {
-        if (!is_array($this->manuallyAllowed)) {
-            $this->manuallyAllowed = array();
-            if (!$this->isCanBeManuallyRestricted()) {
-                return $this->manuallyAllowed;
-            }
-
-            /* @var $folded FoldedResources */
-            foreach (FoldedResourcesManager::inst()->getTableFoldings($this->getTableName()) as $folded) {
-                if ($folded->getTableColumnStype() == $this->getName()) {
-                    $this->manuallyAllowed[] = array('value' => $folded->getFoldingSubType(), 'content' => $folded->getEntityName());
-                }
-            };
-        }
-        return $this->manuallyAllowed;
-    }
-
-    /**
      * Сохраняет значение для вставки его в запрос
      */
     public function safe4insert($val) {
