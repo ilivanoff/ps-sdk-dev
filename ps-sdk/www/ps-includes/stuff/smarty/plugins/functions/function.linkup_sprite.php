@@ -7,7 +7,7 @@
  */
 
 function smarty_function_linkup_sprite($params, Smarty_Internal_Template & $smarty) {
-    echo PsHtml::linkCss(CssSpritesManager::getSprite($params['name'])->getCssDi());
+    echo PsHtml::linkCss(CssSprite::inst($params['name'])->getCssDi());
 }
 
 ?>

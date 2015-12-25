@@ -1,24 +1,20 @@
 <?php
 
+/**
+ * CssSpritesManager::getDirSprite(CssSpritesManager::DIR_ICO, 'print', true)
+ */
 class CssSpritesManager {
-    /** Директории */
-
-    const DIR_ICO = 'ico';
-    const DIR_HEADER = 'header';
 
     /**
      * Метод возвращает спрайты для всех зарегистрированных директорий
+     * TODO - выкинуть
      */
     public static function getAllDirsSptites() {
-        $sprites = array();
-        foreach (PsUtil::getClassConsts(__CLASS__, 'DIR_') as $dirName) {
-            $sprites[$dirName] = self::getSprite($dirName);
-        }
-        return $sprites;
+        return array();
     }
 
     /** @return CssSprite */
-    public static function getSprite($item) {
+    public static function getSprite(Spritable $item) {
         return CssSprite::inst($item);
     }
 
@@ -34,9 +30,9 @@ class CssSpritesManager {
     }
 
     /**
-     * Спрайт для картинки
+     * Спрайт для картинки из директории
      */
-    public static function getDirSprite($dir, $itemName, $withGray = false) {
+    public static function getDirSprite(DieItem $dir, $itemName, $withGray = false) {
         return self::getSprite($dir)->getSpriteSpan($itemName, array(), $withGray);
     }
 

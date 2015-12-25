@@ -1426,7 +1426,7 @@ abstract class FoldedResources extends AbstractSingleton {
 
     /** @return CssSprite */
     public function getSprite($ident) {
-        return $this->isSpritable() ? CssSpritesManager::getSprite($this->getFoldedEntity($ident)) : null;
+        return $this->isSpritable() ? CssSprite::inst($this->getFoldedEntity($ident)) : null;
     }
 
     private function rebuildSprite($ident) {

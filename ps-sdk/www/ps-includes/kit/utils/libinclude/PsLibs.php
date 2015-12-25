@@ -100,6 +100,16 @@ class PsLibs {
     }
 
     /**
+     * Генерация спрайтов
+     */
+    public function SpriteGenerator() {
+        if ($this->isAlreadyIncluded(__FUNCTION__)) {
+            return; //---
+        }
+        require_once $this->SDK_LIB_DIR . 'CssSpriteGenerator/css-sprite-generator-v4.1/includes/ps-css-sprite-gen.inc.php';
+    }
+
+    /**
      * Метод должен быть вызван перед подключением библиотеки для предотвращения повторного подключения
      * Пример использования:
      * 

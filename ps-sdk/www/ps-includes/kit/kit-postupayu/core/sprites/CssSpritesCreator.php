@@ -24,11 +24,12 @@ final class CssSpritesCreator {
             } else {
                 $this->PROFILER->start('Sprite creation');
                 $this->CssSpriteGen->CreateSprite($sprite);
-                $this->LOGGER->info('Sprite was successfully created, path: ' . $sprite->getCssDi()->getAbsPath());
                 $this->PROFILER->stop();
+                $this->LOGGER->info('Sprite was successfully created, path: {}', $sprite->getCssDi()->getRelPath());
             }
         } catch (Exception $ex) {
             PsLock::unlock();
+            $this->LOGGER->info('Sprite creation error: {}', $ex->getMessage());
             throw $ex;
         }
         PsLock::unlock();
@@ -43,11 +44,11 @@ final class CssSpritesCreator {
     /** @return CssSpritesCreator */
     public static function inst(array $params = array()) {
         $hash = simple_hash($params);
-        return (self::$INSTS[$hash] = array_key_exists($hash, self::$INSTS) ? self::$INSTS[$hash] : new CssSpritesCreator($params));
+        return array_key_exists($hash, self::$INSTS) ? self::$INSTS[$hash] : self::$INSTS[$hash] = new CssSpritesCreator($params);
     }
 
     private function __construct(array $params) {
-        ExternalPluginsManager::SpriteGenerator();
+        PsLibs::inst()->SpriteGenerator();
         $this->CssSpriteGen = new CssSpriteGen($params);
         $this->LOGGER = PsLogger::inst(__CLASS__);
         $this->PROFILER = PsProfiler::inst(__CLASS__);

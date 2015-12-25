@@ -47,16 +47,11 @@ final class CssSprite {
      * @return DirManager
      */
     public static function autogenWs($subDirs = null) {
-        return DirManager::autogen(array('sprites', $subDirs));
+        return DirManager::autogen(array(DirManager::DIR_SPRITES, $subDirs));
     }
 
     /** @return CssSprite */
-    public static function inst($spritable) {
-        //Если строка, значит передано название поддиректории в папке www/resources/sprites
-        $spritable = is_string($spritable) ? DirManager::sprites($spritable)->getDirItem() : $spritable;
-
-        check_condition($spritable instanceof Spritable, 'Элемент для построения спрайта не является подклассом Spritable');
-
+    public static function inst(Spritable $spritable) {
         $name = $spritable->getSpriteName();
 
         if (array_key_exists($name, self::$sprites)) {

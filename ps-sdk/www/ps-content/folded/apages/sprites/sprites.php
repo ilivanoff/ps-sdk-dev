@@ -38,7 +38,7 @@ class AP_sprites extends BaseAdminPage {
                     $mode = self::MODE_SPRITES_LIST;
                     break;
                 }
-                $smartyParams['sprite'] = CssSpritesManager::getSprite($name)->rebuild();
+                $smartyParams['sprite'] = CssSprite::inst($name)->rebuild();
                 break;
         }
 

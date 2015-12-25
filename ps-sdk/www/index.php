@@ -42,9 +42,10 @@ ps_admin_on(true);
 //print_r(InflectsManager::inst()->getInflections('корыто'));
 //print_r(PsMathRebusSolver::solve('a+df=1aa'));
 //print_r(PsTable::inst('users')->getColumns());
-
 //echo TexImager::inst()->getImgDi('\alpha');
 //echo TexImager::inst()->getImgDi('\sqrt{4}=2');
 
-print_r(ConfigIni::cronProcesses());
+echo CssSprite::inst(DirItem::inst('ps-content/sprites/ico'))->getImgDi()->getRelPath();
+
+//print_r(ConfigIni::cronProcesses());
 ?>

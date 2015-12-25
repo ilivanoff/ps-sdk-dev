@@ -43,15 +43,6 @@ class ExternalPluginsManager {
         }
     }
 
-    /**
-     * 
-     */
-    public static function SpriteGenerator() {
-        if (self::isInclude(__FUNCTION__)) {
-            require_once PATH_PLUGINS . '/css-sprite-generator-v4.1/includes/ps-css-sprite-gen.inc.php';
-        }
-    }
-
     /*
      * 
      * УТИЛИТЫ
