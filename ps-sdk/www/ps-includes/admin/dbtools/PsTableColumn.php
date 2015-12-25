@@ -128,10 +128,6 @@ class PsTableColumn extends BaseDataStore {
         return $this->coltype;
     }
 
-    public function getParentTableSelectOptions() {
-        return $this->isFk() ? TableExporter::inst()->getTable($this->getParentTableName())->getSelectOptions() : null;
-    }
-
     /**
      * Признак - может ли колонка иметь значение, ограниченное руками?
      */
