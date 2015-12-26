@@ -8,7 +8,7 @@ class AP_APAudit extends BaseAdminPage {
 
     public function buildContent() {
         $SMARTY['dumps'] = $this->getAuditDumpsInfo();
-        $SMARTY['portion'] = PsDefines::getTableDumpPortion();
+        $SMARTY['portion'] = 20000; //PsDefines::getTableDumpPortion();
         return $this->getFoldedEntity()->fetchTpl($SMARTY);
     }
 

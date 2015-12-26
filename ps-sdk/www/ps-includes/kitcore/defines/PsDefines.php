@@ -66,14 +66,6 @@ final class PsDefines extends PsDefinesEngine {
     }
 
     /*
-     * АУДИТ
-     */
-
-    public static function getTableDumpPortion() {
-        return PsDefineVar::TABLE_DUMP_PORTION()->get();
-    }
-
-    /*
      * РЕЖИМ PRODUCTION
      */
 

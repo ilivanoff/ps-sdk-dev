@@ -42,11 +42,6 @@ final class PsDefineVar extends PsEnum {
         return self::inst(PsDefines::TYPE_D);
     }
 
-    /** @return PsDefineVar */
-    public static final function TABLE_DUMP_PORTION() {
-        return self::inst(PsDefines::TYPE_D);
-    }
-
     private $type;
 
     protected function init($type = null) {
