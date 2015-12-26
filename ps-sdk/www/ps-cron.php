@@ -1,5 +1,5 @@
 <?php
 
 //Просто вызываем скрипт, который и сделает всю работу
-require_once __DIR__ . '/ps-includes/MainImportCron.php';
+require_once __DIR__ . '/ps-includes/processes/cron/cron.php';
 ?>

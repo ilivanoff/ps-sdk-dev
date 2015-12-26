@@ -6,6 +6,8 @@ define('PROCESS_FUNCTION_NAME', 'executeProcess');
 //Включаем логирование, перенаправляем его в консоль и устанавливаем логгеры
 $LOGGING_ENABLED = true;
 $LOGGING_STREAM = 2;
+
+//Ограничим список логгеров
 $LOGGERS_LIST[] = 'PROCESS';
 $LOGGERS_LIST[] = 'PsLogger';
 
