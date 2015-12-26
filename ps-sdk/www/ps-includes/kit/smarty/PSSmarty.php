@@ -8,73 +8,49 @@ final class PSSmarty extends AbstractSingleton {
     protected function __construct() {
         PsLibs::inst()->Smarty();
 
-        /**
+        /*
          * Начиная с версии 5.4 в функции htmlentities параметр encoding был изменён на UTF-8, 
          * до этого момента после применения данного метода к тексту шаблона мы будем получать кракозябру.
          */
         SmartyCompilerException::$escape = is_phpver_is_or_greater(5, 4);
 
+        //Получим и сконфигурируем экземпляр Smarty
         $this->smarty = new Smarty();
         $this->smarty->compile_check = true;
         $this->smarty->force_compile = false;
-//        $this->smarty->caching = TRUE;
-
-        $SMARTY_BASE_PATH = DirManager::smarty()->absDirPath();
+        //$this->smarty->caching = TRUE;
 
         /*
          * УПРАВЛЯЮЩИЕ ДИРЕКТОРИИ
          */
-        $this->smarty->setTemplateDir($SMARTY_BASE_PATH . '/templates/');
-        $this->smarty->setCompileDir($SMARTY_BASE_PATH . '/templates_c/');
-        $this->smarty->setCacheDir($SMARTY_BASE_PATH . '/cache/');
-        $this->smarty->setConfigDir($SMARTY_BASE_PATH . '/configs/');
 
-        /*
-         * ПЛАГИНЫ
-         */
-        //1. Функции
-        $plugins_dir[] = $SMARTY_BASE_PATH . '/plugins/functions/';
-        $plugins_dir[] = $SMARTY_BASE_PATH . '/plugins/functions/content/';
-        $plugins_dir[] = $SMARTY_BASE_PATH . '/plugins/functions/mmedia/';
-        $plugins_dir[] = $SMARTY_BASE_PATH . '/plugins/functions/gym/';
-        $plugins_dir[] = $SMARTY_BASE_PATH . '/plugins/functions/replacements/';
-        $plugins_dir[] = $SMARTY_BASE_PATH . '/plugins/functions/discussion/comments/';
-        $plugins_dir[] = $SMARTY_BASE_PATH . '/plugins/functions/discussion/feedback/';
+        //Директории с шаблонами .tpl : PSSmarty::template('common/citata.tpl');
+        $this->smarty->setTemplateDir(ConfigIni::smartyTemplates());
 
-        //2. Модификаторы
-        $plugins_dir[] = $SMARTY_BASE_PATH . '/plugins/modifiers/';
-        $plugins_dir[] = $SMARTY_BASE_PATH . '/plugins/modifiers/content/';
-        $plugins_dir[] = $SMARTY_BASE_PATH . '/plugins/modifiers/discussion/comments/';
-        $plugins_dir[] = $SMARTY_BASE_PATH . '/plugins/modifiers/discussion/feedback/';
-        $plugins_dir[] = $SMARTY_BASE_PATH . '/plugins/modifiers/rubric/';
-        $plugins_dir[] = $SMARTY_BASE_PATH . '/plugins/modifiers/post/';
+        //Директория, в которую складываются скомпилированные шаблоны
+        $this->smarty->setCompileDir(DirManager::autogen('/smarty/templates_c/')->absDirPath());
 
-        //3. Блочные функции
-        $plugins_dir[] = $SMARTY_BASE_PATH . '/plugins/blocks/';
-        $plugins_dir[] = $SMARTY_BASE_PATH . '/plugins/blocks/content/';
-        $plugins_dir[] = $SMARTY_BASE_PATH . '/plugins/blocks/text/';
-        $plugins_dir[] = $SMARTY_BASE_PATH . '/plugins/blocks/child/';
-        $plugins_dir[] = $SMARTY_BASE_PATH . '/plugins/blocks/post/';
+        //Директория, в которую складываются кеши
+        $this->smarty->setCacheDir(DirManager::autogen('/smarty/cache/')->absDirPath());
 
-        /*
-         * ADMIN
-         */
-        $plugins_dir[] = $SMARTY_BASE_PATH . '/plugins/functions/admin/';
+        //Директория с конфигами
+        $this->smarty->setConfigDir(PATH_BASE_DIR . PS_DIR_INCLUDES . '/smarty/configs/');
 
-        $plugins_dir[] = $SMARTY_BASE_PATH . '/plugins/modifiers/admin/';
-
-        $this->smarty->addPluginsDir($plugins_dir);
+        //Директории с плагинами - блочными функциями, функциями, модификатор
+        $this->smarty->addPluginsDir(ConfigIni::smartyPlugins());
 
         /*
          * Импортируем константы некоторых классов, чтобы на них можно было ссылаться через 
          * {$smarty.const.CONST_NAME}
          */
-        PsConstJs::defineAllConsts();
+        //PsConstJs::defineAllConsts();
 
         /*
          * Подключим фильтры
          */
-        new SmartyFilters($this->smarty);
+        PSSmartyFilter::inst()->bind($this->smarty);
+
+        return; //---
 
         /*
          * Зарегистрируем наши функции

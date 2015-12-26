@@ -11,17 +11,42 @@ final class ConfigIni extends AbstractIni {
     const CRON_PROCESS = 'cron-pocess';
     const GROUP_CONNECTIONS = 'connection-pool';
     const GROUP_FOLDINGS = 'foldings';
+    const GROUP_SMARTY = 'smarty';
 
     public static function projectName() {
         return self::getProp(self::GROUP_CORE, 'project');
     }
 
     public static function libsIncluder() {
-        return self::getProp(self::GROUP_CORE, 'libs');
+        return self::getPropCheckType(self::GROUP_CORE, 'libs', array(PsConst::PHP_TYPE_STRING));
     }
 
     public static function cronProcesses() {
         return self::getPropCheckType(self::CRON_PROCESS, 'cron', array(PsConst::PHP_TYPE_ARRAY, PsConst::PHP_TYPE_NULL));
+    }
+
+    public static function smartyFilter() {
+        return self::getPropCheckType(self::GROUP_SMARTY, 'filter', array(PsConst::PHP_TYPE_STRING));
+    }
+
+    public static function smartyPlugins() {
+        return self::readAbsDirPathArr(self::GROUP_SMARTY, 'plugins');
+    }
+
+    public static function smartyTemplates() {
+        return self::readAbsDirPathArr(self::GROUP_SMARTY, 'templates');
+    }
+
+    /**
+     * Метод вычитывает относительные пути к директориям и возвращает набор абсолютных путей
+     */
+    private static function readAbsDirPathArr($group, $prop) {
+        $absDirs = array();
+        $relDirs = to_array(self::getPropCheckType($group, $prop, array(PsConst::PHP_TYPE_ARRAY, PsConst::PHP_TYPE_NULL)));
+        foreach ($relDirs as $rel) {
+            $absDirs[] = PATH_BASE_DIR . $rel;
+        }
+        return $absDirs;
     }
 
     public static function isSdk() {

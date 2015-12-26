@@ -156,14 +156,14 @@ class PsLibs {
         /*
          * Подготовим директории
          */
-        $SDK_LIB_DIR = DirItem::inst(PS_DIR_INCLUDES, DirManager::DIR_LIB . DIR_SEPARATOR)->getAbsPath();
-        $PROJ_LIB_DIR = DirItem::inst(PS_DIR_ADDON, DirManager::DIR_LIB . DIR_SEPARATOR)->getAbsPath();
+        $SDK_LIB_DIR = DirManager::inst(PS_DIR_INCLUDES, DirManager::DIR_LIB)->absDirPath();
+        $PROJ_LIB_DIR = DirManager::inst(PS_DIR_ADDON, DirManager::DIR_LIB)->absDirPath();
 
         /*
          * Класс подключения библиотек совпадает с базовым
          */
         if (__CLASS__ == $class) {
-            self::$inst = new PsLibs($class);
+            self::$inst = new PsLibs();
             self::$inst->SDK_LIB_DIR = $SDK_LIB_DIR;
 
             self::$inst->LOGGER = PsLogger::inst($class);
@@ -188,7 +188,7 @@ class PsLibs {
             return PsUtil::raise('Указанный загрузчик библиотек [{}] не является наследником класса [{}]', $class, __CLASS__);
         }
 
-        self::$inst = new $class($class);
+        self::$inst = new $class();
         self::$inst->SDK_LIB_DIR = $SDK_LIB_DIR;
         self::$inst->PROJ_LIB_DIR = $PROJ_LIB_DIR;
 

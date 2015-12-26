@@ -34,23 +34,6 @@ PsConnectionPool::configure(PsConnectionParams::sdkTest());
 
 ps_admin_on(true);
 
-$di = DirItem::inst('C:/www/ps-sdk-dev/ps-sdk/www////1');
-
-echo $di->getAbsPath();
-br();
-echo $di->getRelPath();
-
-
-br();
-
-$dm = DirManager::inst('a', '////');
-
-echo $dm->absDirPath();
-br();
-echo $dm->relDirPath();
-
-die;
-
 /*
 
   echo PsConnectionPool::params();
