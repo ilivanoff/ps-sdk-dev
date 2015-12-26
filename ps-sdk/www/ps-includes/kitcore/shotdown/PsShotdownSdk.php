@@ -61,7 +61,7 @@ class PsShotdownSdk {
      * Функция, выполняющая закрытие классов.
      * Должна быть именно public, иначе не будет вызвана!
      */
-    public static function _doShotdown() {
+    static final function _doShotdown() {
         PsCheck::arr(self::$DESTRUCTS);
 
         ksort(self::$DESTRUCTS);
