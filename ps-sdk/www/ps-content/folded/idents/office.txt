@@ -1,4 +1,0 @@
-userfeedback
-userlessonsstate
-userpoints
-usercomments
