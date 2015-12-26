@@ -46,13 +46,14 @@ final class PSSmarty extends AbstractSingleton {
         //PsConstJs::defineAllConsts();
 
         /*
-         * Подключим фильтры
+         * ПОДКЛЮЧИМ ФИЛЬТРЫ
          */
         PSSmartyFilter::inst()->bind($this->smarty);
 
         return; //---
 
         /*
+         * TODO - доработать
          * Зарегистрируем наши функции
          */
         /* @var $plugin AbstractSmartyPlugin */
