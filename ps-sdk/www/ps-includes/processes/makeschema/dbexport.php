@@ -258,5 +258,5 @@ function executeProcess(array $argv) {
 //Отключаем автоматический коннект на базу, чтоыб наш генератор ничего ненабедокурил на продуктиве
 $CALLED_FILE = __FILE__;
 $LOGGERS_LIST[] = 'PsConnectionParams';
-require_once '../ProcessStarter.php';
+require_once dirname(__DIR__) . '/ProcessStarter.php';
 ?>

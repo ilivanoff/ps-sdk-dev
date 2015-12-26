@@ -11,3 +11,4 @@
 /ps-sdk/www/ps-addon
 /ps-sdk/www/ps-includes/processes/mosaic/*.log
 /ps-sdk/www/ps-includes/processes/mosaic/output
+/ps-sdk/www/ps-includes/processes/lock/*.log
