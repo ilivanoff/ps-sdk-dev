@@ -12,11 +12,14 @@ $LOGGERS_LIST[] = 'PsLogger';
 //Запускаем профилирование
 $PROFILING_ENABLED = true;
 
+//Отключаем автоматический коннект к БД. Все процессы должны коннектиться сами.
+$PS_NO_AUTO_CONNECT = true;
+
 //Установим глобальный массив, чтобы не получать ошибку в момент попытки стартовать сессию
 $_SESSION = array();
 
 //Подключаем ресурсы проета
-require_once 'MainImportAdmin.php';
+require_once dirname(__DIR__) . '/MainImportAdmin.php';
 
 //Базовый обработчик ошибок, который распечатает стек
 function print_stack(Exception $exception) {
@@ -83,6 +86,9 @@ function saveResult2Html($tplName, $params = null, $__DIR__ = __DIR__, $htmlName
     $htmlName = ensure_file_ext($htmlName, 'html');
     DirItem::inst($__DIR__, $htmlName)->writeToFile($html, true);
 }
+
+//Убедимся, что мы не подключены
+PsConnectionPool::assertDisconnectied();
 
 /**
  * После того, как мы определили все глобальные функции, вызовем функцию 

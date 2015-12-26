@@ -141,5 +141,5 @@ function executeProcess(array $argv) {
 
 $CALLED_FILE = __FILE__;
 $LOGGERS_LIST[] = 'DirFiller';
-require_once dirname(dirname(__DIR__)) . '/MainImportProcess.php';
+require_once '../ProcessStarter.php';
 ?>

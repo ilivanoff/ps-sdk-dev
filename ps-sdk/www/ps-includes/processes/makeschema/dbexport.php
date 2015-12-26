@@ -6,8 +6,6 @@
  * @param array $argv
  */
 function executeProcess(array $argv) {
-    PsConnectionPool::assertDisconnectied();
-
     /*
      * СОЗДАЁМ SQL
      * 
@@ -258,8 +256,7 @@ function executeProcess(array $argv) {
 }
 
 //Отключаем автоматический коннект на базу, чтоыб наш генератор ничего ненабедокурил на продуктиве
-$PS_NO_AUTO_CONNECT = true;
 $CALLED_FILE = __FILE__;
 $LOGGERS_LIST[] = 'PsConnectionParams';
-require_once dirname(dirname(__DIR__)) . '/MainImportProcess.php';
+require_once '../ProcessStarter.php';
 ?>
