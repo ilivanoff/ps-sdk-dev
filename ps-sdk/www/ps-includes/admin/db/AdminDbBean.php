@@ -125,21 +125,6 @@ select LOWER(c.TABLE_NAME) as TABLE_NAME,
     }
 
     /**
-     * Получает список зависимых групп кешей от данной таблицы
-     */
-    public function getTableDependableCaches($table) {
-//Мы обратимся к маппингу, хранящему привязку ГруппаКешей -> СущностьБД
-        $cacheMappingHash = Mappings::CACHE_DBENTITYS()->getHash();
-        return $this->getValues('select distinct lident as value from ps_mappings where mhash=? and rident=?', array($cacheMappingHash, $table));
-    }
-
-    public function getTablesWithDependableCaches() {
-//Мы обратимся к маппингу, хранящему привязку ГруппаКешей -> СущностьБД
-        $cacheMappingHash = Mappings::CACHE_DBENTITYS()->getHash();
-        return $this->getValues("select distinct rident as value from ps_mappings where mhash=? and rident not like 'v_%'", $cacheMappingHash);
-    }
-
-    /**
      * Загрузка списка триггеров таблицы
      */
     public function getTableTriggers($table) {
