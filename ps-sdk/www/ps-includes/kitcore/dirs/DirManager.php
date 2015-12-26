@@ -21,6 +21,7 @@ class DirManager {
     const DIR_FORMULES = 'formules';
     const DIR_SERVICE = 'service';
     const DIR_SPRITES = 'sprites';
+    const DIR_SMARTY = 'smarty';
 
     private $relPath;
     private $absPath;
@@ -84,23 +85,24 @@ class DirManager {
      */
     private static $insts = array();
 
-    /*
+    /**
      * $notCkeckDirs - директории, существование которых проверяться не будет
      * $dirs - директории, существование которых будет проверено при создании менеджера
+     * 
+     * @return DirManager 
      */
-
-    /** @return DirManager */
     public static function inst($notCkeckDirs = null, $dirs = null) {
-        $dirPath = next_level_dir($notCkeckDirs);
-        $corePath = normalize_path(PATH_BASE_DIR);
+        $absPathNotCheck = next_level_dir($notCkeckDirs, DIR_SEPARATOR);
 
-        $isAbs = starts_with($dirPath, $corePath);
+        if ((DIR_SEPARATOR == $absPathNotCheck) || (PATH_BASE_DIR == $absPathNotCheck)) {
+            $absPathNotCheck = PATH_BASE_DIR;
+        } else {
+            if (!starts_with($absPathNotCheck, PATH_BASE_DIR)) {
+                $absPathNotCheck = next_level_dir(PATH_BASE_DIR, $absPathNotCheck);
+            }
+        }
 
-        $absPathNotCheck = $isAbs ? $dirPath : next_level_dir($corePath, $dirPath);
-        $absPathNotCheck = ensure_dir_endswith_dir_separator($absPathNotCheck);
-
-        $absPath = next_level_dir($absPathNotCheck, $dirs);
-        $absPath = ensure_dir_endswith_dir_separator($absPath);
+        $absPath = next_level_dir($absPathNotCheck, $dirs, DIR_SEPARATOR);
 
         //Проверим, нужно ли создать структуру директорий
         if ($absPathNotCheck != $absPath && !is_dir($absPath)) {
@@ -111,7 +113,7 @@ class DirManager {
             return self::$insts[$absPath];
         }
 
-        $relPath = cut_string_start($absPath, $corePath);
+        $relPath = cut_string_start($absPath, PATH_BASE_DIR);
         $relPath = ensure_dir_startswith_dir_separator($relPath);
 
         return self::$insts[$absPath] = new DirManager($relPath, $absPath);

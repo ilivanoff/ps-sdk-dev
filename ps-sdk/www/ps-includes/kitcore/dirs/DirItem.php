@@ -12,26 +12,22 @@ class DirItem implements Spritable {
 
     /** @return DirItem */
     public static function inst($path, $name = null, $ext = null) {
-        $itemPath = normalize_path(file_path($path, $name, $ext));
-        $corePath = normalize_path(PATH_BASE_DIR);
+        $absPath = normalize_path(file_path($path, $name, $ext));
 
-        //Обезопасим пути, в которых есть русские буквы
-        try {
-            $itemPath = iconv('UTF-8', 'cp1251', $itemPath);
-        } catch (Exception $e) {
-            //Если произойдёт ошибка - игнорируем
+        if (!$absPath || (DIR_SEPARATOR == $absPath) || (PATH_BASE_DIR == $absPath) || (PATH_BASE_DIR == $absPath . DIR_SEPARATOR)) {
+            $absPath = PATH_BASE_DIR;
+        } else {
+            if (!starts_with($absPath, PATH_BASE_DIR)) {
+                $absPath = next_level_dir(PATH_BASE_DIR, $absPath);
+            }
         }
-
-        $isAbs = starts_with($itemPath, $corePath);
-
-        $absPath = $isAbs ? $itemPath : next_level_dir($corePath, $itemPath);
 
         if (array_key_exists($absPath, self::$items)) {
             return self::$items[$absPath];
         }
 
-        $relPath = cut_string_start($absPath, $corePath);
-        $relPath = ensure_starts_with($relPath, DIR_SEPARATOR);
+        $relPath = cut_string_start($absPath, PATH_BASE_DIR);
+        $relPath = ensure_dir_startswith_dir_separator($relPath);
 
         return self::$items[$absPath] = new DirItem($relPath, $absPath);
     }

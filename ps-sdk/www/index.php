@@ -34,6 +34,23 @@ PsConnectionPool::configure(PsConnectionParams::sdkTest());
 
 ps_admin_on(true);
 
+$di = DirItem::inst('C:/www/ps-sdk-dev/ps-sdk/www////1');
+
+echo $di->getAbsPath();
+br();
+echo $di->getRelPath();
+
+
+br();
+
+$dm = DirManager::inst('a', '////');
+
+echo $dm->absDirPath();
+br();
+echo $dm->relDirPath();
+
+die;
+
 /*
 
   echo PsConnectionPool::params();
@@ -42,11 +59,14 @@ ps_admin_on(true);
 //print_r(InflectsManager::inst()->getInflections('корыто'));
 //print_r(PsMathRebusSolver::solve('a+df=1aa'));
 //print_r(PsTable::inst('users')->getColumns());
-echo TexImager::inst()->getImgDi('\alpha');
-echo TexImager::inst()->getImgDi('\sqrt{4}=2');
-
+//echo TexImager::inst()->getImgDi('\alpha');
+//echo TexImager::inst()->getImgDi('\sqrt{4}=2');
 //$sprite = CssSprite::inst(DirItem::inst('ps-content/sprites/ico'));
 //echo $sprite->getSpriteSpan('calendar');
-
 //print_r(ConfigIni::cronProcesses());
+//$tpl = PSSmarty::template(DirItem::inst(__DIR__, 'mytpl', PsConst::EXT_TPL));
+$tpl = PSSmarty::template('common/citatas.tpl', array('c_body' => 'My body'));
+$tpl->display();
+$tpl = PSSmarty::template('myhelp/bubble.tpl', array('c_body' => 'My body'));
+$tpl->display();
 ?>

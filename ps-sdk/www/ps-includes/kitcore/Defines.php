@@ -11,8 +11,6 @@ define('MOSAIC_ANS_MAX_LEN', 150);
 define('PS_DEFAULT_TZ', 'Europe/Moscow');
 //define('PS_DEFAULT_TZ', 'Asia/Dubai');
 
-define('DIR_SEPARATOR', '/');
-
 /* Формат для спрайтов изображений */
 define('SYSTEM_IMG_TYPE', 'png');
 

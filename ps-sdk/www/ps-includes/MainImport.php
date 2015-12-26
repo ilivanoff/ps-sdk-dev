@@ -4,9 +4,14 @@
 define('SCRIPT_EXECUTION_START', microtime(true));
 
 /*
- * Корневая папка (DocumentRoot) - C:\WEB\postupayu.ru\www
+ * Разделитель директорий
  */
-define('PATH_BASE_DIR', dirname(__DIR__));
+define('DIR_SEPARATOR', '/');
+
+/*
+ * Корневая папка (DocumentRoot) - C:/www/postupayu.ru/www/
+ */
+define('PATH_BASE_DIR', str_replace('\\', DIR_SEPARATOR, dirname(__DIR__)) . DIR_SEPARATOR);
 
 /*
  * Название папки с содержимым (временные файлы, загрузки и т.д.)
