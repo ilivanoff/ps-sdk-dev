@@ -195,7 +195,7 @@ final class TexImager extends AbstractSingleton {
         $this->LOGGER = PsLogger::inst(__CLASS__);
         $this->PROFILER = PsProfiler::inst(__CLASS__);
         $this->CACHE = SimpleDataCache::inst();
-        $this->DM = DirManager::autogen(DirManager::DIR_FORMULES);
+        $this->DM = DirManager::autoNoDel(DirManager::DIR_FORMULES);
     }
 
 }
