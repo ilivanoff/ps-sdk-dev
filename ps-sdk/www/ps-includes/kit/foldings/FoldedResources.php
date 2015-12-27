@@ -573,20 +573,12 @@ abstract class FoldedResources extends AbstractSingleton {
         check_condition(!$this->existsEntity($ident), "Элемент {$this->getTextDescr($ident)} уже существует.");
     }
 
-    private function assertHasAccess($ident, $doAssert = true) {
-        if ($doAssert) {
-            $this->assertExistsEntity($ident);
-            check_condition($this->hasAccess($ident), 'Вы не имеете доступа к сущности ' . $this->getTextDescr($ident));
-        }
-    }
-
     /**
      * Метод возвращает сущность фолдинга
      * 
      * @return FoldedEntity
      */
     public function getFoldedEntity($ident, $ensureHasAccess = false) {
-        $this->assertHasAccess($ident, $ensureHasAccess);
         return $this->hasAccess($ident) ? FoldedEntity::inst($this, $ident) : null;
     }
 
@@ -659,7 +651,6 @@ abstract class FoldedResources extends AbstractSingleton {
 
     /** @return DirManager */
     public function getResourcesDm($ident = null, $subDir = null) {
-        $this->assertHasAccess($ident, !!$ident);
         return DirManager::resources(array('folded', $this->getFoldingGroup(), $ident, $subDir));
     }
 
@@ -669,7 +660,6 @@ abstract class FoldedResources extends AbstractSingleton {
 
     /** @return DirItem */
     public function getResourceDi($ident, $type) {
-        $this->assertHasAccess($ident);
         $this->assertAllowedResourceType($type);
         return $this->getResourcesDm()->getDirItem($ident, $ident, self::resourceTypeToExt($type));
     }
@@ -684,7 +674,6 @@ abstract class FoldedResources extends AbstractSingleton {
      * @return DirManager
      */
     private function getInfoDm($ident) {
-        $this->assertHasAccess($ident);
         return $this->getResourcesDm($ident, self::INFO_PATTERNS);
     }
 
@@ -811,7 +800,6 @@ abstract class FoldedResources extends AbstractSingleton {
      * Фетчинг информационного шаблона без его кеширования
      */
     public function getInfoTplCtt($ident, $tpl, array $smartyParams = array()) {
-        $this->assertHasAccess($ident);
         $tpl = $tpl instanceof DirItem ? $tpl : $this->getInfoDi($ident, $tpl);
         FoldedInfoTplContext::getInstance()->setContextWithFoldedEntity($this->getFoldedEntity($ident, true));
         $content = trim(ContentHelper::getContent(PSSmarty::template($tpl, $smartyParams)));
@@ -825,7 +813,6 @@ abstract class FoldedResources extends AbstractSingleton {
      *  value1
      */
     public function getTxtParam($ident, $param, $default = null) {
-        $this->assertHasAccess($ident);
         $this->assertAllowedResourceType(self::RTYPE_TXT);
         $params = $this->getFromFoldedCache($ident, self::CACHE_TXT_PARAMS, array());
         if (!is_array($params)) {
@@ -841,7 +828,6 @@ abstract class FoldedResources extends AbstractSingleton {
 
     /** @return DirManager */
     public function getAutogenDm($ident, $subDir = null) {
-        $this->assertHasAccess($ident);
         return DirManager::autogen(array('folded', $this->getFoldingGroup(), $ident, $subDir));
     }
 
@@ -855,8 +841,6 @@ abstract class FoldedResources extends AbstractSingleton {
      * Всегда подключаем все ресурсы, ненужные будут выкинуты в процессе финализации страницы.
      */
     public function getResourcesLinks($ident, $content = null) {
-        $this->assertHasAccess($ident);
-
         $this->LOGGER->info("Getting resource links for entity [$ident].");
 
         $tokens = array();
@@ -900,8 +884,6 @@ abstract class FoldedResources extends AbstractSingleton {
     private static $FETCH_REQUEST_CNT = 0;
 
     public function fetchTplImpl($ident, $smParams = null, $returnType = self::FETCH_RETURN_CONTENT, $addResources = false, $cacheId = null) {
-        $this->assertHasAccess($ident);
-
         $logMsg = null;
 
         if ($this->LOGGER->isEnabled()) {
@@ -1110,7 +1092,6 @@ abstract class FoldedResources extends AbstractSingleton {
      * @return DirItem
      */
     private function getCoverOriginal($ident) {
-        $this->assertHasAccess($ident);
         $this->assertImagesFactoryEnabled();
         return $this->getResourcesDm()->getDirItem($ident, $ident, SYSTEM_IMG_TYPE);
     }
@@ -1530,7 +1511,6 @@ abstract class FoldedResources extends AbstractSingleton {
             return; //---
         }
 
-        $this->assertHasAccess($ident);
         $this->assertAdminCanDo(__FUNCTION__, $ident);
 
         $this->LOGGER->info('Обновляем обложку сущности');
@@ -1541,7 +1521,6 @@ abstract class FoldedResources extends AbstractSingleton {
      * Редактирование сущности фолдинга
      */
     public function editEntity($ident, ArrayAdapter $params) {
-        $this->assertHasAccess($ident);
         $this->assertAdminCanDo(__FUNCTION__, $ident);
 
         foreach ($this->RESOURCE_TYPES_ALLOWED as $type) {
