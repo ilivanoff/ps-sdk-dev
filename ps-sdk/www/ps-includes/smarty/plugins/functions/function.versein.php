@@ -13,8 +13,6 @@ function smarty_function_versein($params, Smarty_Internal_Template &$template) {
 
     $verse = PoetsManager::inst()->getVerse($poetIdent, $verseIdent);
     echo $verse->getContent();
-
-    FoldedContextWatcher::getInstance()->setDependsOnEntity($verse->getFoldedEntity());
 }
 
 ?>

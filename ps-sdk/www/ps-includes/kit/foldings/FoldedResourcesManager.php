@@ -21,29 +21,6 @@ final class FoldedResourcesManager extends AbstractSingleton implements Destruct
     }
 
     /**
-     * Метод возвращает карту: сущность фолдинга=>массив сущностей, от которых она зависит.
-     * При этом зависимость сущности от фолдинга будет только в том случае, если сама сущность сохранила об этом информацию в кеше.
-     * Не сохраняем построенную карту в переменную класса, так как карта может измениться.
-     */
-    public function getDependsOnMap() {
-        PsProfiler::inst(__CLASS__)->start(__FUNCTION__);
-        $result = array();
-        /* @var $folding FoldedResources */
-        foreach (Handlers::getInstance()->getFoldings() as $folding) {
-            if ($folding->isCanDependsOnEntitys()) {
-                foreach ($folding->getVisibleIdents() as $ident) {
-                    /* @var $ent FoldedEntity */
-                    foreach ($folding->getEntitysWeDependsOn($ident) as $parentUq => $ent) {
-                        $result[$folding->getUnique($ident)][] = $parentUq;
-                    }
-                }
-            }
-        }
-        PsProfiler::inst(__CLASS__)->stop();
-        return $result;
-    }
-
-    /**
      * КАРТА ТАБЛИЦА/ПРЕДСТАВЛЕНИЕ -> СУЩНОСТЬ ФОЛДИНГА, РАБОТАЮЩАЯ С НЕЙ
      */
     private $DB_FOLDING_MAP;
@@ -174,20 +151,6 @@ final class FoldedResourcesManager extends AbstractSingleton implements Destruct
                     }
                 } else {
                     $this->LOGGER->info("\t -- Нет --");
-                }
-            }
-        }
-
-        /**
-         * Распечатаем карту зависимости сущностей фолдинга.
-         * Операция настолько тяжёлая, что в режиме ajax также будем избегать её выполнение.
-         */
-        if (PsDefines::isDevmode() && !PageContext::inst()->isAjax()) {
-            $this->LOGGER->infoBox('Карта зависимости сущностей фолдингов:');
-            foreach ($this->getDependsOnMap() as $who => $fromWhoArr) {
-                $this->LOGGER->info("\t$who:");
-                foreach ($fromWhoArr as $fromWho) {
-                    $this->LOGGER->info("\t\t$fromWho");
                 }
             }
         }

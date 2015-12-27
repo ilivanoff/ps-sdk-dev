@@ -21,9 +21,7 @@ final class Handlers {
         //Фолдинги
         $this->foldings[] = PopupPagesManager::inst();
         $this->foldings[] = PluginsManager::inst();
-        $this->foldings[] = IdentPagesManager::inst();
         $this->foldings[] = TimeLineManager::inst();
-        $this->foldings[] = TemplateMessages::inst();
         $this->foldings[] = UserPointsManager::inst();
         $this->foldings[] = StockManager::inst();
         $this->foldings[] = HelpManager::inst();
@@ -35,8 +33,6 @@ final class Handlers {
         $this->foldings[] = ScientistsManager::inst();
         //Админские страницы
         $this->foldings[] = APagesResources::inst();
-        //Управление списком предпросмотра постов
-        $this->foldings[] = ShowcasesCtrlManager::inst();
 
         /*
          * Выделим различные подклассы фолдингов

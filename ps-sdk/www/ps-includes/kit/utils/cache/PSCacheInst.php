@@ -43,7 +43,7 @@ class PSCacheInst {
     }
 
     public function clean() {
-        PSCache::inst()->clean($this->group);
+        PSCache::inst()->cleanCache($this->group);
     }
 
 }

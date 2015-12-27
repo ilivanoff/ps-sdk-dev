@@ -79,10 +79,6 @@ class FoldedEntity implements Spritable {
         return $this->folding->getInfo($this->ident, $tplPath, $smartyParams);
     }
 
-    public function setDependsOnEntity(FoldedEntity $parent) {
-        $this->folding->setDependsOnEntity($this->ident, $parent);
-    }
-
     public function onEntityChanged() {
         $this->folding->onEntityChanged($this->ident);
     }

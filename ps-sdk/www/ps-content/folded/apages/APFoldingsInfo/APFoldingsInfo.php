@@ -8,7 +8,6 @@ class AP_APFoldingsInfo extends BaseAdminPage {
 
     public function buildContent() {
         $PARAMS['foldings'] = Handlers::getInstance()->getFoldings();
-        $PARAMS['depends'] = FoldedResourcesManager::inst()->getDependsOnMap();
 
         return $this->foldedEntity->fetchTpl($PARAMS);
     }

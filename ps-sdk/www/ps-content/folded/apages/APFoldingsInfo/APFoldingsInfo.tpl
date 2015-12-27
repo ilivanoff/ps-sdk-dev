@@ -24,14 +24,3 @@
         {/foreach}
     </tbody>
 </table>
-
-<br/>
-<h5>Карта зависимости фолдингов</h5>
-<ul class="sections depmap">
-    {foreach $depends as $parent=>$childs}
-        <li class="level2"><b>{$parent}</b></li>
-        {foreach $childs as $child}
-            <li class="level3">{$child}</li>
-        {/foreach}
-    {/foreach}
-</ul>

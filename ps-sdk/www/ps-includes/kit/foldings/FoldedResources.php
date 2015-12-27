@@ -55,9 +55,6 @@ abstract class FoldedResources extends AbstractSingleton {
     /** текстовое описание фолдинга */
     private $TO_STRING;
 
-    /** Признак, относится ли данный фолдинг к SDK */
-    private $IS_SDK = null;
-
     /** Ремап типа на расширение */
     private static $TYPE2EXT = array(self::RTYPE_PCSS => 'print.css');
 
@@ -143,48 +140,35 @@ abstract class FoldedResources extends AbstractSingleton {
         return array('info' => '', 'content' => '');
     }
 
-    //Дополнительный список файлов, которые будут проверены на изменение, совместно с $RESOURCE_TYPES_CHECK_CHANGE
-    protected function getDirItems4CheckChanged($ident) {
-        return array();
-    }
-
     /**
      * Методы различных проверок
      */
     public function isIt($type, $subtype = null) {
-        return $this->getFoldingType() == $type && (!$this->getFoldingSubType() || $this->getFoldingSubType() == $subtype);
+        return $this->isItByType($type) && (!$this->getFoldingSubType() || $this->getFoldingSubType() == $subtype);
     }
 
-    /**
-     * Проверка - входит ли фолдинг в SDK.
-     * Важно! В конструкторе такую проверку делать нельзя, так как экземпляр фолдингов создаётся в хранилище фолдингов,
-     * которое уже и знает, к чему относится фолдинг - к проекту или к SDK.
-     * 
-     * @return bool
-     */
-    public final function isSdk() {
-        return $this->IS_SDK === null ? $this->IS_SDK = FoldingsStore::inst()->isSdkFolding($this) : $this->IS_SDK;
-    }
-
+    //Проверяет, относится ли фолдинг к данному типу
     public function isItByType($type) {
-        return $this->getFoldingType() == $type;
+        return $type === $this->getFoldingType();
     }
 
+    //Работает ли фолдинг с подтипами фолдингов
     public function hasSubType() {
         return !!$this->getFoldingSubType();
     }
 
+    //Уникальный идентификатор фолдинга, либо сущности внутри фолдинга (если передана)
     public static function unique($type, $subtype = null, $ident = null) {
-        return $type . ($subtype ? "-$subtype" : '') . ($ident ? "-$ident" : '');
-    }
-
-    private static function smartyPrefix($type, $subtype = null) {
-        return trim($subtype) . $type;
+        return $type . ($subtype ? '-' . $subtype : '') . ($ident ? '-' . $ident : '');
     }
 
     //Уникальный идентификатор фолдинга, либо сущности внутри фолдинга (если передана)
     public function getUnique($ident = null) {
-        return $this->UNIQUE . ($ident ? "-$ident" : '');
+        return $this->UNIQUE . ($ident ? '-' . $ident : '');
+    }
+
+    private static function smartyPrefix($type, $subtype = null) {
+        return trim($subtype) . $type;
     }
 
     //Текстовое описание фолдинга или сущности фолдинга
@@ -236,7 +220,7 @@ abstract class FoldedResources extends AbstractSingleton {
         $this->PROFILER->start(__FUNCTION__);
 
         //Строим полный список сущностей, которые будут проверены на дату последнего изменения
-        $items[] = to_array($this->getDirItems4CheckChanged($ident));
+        $items[] = array();
         foreach ($this->RESOURCE_TYPES_CHECK_CHANGE as $type) {
             $items[] = $this->getResourceDi($ident, $type);
         }
@@ -302,7 +286,7 @@ abstract class FoldedResources extends AbstractSingleton {
     /**
      * Загрузка из кеша
      */
-    public function getFromFoldedCache($ident, $cacheId, $checkKeys = null) {
+    private function getFromFoldedCache($ident, $cacheId, $checkKeys = null) {
         $this->assertExistsEntity($ident);
         $this->assertClassCanUseCache($cacheId);
 
@@ -315,7 +299,6 @@ abstract class FoldedResources extends AbstractSingleton {
          * будем выполнять checkEntityChanged, так как в случае изменения сущности нужно обновить 
          * и всё остальное - сбросить спрайты и т.д.
          */
-        $this->checkEntityChanged($ident);
         $sign = $this->getOldestResourceFile($ident);
         $groupId = $this->cacheGroup($ident);
         return PSCache::inst()->getFromCache($cacheId, $groupId, $checkKeys, $sign);
@@ -324,7 +307,7 @@ abstract class FoldedResources extends AbstractSingleton {
     /**
      * Сохранение в кеш
      */
-    public function saveToFoldedCache($object, $ident, $cacheId) {
+    private function saveToFoldedCache($object, $ident, $cacheId) {
         $this->assertExistsEntity($ident);
         $this->assertClassCanUseCache($cacheId);
 
@@ -342,124 +325,8 @@ abstract class FoldedResources extends AbstractSingleton {
      */
     private function cleanFoldedCache($ident) {
         if ($this->isCanUseCache($ident)) {
-            PSCache::inst()->clean($this->cacheGroup($ident));
+            PSCache::inst()->cleanCache($this->cacheGroup($ident));
         }
-    }
-
-    /*
-     * **************************
-     *   ЗАВИСИМОСТЬ СУЩНОСТЕЙ
-     * **************************
-     */
-
-    /**
-     * Метод возвращает признак - могут ли сущности данного фолдинга зависеть от сущностей других фолдингов.
-     * Это возможно, если данный фолдинг наследует интерфейс StorableFolding и, соответственно, может сохранять своё состояние (использовать кеши).
-     * 
-     * @param string $ident - идентификатор фолдинга. Если передан, то будет проверенно именно для него.
-     */
-    public final function isCanDependsOnEntitys($ident = null) {
-        if ($ident && !$this->isVisibleEntity($ident)) {
-            return false;
-        }
-        return $this instanceof StorableFolding;
-    }
-
-    /**
-     * Метод отмечает, что сущность данного фолдинга зависит от сущности другого фолдинга.
-     * Будет выполнена проверка на то, что сущность не зависит сама от себя.
-     * При этом мы не запрещаем сущностям одного фолждинга зависеть друг от друга.
-     * 
-     * Будем требовать именно передачи FoldedEntity, чтобы не заботиться о проверке существования сущности.
-     * 
-     * @param string $ident - идентификатор сущности данного фолдинга
-     * @param FoldedEntity $entity - сущность, от которой зависит сущность данного фолдинга
-     */
-    private $WE_DEPENDS_ON_CACHE = array();
-
-    public function setDependsOnEntity($ident, FoldedEntity $entity) {
-        if (!$this->isCanDependsOnEntitys($ident)) {
-            //Мы не используем кеш или сущность не видна, поэтому - не зависим от других сущностей фолдингов
-            return; //---
-        }
-
-        if (!$entity->getFolding()->isVisibleEntity($entity->getIdent())) {
-            //Мы обнаружили, что в видимой сущности используется невидимая
-            raise_error('Visible entity [' . $this->getUnique() . '] cannot depends on invisible entity [' . $entity->getUnique() . ']');
-        }
-
-        if ($this->getUnique($ident) == $entity->getUnique()) {
-            //Сущность не может зависеть от самой себя
-            return; //---
-        }
-        $depends = $this->getFromFoldedCache($ident, self::CACHE_DEPEND_ENTS);
-        $depends = to_array($depends);
-        if (in_array($entity->getUnique(), $depends)) {
-            //Мы уже отметили, что зависим от данной сущности
-            return; //---
-        }
-
-        $this->LOGGER->info("Entity [$ident] is depends on entity [$entity].");
-
-        $depends[] = $entity->getUnique();
-        $this->saveToFoldedCache($depends, $ident, self::CACHE_DEPEND_ENTS);
-
-        unset($this->WE_DEPENDS_ON_CACHE[$ident]);
-    }
-
-    /**
-     * Возвращает список сущностей, от которых зависит сущность данного фолдинга.
-     * Метод используется для проверки сущности на изменение.
-     * 
-     * !МЕТОД ВЫЗЫВАЕТСЯ ОЧЕНЬ ЧАСТО!
-     * Дело в том, что после очистки кеша все сущности "считают", что они изменились
-     * и начинают пробегать по всем сущностям фолдингов, оповещая об изменении,
-     * то есть вызывать функцию {@link #getEntitysDependableFromUs}.
-     * 
-     * Поэтому нам нужно работать максимально быстро, используем кеширование на уровне класса.
-     * 
-     * unique => FoldedEntity
-     */
-    public final function getEntitysWeDependsOn($selfEntityIdent) {
-        if (!$this->isCanDependsOnEntitys()) {
-            return array();
-        }
-        if (!array_key_exists($selfEntityIdent, $this->WE_DEPENDS_ON_CACHE)) {
-            $cached = to_array($this->getFromFoldedCache($selfEntityIdent, self::CACHE_DEPEND_ENTS));
-
-            $this->WE_DEPENDS_ON_CACHE[$selfEntityIdent] = array();
-            foreach ($cached as $parentEntityUnique) {
-                $this->WE_DEPENDS_ON_CACHE[$selfEntityIdent][$parentEntityUnique] = Handlers::getInstance()->getFoldedEntityByUnique($parentEntityUnique);
-            }
-        }
-        return $this->WE_DEPENDS_ON_CACHE[$selfEntityIdent];
-    }
-
-    /**
-     * Возвращает список сущностей, зависимых от сущности данного фолдинга.
-     * Метод используется для оповещения сущностей, использующих данную, об изменении.
-     * 
-     * unique => FoldedEntity
-     */
-    public final function getEntitysDependableFromUs($selfEntityIdent) {
-        $dependable = array();
-
-        $selfEntityUnique = $this->getUnique($selfEntityIdent);
-
-        /* @var $parentFolding FoldedResources */
-        foreach (Handlers::getInstance()->getFoldings() as $parentFolding) {
-            if ($parentFolding === $this || !$parentFolding->isCanDependsOnEntitys()) {
-                continue;
-            }
-            foreach ($parentFolding->getVisibleIdents() as $parentEntityIdent) {
-                if (array_key_exists($selfEntityUnique, $parentFolding->getEntitysWeDependsOn($parentEntityIdent))) {
-                    $entity = $parentFolding->getFoldedEntity($parentEntityIdent);
-                    $dependable[$entity->getUnique()] = $entity;
-                }
-            }
-        }
-
-        return $dependable;
     }
 
     /*
@@ -474,108 +341,10 @@ abstract class FoldedResources extends AbstractSingleton {
     }
 
     /**
-     * Метод проверяет, есть ли изменённые сущности данного фолдинга при этом будет выполнена и сама проверка.
-     * 
-     * @param boolean $all - признак, проверить ли все сущности, или достаточно определить первую изменённую.
-     */
-    private $AllEntityChangedChecked = false;
-
-    private function checkEntitiesForChange($all = true) {
-        if ($this->AllEntityChangedChecked) {
-            return $this->isChangedEntitysDetected(); //---
-        }
-
-        $this->LOGGER->info('Checking {} for change.', $all ? 'all entitys' : 'first entity');
-
-        if (!$all && $this->isChangedEntitysDetected()) {
-            return true;
-        }
-
-        /*
-         * Пробегаем по нашим сущностям
-         */
-        foreach ($this->getVisibleIdents() as $ident) {
-            $changed = $this->checkEntityChanged($ident);
-            if ($changed && !$all) {
-                return true;
-            }
-        }
-
-        return $this->isChangedEntitysDetected(); //---
-    }
-
-    public function checkAllEntitiesChanged() {
-        return $this->checkEntitiesForChange(true);
-    }
-
-    public function checkFirstEntityChanged() {
-        return $this->checkEntitiesForChange(false);
-    }
-
-    /**
      * Проверим, не был ли какой-нибудь из файлов ресурсов изменён.
      * Если был, то нужно выполнить действия после изменения сущности.
      */
     private $CHANGE_CHECKED = array();
-
-    private function checkEntityChanged($ident) {
-        if (!$this->isVisibleEntity($ident)) {
-            return false; //Не проверяем изменение для сущностей, которые пока не видны
-        }
-
-        //Проверим изменения сущностей по БД - выкинуто
-        //DbChangeListener::check();
-
-        if (in_array($ident, $this->CHANGE_CHECKED)) {
-            return in_array($ident, $this->CHANGED_ENTITYS); //---
-        }
-
-        check_condition($ident != self::PATTERN_NAME, "Некоректно проверять шаблон для сущности {$this->getEntityName()} на изменение.");
-
-        $this->CHANGE_CHECKED[] = $ident;
-
-        $this->LOGGER->info('');
-        $this->LOGGER->info("Check is entity [$ident] changed.");
-        FoldedResourcesManager::onEntityAction(FoldedResourcesManager::ACTION_ENTITY_CHECK_CHANGED, $this, $ident);
-
-        $this->AllEntityChangedChecked = count($this->CHANGE_CHECKED) >= count($this->getVisibleIdents());
-        if ($this->AllEntityChangedChecked) {
-            $this->LOGGER->info('All entities was checked for change.');
-            FoldedResourcesManager::onEntityAction(FoldedResourcesManager::ACTION_FOLDING_ALL_CHECKED, $this);
-        }
-
-
-        $changed = !$this->getFromFoldedCache($ident, self::CACHE_CHANGE_PROCESS);
-
-        /**
-         * Если сущность не изменена, но есть фолдинги, от которых мы зависим - пробежимся по ним, 
-         * получим сущности родительских фолдингов, от которых мы зависим и проверим, не изменились ли они.
-         */
-        if (!$changed && $this->isCanDependsOnEntitys($ident)) {
-            $this->LOGGER->info("Entity [$ident] not need process change, but checking entitys we depends on.");
-
-            /* @var $entity FoldedEntity */
-            foreach ($this->getEntitysWeDependsOn($ident) as $entity) {
-                $pchanged = $entity->getFolding()->checkEntityChanged($entity->getIdent());
-                /*
-                 * Даже если мы нашли изменённую дочернюю сущность, всё равно проверим все дочерние сущности.
-                 */
-                $changed = $changed || $pchanged;
-                $this->LOGGER->info("Parent entity [$entity] is {}.", $pchanged ? 'CHANGED' : 'not chenged');
-            }
-        }
-
-        $this->LOGGER->info('Entity [{}] {} process change.', $ident, $changed ? 'NEED' : 'not need');
-
-
-        if ($changed) {
-            //Мы изменились, прийдётся обрабатывать изменение
-            $this->onEntityChanged($ident);
-        }
-
-        return $changed;
-    }
-
     private $CHANGED_ENTITYS = array();
 
     //Метод вызывается, как только обнаруживается, что сущность изменилась
@@ -606,36 +375,8 @@ abstract class FoldedResources extends AbstractSingleton {
 
         $this->onEntityChangedImpl($ident);
 
-        $this->onFoldingChanged();
-
-        //Транслируем событие изменения сущности во все зависимые (родительские) фолдинги
-        /* @var $entity FoldedEntity */
-        foreach ($this->getEntitysDependableFromUs($ident) as $parentEntity) {
-            $this->LOGGER->info("Notify dependable folded entity [$parentEntity] that entity [$ident] is changed.");
-            $parentEntity->onEntityChanged();
-        }
-
         //Именно здесь ставим маркер обработанного изменения, так как до этого мы почистили кэши
         $this->saveToFoldedCache(true, $ident, self::CACHE_CHANGE_PROCESS);
-    }
-
-    /**
-     * Метод вызывается в том случае, когда фолдинг меняется, а именно:
-     * 1. Меняется любая сущность этого фолдинга
-     * 2. Меняется таблица или представление, с которой работает этот фолдинг
-     * 
-     * Метод нужен восновном для сброса кешей, зависящих от этого волдинга
-     */
-    private $foldingChangeNotified = false;
-
-    public final function onFoldingChanged() {
-        if ($this->foldingChangeNotified) {
-            return; //---
-        }
-        $this->foldingChangeNotified = true;
-        $this->LOGGER->info('Вызван метод onFoldingChanged.');
-        FoldedResourcesManager::onEntityAction(FoldedResourcesManager::ACTION_FOLDING_ONCE_CHENGED, $this);
-        PSCache::inst()->onFoldingChanged($this);
     }
 
     protected abstract function onEntityChangedImpl($ident);
@@ -893,9 +634,6 @@ abstract class FoldedResources extends AbstractSingleton {
             //Проверим, что это - файл
             check_condition($php->isFile(), 'Не найден класс реализации для сущности ' . $this->getTextDescr($ident));
 
-            //Проверим сущность на изменение
-            $this->checkEntityChanged($ident);
-
             //Получим FoldedEntity, так как её потом нужно будет передать в конструктор
             $foldedEntity = $this->getFoldedEntity($ident);
 
@@ -1104,7 +842,6 @@ abstract class FoldedResources extends AbstractSingleton {
     /** @return DirManager */
     public function getAutogenDm($ident, $subDir = null) {
         $this->assertHasAccess($ident);
-        $this->checkEntityChanged($ident);
         return DirManager::autogen(array('folded', $this->getFoldingGroup(), $ident, $subDir));
     }
 
@@ -1175,9 +912,6 @@ abstract class FoldedResources extends AbstractSingleton {
         }
 
         $entity = $this->getFoldedEntity($ident);
-
-        //Сразу установим зависимость от текущей сущности
-        FoldedContextWatcher::getInstance()->setDependsOnEntity($entity);
 
         $CTXT = $this->getFoldedContext();
 
@@ -2032,7 +1766,7 @@ abstract class FoldedResources extends AbstractSingleton {
         }
 
         /*
-         * Последовательность, однозначно идентифицирующая фолдинг и используемыя в различных 
+         * Последовательность, однозначно идентифицирующая фолдинг и используемая в различных 
          * ситуациях для связи фолдинга и его сущностей, таких как:
          * смарти функции, класс и т.д.
          * Пример: trpost, pl и т.д.

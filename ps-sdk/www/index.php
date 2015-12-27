@@ -34,6 +34,34 @@ PsConnectionPool::configure(PsConnectionParams::sdkTest());
 
 ps_admin_on(true);
 
+$a = array('a' => array('x' => 1, 'y' => 2));
+
+print_r($a);
+br();
+unset($a['c']['x']);
+print_r($a);
+br();
+
+die;
+
+class X {
+
+    function test(array $a = null) {
+        print_r($a);
+        br();
+        print_r(is_array($a));
+    }
+
+}
+
+$x = new X();
+$x->test(null);
+die;
+
+
+PageBuilder::inst()->buildpage(PB_admin::getIdent());
+die;
+
 /*
 
   echo PsConnectionPool::params();

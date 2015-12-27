@@ -26,7 +26,7 @@ class ADMINclient extends AbstractAjaxAction {
 
         switch ($action) {
             case 'ccache':
-                PSCache::inst()->clean();
+                PSCache::inst()->cleanCache();
                 break;
 
             case 'toggledev':

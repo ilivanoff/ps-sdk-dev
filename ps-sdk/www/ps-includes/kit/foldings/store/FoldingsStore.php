@@ -84,18 +84,6 @@ final class FoldingsStore extends AbstractSingleton {
         raise_error("Invalid entity scope [$scope]");
     }
 
-    /**
-     * Метод проверяет, относится ли фолдинг к SDK
-     */
-    public function isSdkFolding(FoldedResources $folding) {
-        $funique = $folding->getUnique();
-        if (array_key_exists($funique, $this->UNIQUE_2_PROVIDER)) {
-            $provider = $this->UNIQUE_2_PROVIDER[$funique];
-            return $provider::isSdk();
-        }
-        raise_error("Folding '$folding' is not registered in any foldings provider");
-    }
-
     /** @return FoldingsStore */
     public static function inst() {
         return parent::inst();

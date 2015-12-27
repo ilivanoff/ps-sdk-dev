@@ -40,7 +40,6 @@ final class PluginsManager extends PluginResources {
         } else {
             $return = $this->buildImpl($plugin, $content, $params);
             PluginFetchingContext::getInstance()->dropContext();
-            FoldedContextWatcher::getInstance()->setDependsOnEntity($this->getFoldedEntity($ident));
         }
         return $return;
     }
@@ -53,7 +52,6 @@ final class PluginsManager extends PluginResources {
         PluginFetchingContext::getInstance()->setContext($plugin->getIdent());
         $return = $this->buildImpl($plugin, null, $params);
         PluginFetchingContext::getInstance()->dropContext();
-        FoldedContextWatcher::getInstance()->setDependsOnEntity($this->getFoldedEntity($ident));
         return $return;
     }
 

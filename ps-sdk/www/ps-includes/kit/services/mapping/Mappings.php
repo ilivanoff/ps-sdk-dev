@@ -42,34 +42,6 @@ class Mappings {
     }
 
     /**
-     * Маппинг групп кешей к фолдингам
-     * 
-     * @param str $postType - тип поста
-     * @return MappingClient
-     */
-    public static final function CACHE_FOLDINGS() {
-        return Mapping::inst(//
-                        MapSrcCacheGroups::inst(array(), __FUNCTION__), //
-                        MapSrcAllFoldings::inst(array(), __FUNCTION__), //
-                        'Группы кеширования к Фолдингам'
-        );
-    }
-
-    /**
-     * Маппинг групп кешей к сущностям базы - таблицам и представлениям
-     * 
-     * @param str $postType - тип поста
-     * @return MappingClient
-     */
-    public static final function CACHE_DBENTITYS() {
-        return Mapping::inst(//
-                        MapSrcCacheGroups::inst(array(), __FUNCTION__), //
-                        MapSrcDbEntitys::inst(array(), __FUNCTION__), //
-                        'Группы кеширования к Таблицам и представлениям'
-        );
-    }
-
-    /**
      * Меод должен вернуть все возможные маппинги.
      * Нужно для показа в админке
      */
@@ -81,8 +53,6 @@ class Mappings {
         foreach (Handlers::getInstance()->getPostsProcessors() as $postType => $pp) {
             $mappings[] = self::RECOMMENDED_POSTS($postType);
         }
-        $mappings[] = self::CACHE_FOLDINGS();
-        $mappings[] = self::CACHE_DBENTITYS();
         return $mappings;
     }
 

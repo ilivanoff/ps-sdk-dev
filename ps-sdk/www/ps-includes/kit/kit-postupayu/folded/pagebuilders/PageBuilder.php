@@ -2,13 +2,6 @@
 
 final class PageBuilder extends PageBuilderResources {
 
-    public function registerAllHtmlPages() {
-        /** @var WebPagesRegistrator */
-        foreach ($this->getAccessibleClassNames() as $builderClass) {
-            $builderClass::registerWebPages();
-        }
-    }
-
     /** @return AbstractPageBuilder */
     private function getPageBuilder($pageType) {
         return $this->getEntityClassInst($pageType);
@@ -141,7 +134,7 @@ final class PageBuilder extends PageBuilderResources {
      */
 
     //На данном этапе запрос уже провалидирован в самой WebPage
-    public final function buildPage(array $buildParams = array()) {
+    public final function buildpage($builderIdent, array $buildParams = array()) {
         header('Content-Type: text/html; charset=utf-8');
         ExceptionHandler::registerPretty();
 
@@ -150,8 +143,7 @@ final class PageBuilder extends PageBuilderResources {
 
         // Подготовим необходимые классы
         $CTXT = PageContext::inst();
-        $PAGE = $CTXT->getPage();
-        $BUILDER = $this->getPageBuilder($CTXT->getPageType());
+        $BUILDER = $this->getPageBuilder($builderIdent);
         $PROFILER = $BUILDER->getProfiler();
 
         $RESOURCES = null;
@@ -174,12 +166,6 @@ final class PageBuilder extends PageBuilderResources {
 
             //Вызываем предварительную обработку страницы
             $BUILDER->preProcessPage($CTXT, $RQ_PARAMS, $BUILD_PARAMS);
-
-            // Оповещаем слушателей
-            /* @var $listener PagePreloadListener */
-            foreach (Handlers::getInstance()->getPagePreloadListeners() as $listener) {
-                $listener->onPagePreload($PAGE);
-            }
 
             //Билдер строит страницу, наполняя контекст. Нам от него нужны будут только данные из контекста
             $PARAMS = $BUILDER->buildPage($CTXT, $BUILDER_CTXT, $RQ_PARAMS, $BUILD_PARAMS);
@@ -228,7 +214,6 @@ final class PageBuilder extends PageBuilderResources {
         if ($PROFILER) {
             // Заканчиваем профилирование
             $PROFILER->stop();
-            PageOpenWatcher::updateUserPageWatch($CTXT->getRequestUrl());
         }
     }
 

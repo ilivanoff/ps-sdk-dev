@@ -60,15 +60,6 @@ class FoldedContextWatcher extends AbstractContextWatcher {
         return $entity;
     }
 
-    /**
-     * Для всех контекстов, которые сохраняют своё состояние, нужно отметить зависимость от сущности фолдинга.
-     */
-    public function setDependsOnEntity(FoldedEntity $parent) {
-        foreach ($this->CTXTS as $ctxt) {
-            $ctxt->getFoldedEntity()->setDependsOnEntity($parent);
-        }
-    }
-
 }
 
 ?>
