@@ -144,9 +144,13 @@ class PopupPagesManager extends PopupPagesResources {
         }
 
         $pageIdent = $RQ->str(POPUP_WINDOW_PARAM);
-        if (!$this->hasAccess($pageIdent, true)) {
-            return false;
-        }
+        /*
+         * Выкинута проверка доступа
+         * 
+          if (!$this->hasAccess($pageIdent, true)) {
+          return false;
+          }
+         */
         $PARAMS[POPUP_WINDOW_PARAM] = $pageIdent;
 
         if ($pageIdent != PP_plugin::getIdent()) {

@@ -19,11 +19,11 @@ class MapSrcFoldingEnts extends MappingSource {
     }
 
     protected function loadIdentsLeft($mident, array $params) {
-        return $this->folding->getAccessibleIdents();
+        return $this->folding->getAllIdents();
     }
 
     protected function loadIdentsRight($mident, array $params, MappingSource $cfgLeft, $identLeft) {
-        $allIdents = $this->folding->getAccessibleIdents();
+        $allIdents = $this->folding->getAllIdents();
         switch ($mident) {
             case 'RUBRIC_2_SCCONTROLLERS':
                 if ($this->folding instanceof ShowcasesCtrlManager) {

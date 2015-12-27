@@ -263,7 +263,7 @@ abstract class FoldedResources extends AbstractSingleton {
      * @return bool
      */
     private function isCanUseCache($ident = null, $cacheId = null) {
-        if ($ident && !$this->isVisibleEntity($ident)) {
+        if ($ident && !$this->existsEntity($ident)) {
             //Сущность не видна
             return false;
         }
@@ -349,7 +349,7 @@ abstract class FoldedResources extends AbstractSingleton {
 
     //Метод вызывается, как только обнаруживается, что сущность изменилась
     public function onEntityChanged($ident) {
-        if (!$this->isVisibleEntity($ident)) {
+        if (!$this->existsEntity($ident)) {
             return; //Сущность пока не видна пользователям, для неё не обрабатываем событие изменения
         }
 
@@ -472,17 +472,6 @@ abstract class FoldedResources extends AbstractSingleton {
     }
 
     /**
-     * Список сущностей, видимых пользователям
-     */
-    public final function getVisibleIdents() {
-        return $this->IDENTS()->VISIBLE_IDENTS;
-    }
-
-    public final function getAccessibleIdents($includePattern = false) {
-        return $this->IDENTS()->ACCESS_IDENTS[$includePattern ? 'full' : 'short'];
-    }
-
-    /**
      * Метод проверяет существование директории для сущности фолдинга.
      */
     public function existsEntity($ident) {
@@ -490,24 +479,11 @@ abstract class FoldedResources extends AbstractSingleton {
     }
 
     /**
-     * Метод проверяет видимость сущности фолдинга.
-     * Восновном используется для сущностей, хранимых ещё и в базе. 
-     * Если записи в базе нет или она имеет признак b_show=0, то сущность не будет видна.
-     * 
-     * Кеш строится только в зависимости от видимых сущностей фолдинга, на изменение тех сущностей,
-     * которые не видны пользователю, не будет реакции. Это нужно, например, для того, чтобы админ
-     * мог редактировать фолдинг в админке, при этом не происходил сброс кешей.
-     */
-    private function isVisibleEntity($ident) {
-        return in_array($ident, $this->getVisibleIdents());
-    }
-
-    /**
      * Метод проверяет, имеет ли текущий авторизованный пользователь доступ к сущности фолдинга.
      * Админ может иметь доступ к существующим невидимым сущностям, например если он её только создал, но не доабвил запись в базу.
      */
     public function hasAccess($ident, $checkClassInstAccess = false) {
-        if (!in_array($ident, $this->getAccessibleIdents(true))) {
+        if (!$this->existsEntity($ident)) {
             return false;
         }
         if ($checkClassInstAccess) {
@@ -521,7 +497,7 @@ abstract class FoldedResources extends AbstractSingleton {
      */
     public final function getVisibleClassInsts() {
         $insts = array();
-        foreach ($this->getVisibleIdents() as $ident) {
+        foreach ($this->getAllIdents() as $ident) {
             $insts[$ident] = $this->getEntityClassInst($ident);
         }
         return $insts;
@@ -534,7 +510,7 @@ abstract class FoldedResources extends AbstractSingleton {
     public final function getAccessibleClassNames() {
         $this->assertAllowedResourceType(self::RTYPE_PHP);
         $classNames = array();
-        foreach ($this->getAccessibleIdents() as $ident) {
+        foreach ($this->getAllIdents() as $ident) {
             require_once $this->getClassPath($ident);
             $classNames[$ident] = $this->ident2className($ident);
         }
@@ -545,7 +521,7 @@ abstract class FoldedResources extends AbstractSingleton {
      * Метод вернёт экземпляры классов для всех сущностей, доступных пользователю
      */
     public final function getAllUserAcessibleClassInsts() {
-        return $this->getUserAcessibleClassInsts($this->getAccessibleIdents());
+        return $this->getUserAcessibleClassInsts($this->getAllIdents());
     }
 
     /**
@@ -588,7 +564,7 @@ abstract class FoldedResources extends AbstractSingleton {
      */
     public function getAccessibleFoldedEntitys($includePattern = false) {
         $result = array();
-        foreach ($this->getAccessibleIdents($includePattern) as $ident) {
+        foreach ($this->getAllIdents($includePattern) as $ident) {
             $result[] = $this->getFoldedEntity($ident);
         }
         return $result;
@@ -596,7 +572,7 @@ abstract class FoldedResources extends AbstractSingleton {
 
     public function getVisibleFoldedEntitys() {
         $result = array();
-        foreach ($this->getVisibleIdents() as $ident) {
+        foreach ($this->getAllIdents() as $ident) {
             $result[] = $this->getFoldedEntity($ident);
         }
         return $result;
@@ -699,7 +675,7 @@ abstract class FoldedResources extends AbstractSingleton {
 
     public function getAccesibleResourcesDi($type, $includePattern = false) {
         $result = array();
-        foreach ($this->getAccessibleIdents($includePattern) as $ident) {
+        foreach ($this->getAllIdents($includePattern) as $ident) {
             $result[$ident] = $this->getResourceDi($ident, $type);
         }
         return $result;
@@ -1315,7 +1291,7 @@ abstract class FoldedResources extends AbstractSingleton {
      * Для админа вернёт всё (из таблицы), для обычного пользователя - только видимые (из вью).
      */
     public function getVisibleDbObjects($objectName) {
-        return FoldingBean::inst()->getVisibleObjects($this, $objectName, $this->getVisibleIdents());
+        return FoldingBean::inst()->getVisibleObjects($this, $objectName, $this->getAllIdents());
     }
 
     /**

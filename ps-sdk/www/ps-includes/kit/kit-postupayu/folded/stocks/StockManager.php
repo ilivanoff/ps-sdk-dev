@@ -55,9 +55,12 @@ class StockManager extends StockResources {
             return PsHtml::divErr("Неизвестный тип акции - [$type].");
         }
 
-        if (!$this->hasAccess($type)) {
-            return '';
-        }
+        /*
+         * TODO - выкинута проверка доступа
+          if (!$this->hasAccess($type)) {
+          return '';
+          }
+         */
 
         /* @var $stock BaseStock */
         $stock = $this->getEntityClassInst($type, false);
