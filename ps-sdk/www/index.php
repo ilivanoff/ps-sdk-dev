@@ -44,11 +44,6 @@ $group2 = 'default2';
 PSCache::inst()->saveToCache($a, $key, $group, 'xxx');
 PSCache::inst()->saveToCache(array('a' => 1), '$key', '$group', 'xxx1');
 
-PSCacheGroupsStore::TEST()->clean();
-PSCacheGroupsStore::TEST()->saveToCache('aaa', 'X', 'a');
-echo PSCacheGroupsStore::TEST()->getFromCache('X', null, 'a');
-//PSCacheGroupsStore::TEST()->clean();
-
 die;
 
 echo TestUtils::testProductivity(function() {
