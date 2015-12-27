@@ -1,11 +1,6 @@
 <?php
 
 /*
- * Время жизни кешей (в минутах)
- */
-define('CACHE_LITE_LIFE_TIME', 720);
-
-/*
  * Включено ли логирование
  */
 define('LOGGING_ENABLED', true);
