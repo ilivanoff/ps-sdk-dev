@@ -39,23 +39,11 @@ final class ConfigIni extends AbstractIni {
     }
 
     public static function smartyPlugins() {
-        return self::readAbsDirPathArr(self::GROUP_SMARTY, 'plugins');
+        return DirManager::relToAbs(self::getPropCheckType(self::GROUP_SMARTY, 'plugins', array(PsConst::PHP_TYPE_ARRAY, PsConst::PHP_TYPE_NULL)));
     }
 
     public static function smartyTemplates() {
-        return self::readAbsDirPathArr(self::GROUP_SMARTY, 'templates');
-    }
-
-    /**
-     * Метод вычитывает относительные пути к директориям и возвращает набор абсолютных путей
-     */
-    private static function readAbsDirPathArr($group, $prop) {
-        $absDirs = array();
-        $relDirs = to_array(self::getPropCheckType($group, $prop, array(PsConst::PHP_TYPE_ARRAY, PsConst::PHP_TYPE_NULL)));
-        foreach ($relDirs as $rel) {
-            $absDirs[] = PATH_BASE_DIR . $rel;
-        }
-        return $absDirs;
+        return DirManager::relToAbs(self::getPropCheckType(self::GROUP_SMARTY, 'templates', array(PsConst::PHP_TYPE_ARRAY, PsConst::PHP_TYPE_NULL)));
     }
 
     public static function isSdk() {

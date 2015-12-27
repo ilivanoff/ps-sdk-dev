@@ -81,6 +81,26 @@ class DirManager {
     }
 
     /**
+     * Вспомогательная функция, позволяющая набор относительных путей преобразовать в массив абсолютных путей
+     * 
+     * @param array $relPathes
+     */
+    public static function relToAbs(array $relPathes = null) {
+        if (empty($relPathes)) {
+            return array();
+        }
+        $absPathes = array();
+        foreach ($relPathes as $key => $relPath) {
+            if (is_array($relPath)) {
+                $absPathes[$key] = self::relToAbs($relPath);
+            } else {
+                $absPathes[$key] = PATH_BASE_DIR . $relPath;
+            }
+        }
+        return $absPathes;
+    }
+
+    /**
      * Фабрика экземпляров
      */
     private static $insts = array();

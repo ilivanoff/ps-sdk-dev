@@ -5,8 +5,8 @@
  * так что регистрируем его первым.
  */
 final class Autoload {
-
     /** Директории подключаемых классов */
+
     const DIR_KIT = 'sdk/kit';
     const DIR_TESTS = 'tests';
 
@@ -187,7 +187,7 @@ final class Autoload {
         }
 
         //ПОПРОБУЕМ ВОСПОЛЬЗОВАТЬСЯ ФОЛДИНГАМИ
-        $path = Handlers::tryGetFoldedEntityClassPath($class);
+        $path = FoldedStorage::tryGetFoldedEntityClassPath($class);
         if ($path) {
             $this->LOGGER->info("Class path for [$class] found with folded resources.");
             return $path;

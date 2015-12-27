@@ -4,7 +4,33 @@ header('Content-Type: text/html; charset=utf-8');
 
 require_once 'ps-includes/MainImport.php';
 
-PageBuilder::inst()->buildpage(PB_admin::getIdent());
+//print_r(ConfigIni::smartyPlugins());
+//print_r(ConfigIni::smartyTemplates());
+//print_r(FoldingsIni::foldingsRel());
+//print_r(FoldingsIni::foldingsAbs());
+
+
+print_r(FoldedStorage::getEntities());
+
+die;
+
+
+echo TestUtils::testProductivity(function() {
+            FoldedStorage::tryGetFoldedEntityClassPath('AP_APAudit');
+        });
+die;
+
+echo FoldedStorage::tryGetFoldedEntityClassPath('AP_APAudit');
+
+die;
+
+
+echo TestUtils::testProductivity(function() {
+            FoldedStorage::getEntities();
+        });
+
+
+//PageBuilder::inst()->buildpage(PB_admin::getIdent());
 die;
 
 class A {

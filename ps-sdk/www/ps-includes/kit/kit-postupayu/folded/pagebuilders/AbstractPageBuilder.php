@@ -1,6 +1,6 @@
 <?php
 
-abstract class AbstractPageBuilder extends FoldedClass implements WebPagesRegistrator {
+abstract class AbstractPageBuilder extends FoldedClass {
 
     protected function _construct() {
         //do nothing...

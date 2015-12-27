@@ -117,7 +117,7 @@ abstract class FoldedResources extends AbstractSingleton {
 
     //Метод проверяет, может ли переданная последовательность служить префиксом класса.
     //Она должна сосотоять из больших букв и заканчиваться подчёркиванием, например: PL_
-    private static function isValidClassPrefix($prefix) {
+    public static function isValidClassPrefix($prefix) {
         return $prefix && preg_match('/[A-Z]+\_/', $prefix, $matches) == 1 && $matches[0] === $prefix;
     }
 
@@ -132,7 +132,7 @@ abstract class FoldedResources extends AbstractSingleton {
     public static function extractIdentFormClass($className) {
         $tokens = explode('_', trim($className), 3);
         $prefix = count($tokens) == 2 ? $tokens[0] . '_' : null;
-        return self::isValidClassPrefix($prefix) ? $tokens[1] : null;
+        return self::isValidClassPrefix($prefix) && !!$tokens[1] ? $tokens[1] : null;
     }
 
     //Предпросмотр сущности фолдинга при редактировании
