@@ -18,7 +18,7 @@ class PopupPagesManager extends PopupPagesResources {
      * Плагины, использованные в постах
      */
     public function getSnapshot() {
-        $SNAPSOT = PSCache::POPUPS()->getFromCache('POPUP_PAGES_SNAPSOT', PsUtil::getClassConsts(__CLASS__, 'CACHABLE_'));
+        $SNAPSOT = PSCacheGroups::POPUPS()->getFromCache('POPUP_PAGES_SNAPSOT', PsUtil::getClassConsts(__CLASS__, 'CACHABLE_'));
         if (!is_array($SNAPSOT)) {
 
             $this->LOGGER->info('Building plugins SNAPSHOT...');
@@ -86,7 +86,7 @@ class PopupPagesManager extends PopupPagesResources {
                 self::CACHABLE_DEFAULT => $DEFAULT
             );
 
-            $SNAPSOT = PSCache::POPUPS()->saveToCache($SNAPSOT, 'POPUP_PAGES_SNAPSOT');
+            $SNAPSOT = PSCacheGroups::POPUPS()->saveToCache($SNAPSOT, 'POPUP_PAGES_SNAPSOT');
         }
         return $SNAPSOT;
     }

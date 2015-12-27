@@ -98,14 +98,14 @@ final class MosaicImage {
      */
     private function getCachable($key) {
         $sign = $this->getOwnedCellsCnt();
-        $DATA = PSCache::MOSAIC()->getFromCache($this->id, PsUtil::getClassConsts(__CLASS__, 'CACHABLE_'), $sign);
+        $DATA = PSCacheGroups::MOSAIC()->getFromCache($this->id, PsUtil::getClassConsts(__CLASS__, 'CACHABLE_'), $sign);
         if (!is_array($DATA)) {
             $DATA = array();
             $ownedCells = $this->BEAN->getOwnedCells($this->id);
             $sign = count($ownedCells); //Честно посчитаем подпись по кол-ву ячеек, с которым была построена карта
             $DATA[self::CACHABLE_AREAS] = MosaicImageCellsCompositor::area($ownedCells, $this->cellWidth, $this->cellHeight);
             $DATA[self::CACHABLE_STATISTIC] = $this->BEAN->getStatictic($this->id);
-            PSCache::MOSAIC()->saveToCache($DATA, $this->id, $sign);
+            PSCacheGroups::MOSAIC()->saveToCache($DATA, $this->id, $sign);
         }
         return array_get_value($key, $DATA);
     }

@@ -18,50 +18,6 @@ final class PSCache extends AbstractSingleton {
     const KEY_SIGN = 'sign';
 
     /**
-     * Список всех зарегистрированных групп кеша
-     */
-    public static function getCacheGroups() {
-        return PsUtil::getClassConstLikeMethods(__CLASS__);
-    }
-
-    /**
-     * Кеш для навигации - будет сброшен при изменении любого поста или количества опубликованных постов.
-     * 
-     * @return PSCacheInst
-     */
-    public static final function POSTS() {
-        return PSCacheInst::inst(__FUNCTION__);
-    }
-
-    /**
-     * Кеш для popup-страниц. Будет сброшен при изменении кол-ва видимых плагинов,
-     * которое происходит при изменении поста или кол-ва видимых постов.
-     * 
-     * @return PSCacheInst
-     */
-    public static final function POPUPS() {
-        return PSCacheInst::inst(__FUNCTION__);
-    }
-
-    /**
-     * Кеш для временных шкал.
-     * 
-     * @return PSCacheInst
-     */
-    public static final function TIMELINES() {
-        return PSCacheInst::inst(__FUNCTION__);
-    }
-
-    /**
-     * Кеш для картинок-мозаек.
-     * 
-     * @return PSCacheInst
-     */
-    public static final function MOSAIC() {
-        return PSCacheInst::inst(__FUNCTION__);
-    }
-
-    /**
      * Метод валидирует значение кода группы и ключа.
      * 
      * @param string $id - Код значения

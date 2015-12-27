@@ -69,7 +69,7 @@ abstract class TimeLineBuilderBase extends FoldedClass {
      */
     public final function getTimeLineJson(ArrayAdapter $params) {
         $cacheKey = $this->prepareBuildCompositionParamsAndGetCahceKey($params);
-        $cache = PSCache::TIMELINES()->getFromCache($cacheKey, array());
+        $cache = PSCacheGroups::TIMELINES()->getFromCache($cacheKey, array());
         if (is_array($cache)) {
             $this->LOGGER->info('Шкала найдена в кеше под ключём {}', $cacheKey);
             return $cache;
@@ -93,7 +93,7 @@ abstract class TimeLineBuilderBase extends FoldedClass {
             check_condition($composition instanceof TimeLineItemsComposite, 'Некорректно построена хронологическая шкала');
             $this->profilerStop();
             $this->LOGGER->info('Шкала успешно построена');
-            PSCache::TIMELINES()->saveToCache($composition->getTimeLineJson(), $cacheKey);
+            PSCacheGroups::TIMELINES()->saveToCache($composition->getTimeLineJson(), $cacheKey);
             $this->LOGGER->info('Шкала сохранена в кеш под ключём: ' . $cacheKey);
             return $composition;
         } catch (Exception $ex) {

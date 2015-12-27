@@ -8,7 +8,7 @@ class DG_plugins extends BaseDialog {
     }
 
     protected function cacheGroup() {
-        return PSCache::POPUPS();
+        return PSCacheGroups::POPUPS();
     }
 
 }

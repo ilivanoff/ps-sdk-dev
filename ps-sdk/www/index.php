@@ -4,8 +4,6 @@ header('Content-Type: text/html; charset=utf-8');
 
 require_once 'ps-includes/MainImport.php';
 
-echo 60 * ConfigIni::cacheFileLifetime();
-
 class A {
 
     public static $a = array();
@@ -45,7 +43,14 @@ $group2 = 'default2';
 
 PSCache::inst()->saveToCache($a, $key, $group, 'xxx');
 PSCache::inst()->saveToCache(array('a' => 1), '$key', '$group', 'xxx1');
-PSCache::inst()->cleanCache();
+
+PSCacheGroupsStore::TEST()->clean();
+PSCacheGroupsStore::TEST()->saveToCache('aaa', 'X', 'a');
+echo PSCacheGroupsStore::TEST()->getFromCache('X', null, 'a');
+//PSCacheGroupsStore::TEST()->clean();
+
+die;
+
 echo TestUtils::testProductivity(function() {
             PSCache::inst()->getFromCache('$key', '$group', null, 'xxx1');
         });
