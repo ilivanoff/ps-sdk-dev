@@ -9,16 +9,29 @@ require_once 'ps-includes/MainImport.php';
 //print_r(FoldingsIni::foldingsRel());
 //print_r(FoldingsIni::foldingsAbs());
 
+echo PSForm::inst()->existsEntity('LoginForm');
+
+die;
+
+echo FoldedStorage::getEntityAbsPath('ap', 'APAudit');
+
+die;
+
+echo TestUtils::testProductivity(function() {
+            FoldedStorage::getEntityAbsPath('ap1', 'APAudit');
+        });
+die;
+
+echo FoldedStorage::getEntityAbsPath('ap', 'APAudit');
+//echo FoldedStorage::existsEntity('ap', 'APAudit');
+
+die;
 
 print_r(FoldedStorage::getEntities());
 
 die;
 
 
-echo TestUtils::testProductivity(function() {
-            FoldedStorage::tryGetFoldedEntityClassPath('AP_APAudit');
-        });
-die;
 
 echo FoldedStorage::tryGetFoldedEntityClassPath('AP_APAudit');
 

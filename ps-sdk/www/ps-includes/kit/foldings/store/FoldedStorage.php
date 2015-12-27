@@ -56,6 +56,10 @@ class FoldedStorage {
         return self::$entities; //---
     }
 
+    public static function existsEntity($foldedUnique, $entity) {
+        return isset(self::getEntities()[$foldedUnique][$entity]);
+    }
+
     public static function getEntityAbsPath($foldedUnique, $entity) {
         return array_get_value_in(array($foldedUnique, $entity), self::getEntities());
     }

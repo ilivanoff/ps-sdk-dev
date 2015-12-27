@@ -475,7 +475,7 @@ abstract class FoldedResources extends AbstractSingleton {
      * Метод проверяет существование директории для сущности фолдинга.
      */
     public function existsEntity($ident) {
-        return in_array($ident, $this->getAllIdents(true));
+        return FoldedStorage::existsEntity($this->getUnique(), $ident);
     }
 
     /**
