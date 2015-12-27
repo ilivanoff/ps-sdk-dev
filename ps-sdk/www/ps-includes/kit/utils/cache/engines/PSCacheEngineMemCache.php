@@ -5,7 +5,7 @@
  *
  * @author azazello
  */
-final class PSMemCache extends AbstractSingleton {
+final class PSCacheEngineMemCache extends AbstractSingleton implements PSCacheEngine {
 
     /** @var PsLoggerInterface */
     private $LOGGER;
@@ -42,6 +42,22 @@ final class PSMemCache extends AbstractSingleton {
         }
 
         $this->LOGGER->info($class . ' is enabled.');
+    }
+
+    public function cleanCache($group = null) {
+        
+    }
+
+    public function getFromCache($id, $group) {
+        
+    }
+
+    public function removeFromCache($id, $group) {
+        
+    }
+
+    public function saveToCache($object, $id, $group) {
+        
     }
 
 }

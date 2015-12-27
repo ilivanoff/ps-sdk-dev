@@ -26,9 +26,13 @@ class PSCacheEngineFile implements PSCacheEngine {
             'automaticSerialization' => true, //Чтобы можно было писать объекты и массивы
             //
             'cacheDir' => DirManager::autogen('cache-lite')->absDirPath(),
-            'lifeTime' => CACHE_LITE_LIFE_TIME * 60,
+            'lifeTime' => ConfigIni::cacheFileLifetime() * 60,
             'caching' => true //Кеширование включено всегда
         );
+
+        if (PsLogger::isEnabled()) {
+            PsLogger::inst(__CLASS__)->info('Lite options: {}', print_r($liteOptions, true));
+        }
 
         $this->IMPL = new Cache_Lite($liteOptions);
     }

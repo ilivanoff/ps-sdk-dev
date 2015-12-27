@@ -3,7 +3,7 @@
 /**
  * Основной класс для работы с кешем
  */
-class PSCache extends AbstractSingleton {
+final class PSCache extends AbstractSingleton {
 
     /** @var PsLoggerInterface */
     private $LOGGER;

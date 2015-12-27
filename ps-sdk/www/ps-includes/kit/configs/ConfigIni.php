@@ -12,6 +12,7 @@ final class ConfigIni extends AbstractIni {
     const GROUP_CONNECTIONS = 'connection-pool';
     const GROUP_FOLDINGS = 'foldings';
     const GROUP_SMARTY = 'smarty';
+    const GROUP_CACHE = 'cache';
 
     public static function projectName() {
         return self::getProp(self::GROUP_CORE, 'project');
@@ -22,7 +23,11 @@ final class ConfigIni extends AbstractIni {
     }
 
     public static function cacheEngine() {
-        return self::getPropCheckType(self::GROUP_CORE, 'cache', array(PsConst::PHP_TYPE_STRING));
+        return self::getPropCheckType(self::GROUP_CACHE, 'engine', array(PsConst::PHP_TYPE_STRING));
+    }
+
+    public static function cacheFileLifetime() {
+        return self::getPropCheckType(self::GROUP_CACHE, 'cache-file-lifetime', array(PsConst::PHP_TYPE_STRING));
     }
 
     public static function cronProcesses() {
