@@ -545,6 +545,7 @@ class Cache_Lite
     */
     function raiseError($msg, $code)
     {
+        throw new Exception($msg, $code);
         //include_once('PEAR.php');
         ExternalPluginsManager::Pear();
         return PEAR::raiseError($msg, $code, $this->_pearErrorMode);

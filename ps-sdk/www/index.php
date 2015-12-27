@@ -35,12 +35,10 @@ PsConnectionPool::configure(PsConnectionParams::sdkTest());
 ps_admin_on(true);
 
 $a = array('a' => array('x' => 1, 'y' => 2));
+$key = 'a';
+$group = 'default';
 
-print_r($a);
-br();
-unset($a['c']['x']);
-print_r($a);
-br();
+PSCache::inst()->saveToCache($a, $key, $group);
 
 die;
 

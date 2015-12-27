@@ -110,6 +110,17 @@ class PsLibs {
     }
 
     /**
+     * Кеш на основе хранения данных в файлах
+     */
+    public function CacheLite() {
+        if ($this->isAlreadyIncluded(__FUNCTION__)) {
+            return; //---
+        }
+        require_once $this->SDK_LIB_DIR . 'Cache/CacheLite/Cache_Lite-1.7.11/Lite.php';
+        require_once $this->SDK_LIB_DIR . 'Cache/CacheLite/Cache_Lite-1.7.11/Lite/Output.php';
+    }
+
+    /**
      * Метод должен быть вызван перед подключением библиотеки для предотвращения повторного подключения
      * Пример использования:
      * 

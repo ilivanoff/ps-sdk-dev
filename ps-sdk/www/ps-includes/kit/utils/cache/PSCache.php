@@ -228,31 +228,46 @@ class PSCache extends AbstractSingleton {
         $this->CACHE_ENGINE->cleanCache($group);
     }
 
-    /** @return PSCache */
-    public static function inst() {
-        return parent::inst();
-    }
-
+    /**
+     * Конструктор класса для работы с кешем.
+     * Кеширование идёт в два этапа:
+     * 1. Кеширование на уровне класса для максимально быстрого доступа
+     * 2. Кеширование в долгосрочном хранилище, которое реализуется отдельным классом - "движком" кеширования
+     * 
+     * Движок кеширования должен быть задан на уровне config.ini
+     * 
+     * @return PSCache
+     */
     protected function __construct() {
         $this->LOGGER = PsLogger::inst(__CLASS__);
 
-        /**
-         * Подключаем cache lite
+        /*
+         * Получим название класса "движка" кеширования
          */
-        ExternalPluginsManager::CacheLite();
+        $class = ConfigIni::cacheEngine();
 
-        $liteOptions = array(
-            'readControl' => true,
-            'writeControl' => true,
-            'readControlType' => 'md5',
-            'automaticSerialization' => true, //Чтобы можно было писать объекты
-            //
-            'cacheDir' => DirManager::autogen('cache')->absDirPath(),
-            'lifeTime' => CACHE_LITE_LIFE_TIME * 60,
-            'caching' => true //Кеширование включено всегда
-        );
+        /*
+         * Проверим наличие класса
+         */
+        $classPath = Autoload::inst()->getClassPath($class);
+        if (!PsCheck::isNotEmptyString($classPath)) {
+            return PsUtil::raise('Не удалось найти класс для кеширования [{}]', $class);
+        }
 
-        $this->CACHE_ENGINE = new Cache_Lite($liteOptions);
+        /*
+         * Правильный ли класс указан?
+         */
+        if (!PsUtil::isInstanceOf($class, 'PSCacheEngine')) {
+            return PsUtil::raise('Указанный класс кеширования [{}] не является наследником класса [{}]', $class, 'PSCacheEngine');
+        }
+
+        $this->LOGGER->info('Используем движок кеширования: {}', $class);
+        $this->CACHE_ENGINE = new $class();
+    }
+
+    /** @return PSCache */
+    public static function inst() {
+        return parent::inst();
     }
 
 }

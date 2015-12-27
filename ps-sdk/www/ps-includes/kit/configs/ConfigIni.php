@@ -21,6 +21,10 @@ final class ConfigIni extends AbstractIni {
         return self::getPropCheckType(self::GROUP_CORE, 'libs', array(PsConst::PHP_TYPE_STRING));
     }
 
+    public static function cacheEngine() {
+        return self::getPropCheckType(self::GROUP_CORE, 'cache', array(PsConst::PHP_TYPE_STRING));
+    }
+
     public static function cronProcesses() {
         return self::getPropCheckType(self::CRON_PROCESS, 'cron', array(PsConst::PHP_TYPE_ARRAY, PsConst::PHP_TYPE_NULL));
     }

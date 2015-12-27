@@ -8,42 +8,45 @@
 class PSCacheEngineFile implements PSCacheEngine {
 
     /** @var Cache_Lite */
-    private $CACHE_FILE;
+    private $IMPL;
 
     public function __construct() {
         /**
          * Подключаем cache lite
          */
-        ExternalPluginsManager::CacheLite();
+        PsLibs::inst()->CacheLite();
 
+        /*
+         * Конфигурируем
+         */
         $liteOptions = array(
             'readControl' => true,
             'writeControl' => true,
             'readControlType' => 'md5',
-            'automaticSerialization' => true, //Чтобы можно было писать объекты
+            'automaticSerialization' => true, //Чтобы можно было писать объекты и массивы
             //
-            'cacheDir' => DirManager::autogen('cache')->absDirPath(),
+            'cacheDir' => DirManager::autogen('cache-lite')->absDirPath(),
             'lifeTime' => CACHE_LITE_LIFE_TIME * 60,
             'caching' => true //Кеширование включено всегда
         );
 
-        $this->CACHE_FILE = new Cache_Lite($liteOptions);
-    }
-
-    public function cleanCache($group = null) {
-        
+        $this->IMPL = new Cache_Lite($liteOptions);
     }
 
     public function getFromCache($id, $group) {
-        
-    }
-
-    public function removeFromCache($id, $group) {
-        
+        return $this->IMPL->get($id, $group);
     }
 
     public function saveToCache($object, $id, $group) {
-        
+        $this->IMPL->save($object, $id, $group);
+    }
+
+    public function removeFromCache($id, $group) {
+        $this->IMPL->remove($id, $group);
+    }
+
+    public function cleanCache($group = null) {
+        $this->IMPL->clean($group);
     }
 
 }
