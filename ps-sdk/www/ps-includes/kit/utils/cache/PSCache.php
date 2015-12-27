@@ -90,7 +90,7 @@ class PSCache extends AbstractSingleton {
      */
     public function removeFromCache($id, $group) {
         $cacheId = $this->buildCacheKey($id, $group);
-        $this->LOGGER->info("Удалена информация по ключу '$cacheId'");
+        $this->LOGGER->info("- Удалена информация по ключу '$cacheId'");
         $this->cleanCacheKey($id, $group);
     }
 
@@ -107,13 +107,12 @@ class PSCache extends AbstractSingleton {
         $cacheId = $this->buildCacheKey($id, $group);
 
         $CACHED = null; //---
-        $FIND_FAST = false;
+        $SEARCH_WITH_ENGINE = false;
 
         if (array_key_exists($group, $this->CACHE_LOCAL) && array_key_exists($id, $this->CACHE_LOCAL[$group])) {
             //Прежде всего поищем в локальном хранилище, постараемся найти значение максимально быстро
             $CACHED = $this->CACHE_LOCAL[$group][$id];
             $this->LOGGER->info("Информация по ключу '$cacheId' найдена в быстром кеше");
-            $FIND_FAST = true;
         } else {
             //Используем движок для поиска в нём
             $this->LOGGER->info("За информацией по ключу '$cacheId' обращаемся в долговременное хранилище");
@@ -121,6 +120,8 @@ class PSCache extends AbstractSingleton {
             PsProfiler::inst(__CLASS__)->start('LOAD from cache engine');
             $CACHED = $this->CACHE_ENGINE->getFromCache($id, $group);
             PsProfiler::inst(__CLASS__)->stop();
+
+            $SEARCH_WITH_ENGINE = true;
         }
 
         if (!$CACHED) {
@@ -147,8 +148,11 @@ class PSCache extends AbstractSingleton {
         }
 
         if (!is_array($REQUIRED_KEYS)) {
-            $this->LOGGER->info("Информация по ключу '$cacheId' найдена в хранилище");
-            return $CACHED; //---
+            if ($SEARCH_WITH_ENGINE) {
+                $this->LOGGER->info("Информация по ключу '$cacheId' найдена в долговременном хранилище");
+                $this->CACHE_LOCAL[$group][$id] = $CACHED;
+            }
+            return $CACHED[self::KEY_DATA]; //---
         }
 
         if (!is_array($CACHED[self::KEY_DATA])) {
@@ -167,15 +171,13 @@ class PSCache extends AbstractSingleton {
             }
         }
 
-        //Если мы нашли эти данные в массиве и они валидны - сразу выходим
-        if ($FIND_FAST) {
-            return $CACHED; //---
+        //Если мы нашли эти данные в долгосрочном хранилище - перенесём в быстрый доступ
+        if ($SEARCH_WITH_ENGINE) {
+            $this->LOGGER->info("Информация по ключу '$cacheId' найдена в долговременном хранилище");
+            $this->CACHE_LOCAL[$group][$id] = $CACHED;
         }
 
-        $this->LOGGER->info("Информация по ключу '$cacheId' найдена в хранилище");
-
-        //Перенесём данные в локальный кеш для быстрого доступа
-        return $this->CACHE_LOCAL[$group][$id] = $CACHED;
+        return $CACHED[self::KEY_DATA]; //---
     }
 
     /**
@@ -188,7 +190,7 @@ class PSCache extends AbstractSingleton {
      */
     public function saveToCache($object, $id, $group, $sign = null) {
         $cacheId = $this->buildCacheKey($id, $group);
-        $this->LOGGER->info("Информация по ключу '$cacheId' сохранена в кеш");
+        $this->LOGGER->info("+ Информация по ключу '$cacheId' сохранена в кеш с подписью '$sign'");
 
         $CACHED[self::KEY_SIGN] = $sign;
         $CACHED[self::KEY_DATA] = $object;
@@ -199,7 +201,9 @@ class PSCache extends AbstractSingleton {
         PsProfiler::inst(__CLASS__)->stop();
 
         //Перенесём данные в локальный кеш для быстрого доступа
-        return $this->CACHE_LOCAL[$group][$id] = $CACHED;
+        $this->CACHE_LOCAL[$group][$id] = $CACHED;
+
+        return $object;
     }
 
     /**
@@ -212,7 +216,7 @@ class PSCache extends AbstractSingleton {
             /*
              * Полная очистка кеша
              */
-            $this->LOGGER->info('Полная очистка кеша');
+            $this->LOGGER->info('--- Полная очистка кеша');
 
             $this->CACHE_LOCAL = array();
         } else {
@@ -220,7 +224,7 @@ class PSCache extends AbstractSingleton {
             /*
              * Полная очистка кеша
              */
-            $this->LOGGER->info("Очистка кеша по группе [$group]");
+            $this->LOGGER->info("-- Очистка кеша по группе [$group]");
 
             unset($this->CACHE_LOCAL[$group]);
         }

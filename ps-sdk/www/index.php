@@ -26,6 +26,8 @@ A::test();
 A::test();
 B::test();
 
+ExceptionHandler::registerPretty();
+
 //print_r(B::$a);
 
 PsLibs::inst();
@@ -35,10 +37,26 @@ PsConnectionPool::configure(PsConnectionParams::sdkTest());
 ps_admin_on(true);
 
 $a = array('a' => array('x' => 1, 'y' => 2));
-$key = 'a';
+$key = 'M';
 $group = 'default';
+$group2 = 'default2';
 
-PSCache::inst()->saveToCache($a, $key, $group);
+PSCache::inst()->saveToCache($a, $key, $group, 'xxx');
+PSCache::inst()->saveToCache(array('a'=>1), '$key', '$group', 'xxx1');
+echo TestUtils::testProductivity(function() {
+            PSCache::inst()->getFromCache('$key', '$group', array('a'), 'xxx1');
+        });
+
+print_r(PSCache::inst()->getFromCache($key, $group, array('a'), 'xxx1'));
+
+die;
+
+print_r(PSCache::inst()->saveToCache($a, $key, $group));
+print_r(PSCache::inst()->getFromCache($key, $group));
+
+PSCache::inst()->removeFromCache($key, $group);
+print_r(PSCache::inst()->getFromCache($key, $group));
+
 
 die;
 
