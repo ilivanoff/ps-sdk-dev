@@ -24,25 +24,6 @@ class ExternalPluginsManager {
         }
     }
 
-    /**
-     * 
-     */
-    public static function Pear() {
-        if (self::isInclude(__FUNCTION__)) {
-            require_once PATH_PLUGINS . '/PEAR-1.9.4/PEAR.php';
-        }
-    }
-
-    /**
-     * 
-     */
-    public static function CacheLite() {
-        if (self::isInclude(__FUNCTION__)) {
-            require_once PATH_PLUGINS . '/Cache_Lite-1.7.11/Cache_Lite-1.7.11/Lite.php';
-            require_once PATH_PLUGINS . '/Cache_Lite-1.7.11/Cache_Lite-1.7.11/Lite/Output.php';
-        }
-    }
-
     /*
      * 
      * УТИЛИТЫ

@@ -4,6 +4,9 @@ header('Content-Type: text/html; charset=utf-8');
 
 require_once 'ps-includes/MainImport.php';
 
+PageBuilder::inst()->buildpage(PB_admin::getIdent());
+die;
+
 class A {
 
     public static $a = array();
@@ -78,8 +81,6 @@ $x->test(null);
 die;
 
 
-PageBuilder::inst()->buildpage(PB_admin::getIdent());
-die;
 
 /*
 
