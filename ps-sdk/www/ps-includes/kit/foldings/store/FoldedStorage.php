@@ -5,7 +5,7 @@
  *
  * @author azazello
  */
-final class FoldedStorageLight extends AbstractSingleton {
+final class FoldedStorage extends AbstractSingleton {
 
     /**
      * @var PsLoggerInterface 
@@ -41,7 +41,7 @@ final class FoldedStorageLight extends AbstractSingleton {
      */
     private $CLASSPREFIX_2_FOLDING = array();
 
-    /** @return FoldedStorageLight */
+    /** @return FoldedStorage */
     protected static function inst() {
         return parent::inst();
     }

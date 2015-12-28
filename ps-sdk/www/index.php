@@ -9,12 +9,16 @@ require_once 'ps-includes/MainImport.php';
 //print_r(FoldingsIni::foldingsRel());
 //print_r(FoldingsIni::foldingsAbs());
 
+PageBuilder::inst()->buildpage(PB_admin::getIdent());
+
+die;
+
 echo TestUtils::testProductivity(function() {
-            FoldedStorageLight::tryGetEntityClassPath('PL_advgraph');
+            FoldedStorage::tryGetEntityClassPath('PL_advgraph');
         }, 200);
 
 br();
-echo FoldedStorageLight::extractInfoFromClassName('PL_slib', $classPrefix, $entity);
+echo FoldedStorage::extractInfoFromClassName('PL_slib', $classPrefix, $entity);
 br();
 echo $classPrefix;
 br();
@@ -34,7 +38,7 @@ print_r($matches);
 
 die;
 
-FoldedStorageLight::extractFoldedTypeAndSubtype('lib-xxxx-', $type, $subtype);
+FoldedStorage::extractFoldedTypeAndSubtype('lib-xxxx-', $type, $subtype);
 
 echo "$type, $subtype";
 

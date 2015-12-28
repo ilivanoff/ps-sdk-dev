@@ -187,7 +187,7 @@ final class Autoload {
         }
 
         //ПОПРОБУЕМ ВОСПОЛЬЗОВАТЬСЯ ФОЛДИНГАМИ
-        $path = FoldedStorageLight::tryGetEntityClassPath($class);
+        $path = FoldedStorage::tryGetEntityClassPath($class);
         if ($path) {
             $this->LOGGER->info("Class path for [$class] found with folded resources.");
             return $path;
