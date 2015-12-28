@@ -560,6 +560,7 @@ function array_remove_value(array &$array, $values, $strict = false) {
     foreach (array_keys($array, $values, $strict) as $key) {
         unset($array[$key]);
     }
+    return $array;
 }
 
 function array_remove_keys(array &$array, array $keys) {

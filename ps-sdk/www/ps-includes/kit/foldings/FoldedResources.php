@@ -31,6 +31,9 @@ abstract class FoldedResources extends AbstractSingleton {
     /** @var SimpleDataCache */
     private $INSTS_CACHE;
 
+    /** Идентификаторы */
+    private $IDENTS;
+
     /** Название таблицы, хранящей сущности фолдинга */
     private $TABLE;
 
@@ -48,9 +51,6 @@ abstract class FoldedResources extends AbstractSingleton {
 
     /** Префикс для классов, например IP_. Если забора с типом ресурсов - PHP не ведётся, то - null */
     private $CLASS_PREFIX;
-
-    /** Базовый путь к классам, для максимально быстрого получения classpath */
-    private $CLASS_PATH_BASE;
 
     /** текстовое описание фолдинга */
     private $TO_STRING;
@@ -118,7 +118,7 @@ abstract class FoldedResources extends AbstractSingleton {
     //Метод проверяет, может ли переданная последовательность служить префиксом класса.
     //Она должна сосотоять из больших букв и заканчиваться подчёркиванием, например: PL_
     public static function isValidClassPrefix($prefix) {
-        return $prefix && preg_match('/[A-Z]+\_/', $prefix, $matches) == 1 && $matches[0] === $prefix;
+        return $prefix && preg_match('/^[A-Z]+\_/', $prefix, $matches) == 1 && $matches[0] === $prefix;
     }
 
     //Метод извлекат префикс из имени класса
@@ -382,93 +382,15 @@ abstract class FoldedResources extends AbstractSingleton {
     protected abstract function onEntityChangedImpl($ident);
 
     /**
-     * ====================
-     * = ПРОВЕРКА ДОСТУПА =
-     * ====================
-     * 
-     * Сущности фолдинга могут быть проверены на доступ по трём параметрам:
-     * 1. Сущность существует - просто проверяется наличие директории для сущности фолдинга
-     * 2. Сущность видима - для классов, хранящих свои сущности ещё и в базе. "Видима" === "Доступна клиенту".
-     * 3. Сущность доступна - у пользователя есть доступ к данной сущности. Админ = сущность существует, клиет = сущность видима.
-     * 
-     * Видимость (в отличае от доступности) не зависит от того, под кем авторизован пользователь!
-     */
-    private $ALL_IDENTS;
-    private $VISIBLE_IDENTS;
-    private $ACCESS_IDENTS;
-    private $IDENTS_LOADED = false;
-
-    /** @return FoldedResources */
-    private function IDENTS() {
-        if ($this->IDENTS_LOADED) {
-            return $this;
-        }
-        $this->IDENTS_LOADED = true;
-
-        $this->profilerStart(__FUNCTION__);
-
-        /*
-         * 1. Загружаем список существующих сущностей фолдинга
-         */
-        $full = $this->getResourcesDm()->getSubDirNames();
-        $this->ALL_IDENTS['full'] = $full; //С шаблоном
-
-        $short = $full;
-        array_remove_value($short, self::PATTERN_NAME);
-        $short = array_values($short);
-        $this->ALL_IDENTS['short'] = $short; //Без шаблона (+ нужно реиндексировать массив)
-
-        /*
-         * 2. Загружаем список видимых сущностей фолдинга
-         */
-        if ($this->isWorkWithTable()) {
-            $this->VISIBLE_IDENTS = array_values(array_intersect($short, FoldingBean::inst()->getIdents($this, false)));
-        } else {
-            $this->VISIBLE_IDENTS = $short;
-        }
-
-        /*
-         * 3. Строим список сущностей фолдинга, к которым пользователь имеет доступ
-         */
-        if (AuthManager::isAuthorizedAsAdmin()) {
-            //Админ имеет доступ и к шаблону
-            $this->ACCESS_IDENTS['full'] = $full;
-            $this->ACCESS_IDENTS['short'] = $short;
-        } else {
-            $this->ACCESS_IDENTS['full'] = $this->VISIBLE_IDENTS;
-            $this->ACCESS_IDENTS['short'] = $this->VISIBLE_IDENTS;
-        }
-
-        /*
-         * 5. Отлогируем то, что получилось
-         */
-        if ($this->LOGGER->isEnabled()) {
-            $this->LOGGER->info();
-            $this->LOGGER->info('Загружаем список доступных сущностей');
-            $this->LOGGER->info('Все сущности ({}): {}', count($full), array_to_string($full));
-
-            $hidden = array_diff($full, $this->VISIBLE_IDENTS);
-            if (empty($hidden)) {
-                $this->LOGGER->info('Скрытых сущностей нет');
-            } else {
-                $this->LOGGER->info('Cкрытые сущности ({}): {}', count($hidden), array_to_string($hidden));
-            }
-
-            $this->LOGGER->info('Доступные пользователю сущности ({}): {}', count($this->ACCESS_IDENTS['full']), array_to_string($this->ACCESS_IDENTS['full']));
-
-            $this->LOGGER->info();
-
-            $this->profilerStop();
-        }
-
-        return $this;
-    }
-
-    /**
      * Возвращает полный список сущностей, не проверяя права доступа
      */
     public final function getAllIdents($includePattern = false) {
-        return $this->IDENTS()->ALL_IDENTS[$includePattern ? 'full' : 'short'];
+        if (!is_array($this->IDENTS)) {
+            $all = array_keys(FoldedStorage::getEntities($this->UNIQUE));
+            $this->IDENTS['full'] = $all;
+            $this->IDENTS['short'] = array_values(array_remove_value($all, self::PATTERN_NAME));
+        }
+        return $this->IDENTS[$includePattern ? 'full' : 'short'];
     }
 
     /**
@@ -626,8 +548,8 @@ abstract class FoldedResources extends AbstractSingleton {
     }
 
     /** @return DirManager */
-    public function getResourcesDm($ident = null, $subDir = null) {
-        return DirManager::resources(array('folded', $this->getFoldingGroup(), $ident, $subDir));
+    public function getResourcesDm($ident, $subDir = null) {
+        return DirManager::inst(FoldedStorage::getEntityChild($this->UNIQUE, $ident, $subDir));
     }
 
     public static function resourceTypeToExt($type) {
@@ -637,7 +559,8 @@ abstract class FoldedResources extends AbstractSingleton {
     /** @return DirItem */
     public function getResourceDi($ident, $type) {
         $this->assertAllowedResourceType($type);
-        return $this->getResourcesDm()->getDirItem($ident, $ident, self::resourceTypeToExt($type));
+        return $this->getResourcesDm($ident)->getDirItem(null, $ident, self::resourceTypeToExt($type));
+        //return DirItem::inst(FoldedStorage::getEntityChild($this->UNIQUE, $ident, self::resourceTypeToExt($type)));
     }
 
     /** @return DirItem */
@@ -1038,10 +961,10 @@ abstract class FoldedResources extends AbstractSingleton {
      * Метод возвращает путь к классу для сущности фолдинга
      */
     public function getClassPath($ident) {
-        if (!$this->CLASS_PATH_BASE || $ident === self::PATTERN_NAME) {
-            return null;
+        if (self::PATTERN_NAME === $ident) {
+            return null; //---
         }
-        return $this->CLASS_PATH_BASE . $ident . DIR_SEPARATOR . $ident . '.php';
+        return FoldedStorage::tryGetEntityClassPath($this->CLASS_PREFIX . $ident);
     }
 
     /*
@@ -1507,7 +1430,7 @@ abstract class FoldedResources extends AbstractSingleton {
 
         //Сущность могла стать видна из-за редактирования записи в базе
         $this->LOGGER->info('Очищаем кеш доступных сущностей');
-        $this->IDENTS_LOADED = false;
+        $this->IDENTS = null;
 
         $this->onEntityChanged($ident);
     }
@@ -1545,7 +1468,7 @@ abstract class FoldedResources extends AbstractSingleton {
         //$this->assertNotExistsEntity($ident);
         $this->getResourcesDm()->makePath($ident);
         //Зачистим кеш созданных сущноестей
-        $this->IDENTS_LOADED = false;
+        $this->IDENTS = null;
         foreach ($this->RESOURCE_TYPES_ALLOWED as $type) {
             $src = $this->getResourceDi(self::PATTERN_NAME, $type);
             $dst = $this->getResourceDi($ident, $type)->touch();
@@ -1732,7 +1655,6 @@ abstract class FoldedResources extends AbstractSingleton {
         //Если мы используем php-классы, то проверим, корректно ли задан префикс классов
         if ($this->isAllowedResourceType(self::RTYPE_PHP)) {
             $this->CLASS_PREFIX = strtoupper($SRC_PREFIX) . '_';
-            $this->CLASS_PATH_BASE = ensure_dir_endswith_dir_separator($this->getResourcesDm()->absDirPath());
         }
 
         //Разберём настройки хранения фолдингов в базе
