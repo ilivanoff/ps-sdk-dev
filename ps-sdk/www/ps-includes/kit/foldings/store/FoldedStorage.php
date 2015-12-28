@@ -92,12 +92,13 @@ final class FoldedStorage extends AbstractSingleton {
             $this->CLASSPREFIX_2_FOLDING[strtoupper($fsubtype . $ftype) . '_'] = $foldedUnique;
         }
 
-        $this->PROFILER->stop();
+        $sec = $this->PROFILER->stop();
 
         if ($this->LOGGER->isEnabled()) {
             $this->LOGGER->info('FOLDING_2_ENTITY_2_ENTABSPATH: {}', print_r($this->FOLDING_2_ENTITY_2_ENTABSPATH, true));
             $this->LOGGER->info('CLASSPREFIX_2_FOLDING: {}', print_r($this->CLASSPREFIX_2_FOLDING, true));
             $this->LOGGER->info('SOURCE_2_FOLDING: {}', print_r($this->SOURCE_2_FOLDING, true));
+            $this->LOGGER->info('BUILDING_TIME: {} sec', $sec->getTotalTime());
         }
     }
 

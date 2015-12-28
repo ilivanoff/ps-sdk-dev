@@ -9,12 +9,8 @@ require_once 'ps-includes/MainImport.php';
 //print_r(FoldingsIni::foldingsRel());
 //print_r(FoldingsIni::foldingsAbs());
 
-PageBuilder::inst()->buildpage(PB_admin::getIdent());
-
-die;
-
 echo TestUtils::testProductivity(function() {
-            FoldedStorage::tryGetEntityClassPath('PL_advgraph');
+            FoldedStorage::getEntities('lib-s');
         }, 200);
 
 br();
@@ -25,6 +21,11 @@ br();
 echo $entity;
 
 die;
+
+PageBuilder::inst()->buildpage(PB_admin::getIdent());
+
+die;
+
 
 print_r(trim(null));
 
