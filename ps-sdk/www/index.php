@@ -7,7 +7,39 @@ require_once 'ps-includes/MainImport.php';
 //print_r(ConfigIni::smartyPlugins());
 //print_r(ConfigIni::smartyTemplates());
 //print_r(FoldingsIni::foldingsRel());
+//print_r(FoldedStorage::getEntities());
 //print_r(FoldingsIni::foldingsAbs());
+
+echo TestUtils::testProductivity(function() {
+            FoldedStorageLight::getEntityClassPath('PL_advgraph');
+        }, 200);
+
+br();
+echo FoldedStorageLight::extractInfoFromClassName('PL_slib', $classPrefix, $entity);
+br();
+echo $classPrefix;
+br();
+echo $entity;
+
+die;
+
+print_r(trim(null));
+
+die;
+
+$prefix = 'PL_math';
+
+echo preg_match('/^[A-Z]+\_/', $prefix, $matches);
+br();
+print_r($matches);
+
+die;
+
+FoldedStorageLight::extractFoldedTypeAndSubtype('lib-xxxx-', $type, $subtype);
+
+echo "$type, $subtype";
+
+die;
 
 echo PSForm::inst()->existsEntity('LoginForm');
 

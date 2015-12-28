@@ -38,10 +38,10 @@ class FoldedStorage {
 
         self::$entities = array();
         $i = 0;
-        foreach (FoldingsIni::foldingsAbs() as $foldedUnique => $absPathes) {
+        foreach (FoldingsIni::foldingsRel() as $foldedUnique => $relPathes) {
             self::$entities[$foldedUnique] = array();
-            foreach (array_unique($absPathes) as $absPath) {
-                $dm = DirManager::inst($absPath);
+            foreach (array_unique($relPathes) as $relPath) {
+                $dm = DirManager::inst($relPath);
                 foreach ($dm->getSubDirNames() as $entity) {
                     ++$i;
                     if (array_key_exists($entity, self::$entities[$foldedUnique])) {
