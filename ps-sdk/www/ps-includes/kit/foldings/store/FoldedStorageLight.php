@@ -181,7 +181,7 @@ final class FoldedStorageLight extends AbstractSingleton {
      * Метод должен быть статическим, так как если мы попытаемся получить путь к
      * классу фолидна, создаваемому Handlers, то никогда его не загрузим.
      */
-    public static function getEntityClassPath($className) {
+    public static function tryGetEntityClassPath($className) {
         if (!self::extractInfoFromClassName($className, $classPrefix, $entity)) {
             return null; //---
         }

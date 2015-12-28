@@ -7,11 +7,10 @@ require_once 'ps-includes/MainImport.php';
 //print_r(ConfigIni::smartyPlugins());
 //print_r(ConfigIni::smartyTemplates());
 //print_r(FoldingsIni::foldingsRel());
-//print_r(FoldedStorage::getEntities());
 //print_r(FoldingsIni::foldingsAbs());
 
 echo TestUtils::testProductivity(function() {
-            FoldedStorageLight::getEntityClassPath('PL_advgraph');
+            FoldedStorageLight::tryGetEntityClassPath('PL_advgraph');
         }, 200);
 
 br();
@@ -39,43 +38,6 @@ FoldedStorageLight::extractFoldedTypeAndSubtype('lib-xxxx-', $type, $subtype);
 
 echo "$type, $subtype";
 
-die;
-
-echo PSForm::inst()->existsEntity('LoginForm');
-
-die;
-
-echo FoldedStorage::getEntityAbsPath('ap', 'APAudit');
-
-die;
-
-echo TestUtils::testProductivity(function() {
-            FoldedStorage::getEntityAbsPath('ap1', 'APAudit');
-        });
-die;
-
-echo FoldedStorage::getEntityAbsPath('ap', 'APAudit');
-//echo FoldedStorage::existsEntity('ap', 'APAudit');
-
-die;
-
-print_r(FoldedStorage::getEntities());
-
-die;
-
-
-
-echo FoldedStorage::tryGetFoldedEntityClassPath('AP_APAudit');
-
-die;
-
-
-echo TestUtils::testProductivity(function() {
-            FoldedStorage::getEntities();
-        });
-
-
-//PageBuilder::inst()->buildpage(PB_admin::getIdent());
 die;
 
 class A {
