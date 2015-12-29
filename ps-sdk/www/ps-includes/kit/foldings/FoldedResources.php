@@ -28,9 +28,6 @@ abstract class FoldedResources extends AbstractSingleton {
     /** @var PsProfilerInterface */
     protected $PROFILER;
 
-    /** @var SimpleDataCache */
-    private $INSTS_CACHE;
-
     /** Идентификаторы */
     private $IDENTS;
 
@@ -94,7 +91,7 @@ abstract class FoldedResources extends AbstractSingleton {
      * Например функция trpostimg - сразу указывает на фолдинг post-tr.
      * Данный префикс являет собой просто слияние подтипа + типа фолдинга.
      */
-    public function getSmartyPrefix() {
+    public final function getSmartyPrefix() {
         return $this->SMARTY_PREFIX;
     }
 
@@ -133,6 +130,11 @@ abstract class FoldedResources extends AbstractSingleton {
         $tokens = explode('_', trim($className), 3);
         $prefix = count($tokens) == 2 ? $tokens[0] . '_' : null;
         return self::isValidClassPrefix($prefix) && !!$tokens[1] ? $tokens[1] : null;
+    }
+
+    //Метод переводит тип ресурса в расширение файла для ресурса
+    public static function resourceTypeToExt($type) {
+        return array_get_value($type, self::$TYPE2EXT, $type);
     }
 
     //Предпросмотр сущности фолдинга при редактировании
@@ -334,17 +336,9 @@ abstract class FoldedResources extends AbstractSingleton {
      */
 
     /**
-     * Метод проверяет, были ли к данному моменту обнаружены изменённые сущности фолдинга.
-     */
-    public function isChangedEntitysDetected() {
-        return count($this->CHANGED_ENTITYS) > 0;
-    }
-
-    /**
      * Проверим, не был ли какой-нибудь из файлов ресурсов изменён.
      * Если был, то нужно выполнить действия после изменения сущности.
      */
-    private $CHANGE_CHECKED = array();
     private $CHANGED_ENTITYS = array();
 
     //Метод вызывается, как только обнаруживается, что сущность изменилась
@@ -358,10 +352,6 @@ abstract class FoldedResources extends AbstractSingleton {
         }
         $this->CHANGED_ENTITYS[] = $ident;
 
-        //Эту сущность больше не нужно проверять
-        $this->CHANGE_CHECKED[] = $ident;
-        $this->CHANGE_CHECKED = array_unique($this->CHANGE_CHECKED);
-
         $this->LOGGER->info("Entity [$ident] is changed");
         FoldedResourcesManager::onEntityAction(FoldedResourcesManager::ACTION_ENTITY_CHANGED, $this, $ident);
 
@@ -371,12 +361,11 @@ abstract class FoldedResources extends AbstractSingleton {
 
         unset($this->OLDEST[$ident]);
         unset($this->FETCH_RETURNS[$ident]);
-        unset($this->WE_DEPENDS_ON_CACHE[$ident]);
 
         $this->onEntityChangedImpl($ident);
 
         //Именно здесь ставим маркер обработанного изменения, так как до этого мы почистили кэши
-        $this->saveToFoldedCache(true, $ident, self::CACHE_CHANGE_PROCESS);
+        //$this->saveToFoldedCache(true, $ident, self::CACHE_CHANGE_PROCESS);
     }
 
     protected abstract function onEntityChangedImpl($ident);
@@ -397,7 +386,18 @@ abstract class FoldedResources extends AbstractSingleton {
      * Метод проверяет существование директории для сущности фолдинга.
      */
     public function existsEntity($ident) {
-        return FoldedStorage::existsEntity($this->getUnique(), $ident);
+        return FoldedStorage::existsEntity($this->UNIQUE, $ident);
+    }
+
+    //Сущность существует, но не обязательно видима
+    public function assertExistsEntity($ident) {
+        check_condition($this->existsEntity($ident), "Элемент {$this->getTextDescr($ident)} не существует.");
+        return $ident;
+    }
+
+    //Проверяет, что сущность не существует
+    public function assertNotExistsEntity($ident) {
+        check_condition(!$this->existsEntity($ident), "Элемент {$this->getTextDescr($ident)} уже существует.");
     }
 
     /**
@@ -415,63 +415,6 @@ abstract class FoldedResources extends AbstractSingleton {
     }
 
     /**
-     * Экземпляры всех классов для видимых сущностей фолдинга
-     */
-    public final function getVisibleClassInsts() {
-        $insts = array();
-        foreach ($this->getAllIdents() as $ident) {
-            $insts[$ident] = $this->getEntityClassInst($ident);
-        }
-        return $insts;
-    }
-
-    /**
-     * Названия всех классов для всех сущностей фолдинга, доступных пользователю.
-     * Восновном используется для вызова статичиских методов.
-     */
-    public final function getAccessibleClassNames() {
-        $this->assertAllowedResourceType(self::RTYPE_PHP);
-        $classNames = array();
-        foreach ($this->getAllIdents() as $ident) {
-            require_once $this->getClassPath($ident);
-            $classNames[$ident] = $this->ident2className($ident);
-        }
-        return $classNames;
-    }
-
-    /**
-     * Метод вернёт экземпляры классов для всех сущностей, доступных пользователю
-     */
-    public final function getAllUserAcessibleClassInsts() {
-        return $this->getUserAcessibleClassInsts($this->getAllIdents());
-    }
-
-    /**
-     * Метод принимает на вход массив идентификаторов и возвращает те из них, 
-     * которые видны пользователю и экземпляры классов для которых имеют тип доступа,
-     * видимый текущему авторизованному пользователю.
-     */
-    protected final function getUserAcessibleClassInsts(array $idents) {
-        $insts = array();
-        foreach ($idents as $ident) {
-            if (!array_key_exists($ident, $insts) && $this->hasAccess($ident, true)) {
-                $insts[$ident] = $this->getEntityClassInst($ident);
-            }
-        }
-        return $insts;
-    }
-
-    //Сущность существует, но не обязательно видима
-    public function assertExistsEntity($ident) {
-        check_condition($this->existsEntity($ident), "Элемент {$this->getTextDescr($ident)} не существует.");
-    }
-
-    //Проверяет, что сущность не существует
-    public function assertNotExistsEntity($ident) {
-        check_condition(!$this->existsEntity($ident), "Элемент {$this->getTextDescr($ident)} уже существует.");
-    }
-
-    /**
      * Метод возвращает сущность фолдинга
      * 
      * @return FoldedEntity
@@ -480,71 +423,78 @@ abstract class FoldedResources extends AbstractSingleton {
         return $this->hasAccess($ident) ? FoldedEntity::inst($this, $ident) : null;
     }
 
-    /**
-     * Метод возвращает все сущности фолдинга
-     * @return array
-     */
-    public function getAccessibleFoldedEntitys($includePattern = false) {
-        $result = array();
-        foreach ($this->getAllIdents($includePattern) as $ident) {
-            $result[] = $this->getFoldedEntity($ident);
-        }
-        return $result;
-    }
-
-    public function getVisibleFoldedEntitys() {
-        $result = array();
-        foreach ($this->getAllIdents() as $ident) {
-            $result[] = $this->getFoldedEntity($ident);
-        }
-        return $result;
-    }
-
-    public function getAllowedResourceTypes() {
+    public final function getAllowedResourceTypes() {
         return $this->RESOURCE_TYPES_ALLOWED;
     }
 
-    public function isAllowedResourceType($type) {
+    public final function isAllowedResourceType($type) {
         return in_array($type, $this->RESOURCE_TYPES_ALLOWED);
     }
 
     public function assertAllowedResourceType($type) {
-        check_condition($this->isAllowedResourceType($type), "Тип ресурса [$type] не может быть запрошен для сущностей типа " . $this->getTextDescr());
+        return check_condition($this->isAllowedResourceType($type), "Тип ресурса [$type] не может быть запрошен для сущностей типа " . $this->getTextDescr());
     }
 
     /**
-     * Создание экземпляра класса для сущности фолдинга
+     * Создание экземпляра класса для сущности фолдинга.
+     * Если по каким-либо причинам экземпляр не может быть создан - выбрасываем ошибку.
+     * 
      * @return FoldedClass
      */
-    public function getEntityClassInst($ident, $cache = true) {
-        if (!$cache || !$this->INSTS_CACHE->has($ident)) {
-            //Получим элемент - класс
-            $php = $this->getResourceDi($ident, self::RTYPE_PHP);
+    public final function getEntityClassInst($ident, $cache = true) {
+        /* @var $CACHE SimpleDataCache */
+        $CACHE = $cache ? SimpleDataCache::inst($this->unique('CLASSES-CACHE')) : null; //---
 
-            //Проверим, что это - файл
-            check_condition($php->isFile(), 'Не найден класс реализации для сущности ' . $this->getTextDescr($ident));
-
-            //Получим FoldedEntity, так как её потом нужно будет передать в конструктор
-            $foldedEntity = $this->getFoldedEntity($ident);
-
-            //Подключим класс, не будем заставлять трудиться класслоадер
-            require_once $php->getAbsPath();
-
-            //Построим название класса на основе идентификатора сущности
-            $baseFoldedClass = 'FoldedClass';
-            $class = $this->ident2className($ident);
-            check_condition(PsUtil::isInstanceOf($class, $baseFoldedClass), "Класс для сущности $foldedEntity не является наследником $baseFoldedClass");
-
-            //Создаём акземпляр
-            $inst = new $class($foldedEntity);
-
-            //Отлогируем
-            $this->LOGGER->info("Instance of $class created.");
-            FoldedResourcesManager::onEntityAction(FoldedResourcesManager::ACTION_ENTITY_INST_CREATED, $this, $ident);
-
-            return $cache ? $this->INSTS_CACHE->set($ident, $inst) : $inst;
+        if ($CACHE && $CACHE->has($ident)) {
+            return $CACHE->get($ident);
         }
-        return $this->INSTS_CACHE->get($ident);
+
+        $classPath = $this->getClassPath($ident);
+
+        //Подключим класс, не будем заставлять трудиться класслоадер
+        require_once $classPath;
+
+        //Построим название класса на основе идентификатора сущности
+        $className = $this->ident2className($ident);
+        if (!PsUtil::isInstanceOf($className, FoldedClass::getCalledClass())) {
+            return PsUtil::raise('Класс для сущности {} не является наследником {}', $this->getTextDescr($ident), FoldedClass::getCalledClass());
+        }
+
+        //Получим FoldedEntity, так как её потом нужно будет передать в конструктор
+        $foldedEntity = $this->getFoldedEntity($ident);
+
+        //Создаём экземпляр
+        $inst = new $className($foldedEntity);
+
+        //Отлогируем
+        $this->LOGGER->info('Instance of {} created.', $className);
+        FoldedResourcesManager::onEntityAction(FoldedResourcesManager::ACTION_ENTITY_INST_CREATED, $this, $ident);
+
+        return $CACHE ? $CACHE->set($ident, $inst) : $CACHE;
+    }
+
+    /**
+     * Метод загружает все экземпляры классов
+     * 
+     * @param array $idents - ограниченный список сущностей, если нет - ищем среди всех
+     * @param bool $checkClassAccess - нужно ли при загрузке проверить доступ к сущности
+     * @param bool $cacheInst - кешировать ли созданные экземпляры
+     * @return array - карта идентификатор->экземпляр
+     */
+    public final function getEntityClassInsts(array $idents = null, $checkClassAccess = true, $skipNotExisted = true, $cacheInst = true) {
+        $idents = is_array($idents) ? array_unique($idents) : $this->getAllIdents();
+        $insts = array();
+        foreach ($idents as $ident) {
+            if ($this->existsEntity($ident)) {
+                $inst = $this->getEntityClassInst($ident, $cacheInst);
+                if (!$checkClassAccess || $inst->isUserHasAccess()) {
+                    $insts[$ident] = $inst;
+                }
+            } else {
+                check_condition($skipNotExisted, "Элемент {$this->getTextDescr($ident)} не существует.");
+            }
+        }
+        return $insts;
     }
 
     /** @return DirManager */
@@ -552,15 +502,10 @@ abstract class FoldedResources extends AbstractSingleton {
         return DirManager::inst(FoldedStorage::getEntityChild($this->UNIQUE, $ident, $subDir));
     }
 
-    public static function resourceTypeToExt($type) {
-        return array_get_value($type, self::$TYPE2EXT, $type);
-    }
-
     /** @return DirItem */
     public function getResourceDi($ident, $type) {
         $this->assertAllowedResourceType($type);
         return $this->getResourcesDm($ident)->getDirItem(null, $ident, self::resourceTypeToExt($type));
-        //return DirItem::inst(FoldedStorage::getEntityChild($this->UNIQUE, $ident, self::resourceTypeToExt($type)));
     }
 
     /** @return DirItem */
@@ -707,32 +652,17 @@ abstract class FoldedResources extends AbstractSingleton {
     }
 
     /**
-     * ИНФОРМАЦИЯ О ФОЛДИНГЕ, ХРАНИМАЯ В ТЕКСТОВОМ ФАЙЛЕ:
-     * [param1]
-     *  value1
-     */
-    public function getTxtParam($ident, $param, $default = null) {
-        $this->assertAllowedResourceType(self::RTYPE_TXT);
-        $params = $this->getFromFoldedCache($ident, self::CACHE_TXT_PARAMS, array());
-        if (!is_array($params)) {
-            $params = $this->getResourceDi($ident, self::RTYPE_TXT)->getTextPropsAdapter()->getProps();
-            $this->saveToFoldedCache($params, $ident, self::CACHE_TXT_PARAMS);
-        }
-        return array_get_value($param, $params, $default);
-    }
-
-    /**
      * Различные "временные" данные для сущности
      */
 
     /** @return DirManager */
     public function getAutogenDm($ident, $subDir = null) {
-        return DirManager::autogen(array('folded', $this->getFoldingGroup(), $ident, $subDir));
+        return DirManager::autogen(array('folded', $this->getUnique($this->assertExistsEntity($ident)), $subDir));
     }
 
     /** @return DirItem */
-    public function getAutogenDi($ident, $subDir = null, $file = null, $ext = null) {
-        return $this->getAutogenDm($ident, $subDir)->getDirItem(null, $file, $ext);
+    public function getAutogenDi($ident, $makeDirs = null, $notMakeDirs = null, $file = null, $ext = null) {
+        return $this->getAutogenDm($ident, $makeDirs)->getDirItem($notMakeDirs, $file, $ext);
     }
 
     /**
@@ -959,12 +889,15 @@ abstract class FoldedResources extends AbstractSingleton {
 
     /**
      * Метод возвращает путь к классу для сущности фолдинга
+     * Если сущности не существует или мы не поддерживаем работу с классами - выдаём ошибку.
      */
     public function getClassPath($ident) {
         if (self::PATTERN_NAME === $ident) {
-            return null; //---
+            return PsUtil::raise('Нельзя загрузить путь к классу для сущности {}', self::PATTERN_NAME);
         }
-        return FoldedStorage::tryGetEntityClassPath($this->CLASS_PREFIX . $ident);
+        $this->assertAllowedResourceType(self::RTYPE_PHP);
+
+        return check_condition(FoldedStorage::tryGetEntityClassPath($this->CLASS_PREFIX . $ident), 'Не найден класс реализации для сущности ' . $this->getTextDescr($ident));
     }
 
     /*
@@ -1145,14 +1078,6 @@ abstract class FoldedResources extends AbstractSingleton {
      */
     protected function getListIdents($list) {
         return array_keys($this->getListContent($list));
-    }
-
-    /**
-     * Метод получает сущности из списка, создаёт экземпляры классов и проверяет 
-     * их на доступность текущему авторизованному пользователю.
-     */
-    protected final function getUserAcessibleClassInstsFromList($list) {
-        return $this->getUserAcessibleClassInsts($this->getListIdents($list));
     }
 
     /*
@@ -1530,7 +1455,7 @@ abstract class FoldedResources extends AbstractSingleton {
         $fsubtype = $this->getFoldingSubType();
         $name = "$ftype-$fsubtype-$ident";
 
-        $zipDi = $this->getAutogenDi($ident, null, $name, 'zip')->remove();
+        $zipDi = $this->getAutogenDi($ident, null, null, $name, 'zip')->remove();
 
         $zip = $zipDi->startZip();
 
@@ -1625,11 +1550,14 @@ abstract class FoldedResources extends AbstractSingleton {
      */
     protected function __construct() {
         $this->CLASS = get_called_class();
-        $this->INSTS_CACHE = new SimpleDataCache();
         $this->UNIQUE = self::unique($this->getFoldingType(), $this->getFoldingSubType());
-        $this->LOGGER = PsLogger::inst(__CLASS__ . '-' . $this->UNIQUE);
 
+        $this->LOGGER = PsLogger::inst(__CLASS__ . '-' . $this->UNIQUE);
         $this->PROFILER = PsProfiler::inst(__CLASS__);
+
+        $this->CLASS_PREFIX = FoldedStorage::getFoldingClassPrefix($this->UNIQUE);
+        $this->SMARTY_PREFIX = FoldedStorage::getFoldingSourcePrefix($this->UNIQUE);
+
         $this->RESOURCE_TYPES_LINKED = array_intersect($this->RESOURCE_TYPES_ALLOWED, $this->RESOURCE_TYPES_LINKED);
         $this->RESOURCE_TYPES_CHECK_CHANGE = array_intersect($this->RESOURCE_TYPES_ALLOWED, $this->RESOURCE_TYPES_CHECK_CHANGE);
 
@@ -1641,20 +1569,6 @@ abstract class FoldedResources extends AbstractSingleton {
          */
         if ($this->isImagesFactoryEnabled() && !$this->defaultDim()) {
             raise_error("Не заданы размеры обложки по умолчанию для фолдинга $this");
-        }
-
-        /*
-         * Последовательность, однозначно идентифицирующая фолдинг и используемая в различных 
-         * ситуациях для связи фолдинга и его сущностей, таких как:
-         * смарти функции, класс и т.д.
-         * Пример: trpost, pl и т.д.
-         */
-        $SRC_PREFIX = trim($this->getFoldingSubType()) . $this->getFoldingType();
-        $this->SMARTY_PREFIX = $SRC_PREFIX;
-
-        //Если мы используем php-классы, то проверим, корректно ли задан префикс классов
-        if ($this->isAllowedResourceType(self::RTYPE_PHP)) {
-            $this->CLASS_PREFIX = strtoupper($SRC_PREFIX) . '_';
         }
 
         //Разберём настройки хранения фолдингов в базе

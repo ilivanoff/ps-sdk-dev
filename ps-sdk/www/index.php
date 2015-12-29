@@ -9,9 +9,15 @@ require_once 'ps-includes/MainImport.php';
 //print_r(FoldingsIni::foldingsRel());
 //print_r(FoldingsIni::foldingsAbs());
 
+
+echo PluginsManager::inst()->getAutogenDi('advgraph', array('x', 'y', 'z'), null, 'temp', 'php')->touch();
+
+
+die;
+
 echo TestUtils::testProductivity(function() {
-            FoldedStorage::getEntities('lib-s');
-        }, 200);
+    FoldedStorage::getEntities('lib-s');
+}, 200);
 
 br();
 echo FoldedStorage::extractInfoFromClassName('PL_slib', $classPrefix, $entity);
@@ -88,8 +94,8 @@ PSCache::inst()->saveToCache(array('a' => 1), '$key', '$group', 'xxx1');
 die;
 
 echo TestUtils::testProductivity(function() {
-            PSCache::inst()->getFromCache('$key', '$group', null, 'xxx1');
-        });
+    PSCache::inst()->getFromCache('$key', '$group', null, 'xxx1');
+});
 
 print_r(PSCache::inst()->getFromCache($key, $group, array('a'), 'xxx1'));
 

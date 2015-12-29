@@ -2,13 +2,6 @@
 
 class PB_basic extends AbstractPageBuilder {
 
-    public static function registerWebPages() {
-        /* @var $class BasicPage */
-        foreach (BasicPagesManager::inst()->getAccessibleClassNames() as $class) {
-            $class::registerWebPages();
-        }
-    }
-
     /** @var BasicPage */
     private $basicPage;
 

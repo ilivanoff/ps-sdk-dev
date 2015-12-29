@@ -21,7 +21,7 @@ class PP_timeline extends BasePopupPage {
     public function buildContent() {
         $TLM = TimeLineManager::inst();
 
-        $insts = $TLM->getVisibleClassInsts();
+        $insts = $TLM->getEntityClassInsts();
         if (empty($insts)) {
             return; //Нет временных шкал для показа
         }

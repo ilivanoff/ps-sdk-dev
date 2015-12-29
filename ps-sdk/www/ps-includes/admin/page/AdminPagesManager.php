@@ -6,7 +6,7 @@ class AdminPagesManager {
     private $curPage;
 
     private function __construct() {
-        $this->pages = APagesResources::inst()->getAllUserAcessibleClassInsts();
+        $this->pages = APagesResources::inst()->getEntityClassInsts();
         $this->curPage = $this->getPage(RequestArrayAdapter::inst()->str(GET_PARAM_PAGE));
         $this->curPage = $this->curPage ? $this->curPage : $this->getPage(AP_APCommon::getPageIdent());
     }

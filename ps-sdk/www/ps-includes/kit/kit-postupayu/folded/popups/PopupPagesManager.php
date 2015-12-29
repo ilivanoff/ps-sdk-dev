@@ -45,7 +45,7 @@ class PopupPagesManager extends PopupPagesResources {
 
             //Соберём все видимые попап-страницы и плагины
             $ENTITYS = array();
-            foreach (array($this->getVisibleClassInsts(), PluginsManager::inst()->getVisibleClassInsts()) as $popups) {
+            foreach (array($this->getEntityClassInsts(), PluginsManager::inst()->getEntityClassInsts()) as $popups) {
                 foreach ($popups as $ident => $popup) {
                     $visType = $popup->getPopupVisibility();
                     $take = PopupVis::isAllwaysVisible($visType) || ($visType == PopupVis::BYPOST && in_array($ident, $USED));

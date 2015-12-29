@@ -30,7 +30,7 @@ class TimeLineManager extends TimeLineResources {
 
     /** @return FoldedEntity */
     public function getFoldedEntity4TimeLineFolding(TimeLineFolding $folding) {
-        foreach ($this->getAllUserAcessibleClassInsts() as $inst) {
+        foreach ($this->getEntityClassInsts() as $inst) {
             if (($inst instanceof TimeLineFoldingBuilder) && ($inst->getTimeLineFolding() === $folding)) {
                 return $inst->getFoldedEntity();
             }

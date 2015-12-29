@@ -15,7 +15,7 @@ final class DialogManager extends DialogResources implements PageFinalizerFoldin
     public function finalizePageContent($CONTENT) {
         $links = array();
         /** @var $inst BaseDialog */
-        foreach ($this->getAllUserAcessibleClassInsts() as $inst) {
+        foreach ($this->getEntityClassInsts() as $inst) {
             $links[] = $inst->getFoldedEntity()->getResourcesLinks();
         }
         return $CONTENT . implode('', $links);

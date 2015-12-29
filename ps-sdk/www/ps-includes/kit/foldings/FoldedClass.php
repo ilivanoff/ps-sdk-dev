@@ -90,6 +90,10 @@ abstract class FoldedClass {
         return FoldedResources::extractIdentFormClass(get_called_class());
     }
 
+    public static final function getCalledClass() {
+        return get_called_class();
+    }
+
     public function __toString() {
         return get_called_class();
     }

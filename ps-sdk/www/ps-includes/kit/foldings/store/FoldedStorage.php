@@ -175,6 +175,22 @@ final class FoldedStorage extends AbstractSingleton {
     }
 
     /**
+     * Получение префикса класса для фолдинга: lib-p => PLIB_
+     * @param string $foldedUnique - код фолдинга [lib-p]
+     */
+    public static function getFoldingClassPrefix($foldedUnique) {
+        return self::assertExistsFolding($foldedUnique) ? array_search($foldedUnique, self::inst()->CLASSPREFIX_2_FOLDING) : null;
+    }
+
+    /**
+     * Получение префикса ресурсов для фолдинга: lib-p => plib
+     * @param string $foldedUnique - код фолдинга [lib-p]
+     */
+    public static function getFoldingSourcePrefix($foldedUnique) {
+        return self::assertExistsFolding($foldedUnique) ? array_search($foldedUnique, self::inst()->SOURCE_2_FOLDING) : null;
+    }
+
+    /**
      * Метод патыется получить путь к сущности фолдинга по названию класса.
      * Все классы для сущностей фолдинга начинаются на префикс с подчёркиванием,
      * например PL_, на этом и основан способ подключени класса.
