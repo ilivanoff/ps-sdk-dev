@@ -432,7 +432,8 @@ abstract class FoldedResources extends AbstractSingleton {
     }
 
     public function assertAllowedResourceType($type) {
-        return check_condition($this->isAllowedResourceType($type), "Тип ресурса [$type] не может быть запрошен для сущностей типа " . $this->getTextDescr());
+        check_condition($this->isAllowedResourceType($type), "Тип ресурса [$type] не может быть запрошен для сущностей типа {$this->getTextDescr()}");
+        return $type; //---
     }
 
     /**
@@ -504,13 +505,22 @@ abstract class FoldedResources extends AbstractSingleton {
 
     /** @return DirItem */
     public function getResourceDi($ident, $type) {
-        $this->assertAllowedResourceType($type);
-        return $this->getResourcesDm($ident)->getDirItem(null, $ident, self::resourceTypeToExt($type));
+        return $this->getResourcesDm($ident)->getDirItem(null, $ident, self::resourceTypeToExt($this->assertAllowedResourceType($type)));
     }
 
     /** @return DirItem */
     public function getTplDi($ident) {
         return $this->getResourceDi($ident, self::RTYPE_TPL);
+    }
+
+    /** @return DirManager */
+    public function getAutogenDm($ident, $subDir = null) {
+        return DirManager::autogen(array('folded', $this->getUnique($this->assertExistsEntity($ident)), $subDir));
+    }
+
+    /** @return DirItem */
+    public function getAutogenDi($ident, $makeDirs = null, $notMakeDirs = null, $file = null, $ext = null) {
+        return $this->getAutogenDm($ident, $makeDirs)->getDirItem($notMakeDirs, $file, $ext);
     }
 
     /**
@@ -539,14 +549,6 @@ abstract class FoldedResources extends AbstractSingleton {
     /** @return Smarty_Internal_Template */
     private function getTpl($ident, $smartyParams = null) {
         return PSSmarty::template($this->getResourceDi($ident, self::RTYPE_TPL), $smartyParams);
-    }
-
-    public function getAccesibleResourcesDi($type, $includePattern = false) {
-        $result = array();
-        foreach ($this->getAllIdents($includePattern) as $ident) {
-            $result[$ident] = $this->getResourceDi($ident, $type);
-        }
-        return $result;
     }
 
     /*
@@ -654,16 +656,6 @@ abstract class FoldedResources extends AbstractSingleton {
     /**
      * Различные "временные" данные для сущности
      */
-
-    /** @return DirManager */
-    public function getAutogenDm($ident, $subDir = null) {
-        return DirManager::autogen(array('folded', $this->getUnique($this->assertExistsEntity($ident)), $subDir));
-    }
-
-    /** @return DirItem */
-    public function getAutogenDi($ident, $makeDirs = null, $notMakeDirs = null, $file = null, $ext = null) {
-        return $this->getAutogenDm($ident, $makeDirs)->getDirItem($notMakeDirs, $file, $ext);
-    }
 
     /**
      * Метод подключает ресурсы к сущности фолдинга.
@@ -907,14 +899,14 @@ abstract class FoldedResources extends AbstractSingleton {
     /**
      * Метод возвращает признак - работает ли данный фолдинг с картинками
      */
-    public function isImagesFactoryEnabled() {
+    public final function isImagesFactoryEnabled() {
         return $this instanceof ImagedFolding;
     }
 
     /**
      * Метод утверждает, что фолдинг работает с картинками
      */
-    public function assertImagesFactoryEnabled() {
+    public final function assertImagesFactoryEnabled() {
         check_condition($this->isImagesFactoryEnabled(), "Фолдинг [$this] не работает с картинками");
     }
 
@@ -969,6 +961,7 @@ abstract class FoldedResources extends AbstractSingleton {
      */
     protected function assertSpritable($ident) {
         check_condition($this->isSpritable(), "Работа со спрайтами для сущности {$this->getTextDescr($ident)} запрещена.");
+        return $ident; //---
     }
 
     /** @return CssSprite */
@@ -986,16 +979,14 @@ abstract class FoldedResources extends AbstractSingleton {
      * Название файла со спрайтами
      */
     public function getSpriteName($ident) {
-        $this->assertSpritable($ident);
-        return $this->getUnique($ident);
+        return $this->getUnique($this->assertSpritable($ident));
     }
 
     /**
      * Метод должен вернуть картинки для построения спрайта
      */
     public function getSpriteImages($ident) {
-        $this->assertSpritable($ident);
-        return $this->getTplFormules($ident);
+        return $this->getTplFormules($this->assertSpritable($ident));
     }
 
     /**
