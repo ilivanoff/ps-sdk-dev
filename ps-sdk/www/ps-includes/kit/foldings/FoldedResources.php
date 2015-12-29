@@ -420,6 +420,18 @@ abstract class FoldedResources extends AbstractSingleton {
         return $this->hasAccess($ident) ? FoldedEntity::inst($this, $ident) : null;
     }
 
+    /**
+     * Метод возвращает все сущности фолдинга
+     * @return array
+     */
+    public function getFoldedEntitys($includePattern = false) {
+        $result = array();
+        foreach ($this->getAllIdents($includePattern) as $ident) {
+            $result[$ident] = $this->getFoldedEntity($ident);
+        }
+        return $result;
+    }
+
     public final function getAllowedResourceTypes() {
         return $this->RESOURCE_TYPES_ALLOWED;
     }

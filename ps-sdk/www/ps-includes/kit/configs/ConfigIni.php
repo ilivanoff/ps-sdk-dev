@@ -22,6 +22,10 @@ final class ConfigIni extends AbstractIni {
         return self::getPropCheckType(self::GROUP_CORE, 'libs', array(PsConst::PHP_TYPE_STRING));
     }
 
+    public static function webPagesStore() {
+        return self::getPropCheckType(self::GROUP_CORE, 'web-pages', array(PsConst::PHP_TYPE_STRING));
+    }
+
     public static function cacheEngine() {
         return self::getPropCheckType(self::GROUP_CACHE, 'engine', array(PsConst::PHP_TYPE_STRING));
     }

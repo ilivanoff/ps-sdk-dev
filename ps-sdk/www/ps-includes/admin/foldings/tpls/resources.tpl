@@ -22,10 +22,6 @@ abstract class {$ResourcesClass} extends FoldedResources {$implements}{
         return '{$EntityName}';
     }
 
-    public function getFoldingGroup() {
-        return '{$FoldingGroup}';
-    }
-
     public function getFoldingType() {
         return '{$FoldingType}';
     }

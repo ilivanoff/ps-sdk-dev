@@ -152,7 +152,7 @@ div.no_items {
 /* <span>...</span> */
 span.error, div.error {
     color: #700;
-    background: url(/resources/images/icons/error.png) no-repeat left center;
+    background: url(/ps-content/images/icons/error.png) no-repeat left center;
     padding-left: 18px;
 }
 
@@ -171,7 +171,7 @@ span.success, div.success {
 
 span.progress {
     color: gray;
-    background: url(/resources/images/icons/loading/loading12.gif) no-repeat left center;
+    background: url(/ps-content/images/icons/loading/loading12.gif) no-repeat left center;
     padding-left: 16px;
     cursor: default;
 }
@@ -190,7 +190,7 @@ span.real_val {
 /* Ссылки "напишите нам" */
 .write_to_us {
     padding-left: 15px;
-    background: url(/resources/images/icons/pencil.png) 2px center no-repeat;
+    background: url(/ps-content/images/icons/pencil.png) 2px center no-repeat;
 }
 
 /* Подпись */
@@ -227,7 +227,7 @@ p.signature span {
 
 /*Контейнер, который содержит не загруженную картинку*/
 .box-img-x-error {
-    background: url('/resources/images/noimage.png') center center no-repeat;
+    background: url('/ps-content/images/noimage.png') center center no-repeat;
 }
 
 
@@ -262,7 +262,7 @@ table.highlighted tbody tr:hover {
 }
 
 thead, .thead {
-    background: #ccc url("/resources/images/bar.gif") repeat-x left center;
+    background: #ccc url("/ps-content/images/bar.gif") repeat-x left center;
 }
 
 th {
@@ -323,11 +323,11 @@ table.editable td.editable.yn{
 
 /*  Цвет невалидного поля  */
 table.editable tr:hover td.editable {
-    background: url('/resources/images/icons/tdeditable.png') 1px 1px no-repeat transparent;
+    background: url('/ps-content/images/icons/tdeditable.png') 1px 1px no-repeat transparent;
 }
 
 table.editable tr td.editable.modified {
-    background: url('/resources/images/icons/tdmodified.png') 1px 1px no-repeat transparent !important;
+    background: url('/ps-content/images/icons/tdmodified.png') 1px 1px no-repeat transparent !important;
 }
 
 table.editable tr td.editable.invalid {
@@ -367,11 +367,11 @@ table.binom td {
 }
 
 .binom .lbr{
-    background: url('/resources/images/binom_bg.png') left center no-repeat;
+    background: url('/ps-content/images/binom_bg.png') left center no-repeat;
 }
 
 .binom .rbr{
-    background: url('/resources/images/binom_bg.png') right center no-repeat;
+    background: url('/ps-content/images/binom_bg.png') right center no-repeat;
 }
 
 .binom .lbr,
@@ -451,7 +451,7 @@ a[target=_blank],
 .gray a[target=_blank]:hover,
 a.gray [target=_blank]:hover {
     color: #06C;
-    background: url(/resources/images/icons/ex.gif) repeat-y scroll right 0 transparent;
+    background: url(/ps-content/images/icons/ex.gif) repeat-y scroll right 0 transparent;
     padding-right: 13px;
 }
 
@@ -554,11 +554,11 @@ form fieldset.closed {
 legend.toggle {
     cursor: pointer;
     padding-right: 18px;
-    background: url(/resources/images/icons/legclose.png) 98% center no-repeat;
+    background: url(/ps-content/images/icons/legclose.png) 98% center no-repeat;
 }
 
 form fieldset.closed legend.toggle {
-    background-image: url(/resources/images/icons/legopen.png);
+    background-image: url(/ps-content/images/icons/legopen.png);
 }
 
 form p {
@@ -602,11 +602,11 @@ span.ps-datetime-picker-info {
 }
 
 span.ps-datetime-picker-info.past {
-    background: url('/resources/images/icons/figure/alarm-clock-select.png') right center no-repeat;
+    background: url('/ps-content/images/icons/figure/alarm-clock-select.png') right center no-repeat;
 }
 
 span.ps-datetime-picker-info.future {
-    background: url('/resources/images/icons/figure/clock-select-remain.png') right center no-repeat;
+    background: url('/ps-content/images/icons/figure/clock-select-remain.png') right center no-repeat;
 }
 
 form input.ps-datetime-picker,
@@ -798,14 +798,14 @@ li.level2 {
 li.level3 {
     margin-left: 40px;
     padding-left: 15px;
-    background: url(/resources/images/icons/list_chield.png) left top no-repeat;
+    background: url(/ps-content/images/icons/list_chield.png) left top no-repeat;
     /*font-style: italic;*/
 }
 
 li.level4 {
     margin-left: 55px;
     padding-left: 15px;
-    background:url(/resources/images/icons/list_chield.png) left top no-repeat;
+    background:url(/ps-content/images/icons/list_chield.png) left top no-repeat;
 }
 
 /* Дерево, как у юнитов (с папочками) */
@@ -817,7 +817,7 @@ ul.sections {
 ul.sections li.level2 {
     margin-left: 17px;
     padding-left: 20px;
-    background: url(/resources/images/icons/folder.png) left center no-repeat;
+    background: url(/ps-content/images/icons/folder.png) left center no-repeat;
 }
 
 
@@ -985,7 +985,7 @@ h5.paragraph {
     color: #11584a;
     margin-top: 20px;
     padding: 3px 0 0 1.5em;
-    background: url(/resources/images/icons/paragraph.png) 5px bottom no-repeat;
+    background: url(/ps-content/images/icons/paragraph.png) 5px bottom no-repeat;
 }
 
 h5.green {
@@ -1069,7 +1069,7 @@ h6 a{
 .chessfigs .bp {
     width: 35px;
     height: 35px;
-    background-image: url(/resources/images/icons/chess/chess.png);
+    background-image: url(/ps-content/images/icons/chess/chess.png);
     background-repeat: no-repeat;
     /*background-color: #ddd;*/
     display: inline-block;
@@ -1143,7 +1143,7 @@ h6 a{
 .chessfigs_small .bp {
     width: 26px;
     height: 26px;
-    background-image: url(/resources/images/icons/chess/chess_small.png);
+    background-image: url(/ps-content/images/icons/chess/chess_small.png);
     background-repeat: no-repeat;
     /*background-color: #ddd;*/
     display: inline-block;
@@ -1258,7 +1258,7 @@ object {
 }
 
 .ps-gallery-box a.header span.info{
-    background: url(/resources/images/icons/gallery_nc.png) left center no-repeat;
+    background: url(/ps-content/images/icons/gallery_nc.png) left center no-repeat;
     padding-left: 20px;
 }
 
@@ -1285,7 +1285,7 @@ object {
 
 .ps-gallery-box .controls a.popup {
     padding-right: 14px;
-    background: url(/resources/images/icons/popup.png) right center no-repeat;
+    background: url(/ps-content/images/icons/popup.png) right center no-repeat;
     position: absolute;
     right: 0px;
     bottom: 0px;
@@ -1322,7 +1322,7 @@ object {
 }
 
 .ps-gallery-box.open a.header span.info {
-    background-image: url(/resources/images/icons/gallery.png);
+    background-image: url(/ps-content/images/icons/gallery.png);
     color: black;
 }
 
@@ -1486,11 +1486,11 @@ table.famous_list td.dates{
 
 .th .th_body_container {
     padding-left: 30px;
-    background: url(/resources/images/icons/th_start.png) 2px 2px no-repeat;
+    background: url(/ps-content/images/icons/th_start.png) 2px 2px no-repeat;
 }
 
 .th .th_body_container .th_body {
-    background: url(/resources/images/icons/th_end.png) right bottom no-repeat;
+    background: url(/ps-content/images/icons/th_end.png) right bottom no-repeat;
     padding-bottom: 10px;
 }
 
@@ -1524,11 +1524,11 @@ table.famous_list td.dates{
 
 .ex .ex_body_container {
     padding-left: 30px;
-    background: url(/resources/images/icons/ex_start.png) 2px 0 no-repeat;
+    background: url(/ps-content/images/icons/ex_start.png) 2px 0 no-repeat;
 }
 
 .ex .ex_body_container .ex_body {
-    background: url(/resources/images/icons/ex_end.png) right bottom no-repeat;
+    background: url(/ps-content/images/icons/ex_end.png) right bottom no-repeat;
     padding-bottom: 10px;
 }
 
@@ -1555,7 +1555,7 @@ table.famous_list td.dates{
     display: inline-block;
     text-align: center;
     vertical-align: middle;
-    background: url('/resources/images/noimage.png') center center no-repeat;
+    background: url('/ps-content/images/noimage.png') center center no-repeat;
     padding: 3px;
     border: 1px solid #ddd;
     position: relative;
@@ -1718,7 +1718,7 @@ a.imaged, span.imaged {
 .todo{
     border: 3px double red;
     margin: 0;
-    background: url(/resources/images/todo.png);
+    background: url(/ps-content/images/todo.png);
     font-size: 14px;
     clear: both;
 }
@@ -1775,7 +1775,7 @@ div.block_formula sub, div.block_formula sup, div.block_formula sub .math_text, 
 /* Математические операции */
 span.math_vector{
     padding: 2px 2px 0 0;
-    background: url(/resources/images/icons/vector_hat.png) top right no-repeat;
+    background: url(/ps-content/images/icons/vector_hat.png) top right no-repeat;
 }
 
 sub span.math_text{
@@ -2011,83 +2011,83 @@ span.confirm a.yes:hover{
 }
 
 .pscontrols a.delete{
-    background-image: url(/resources/images/icons/delete_nc.png);
+    background-image: url(/ps-content/images/icons/delete_nc.png);
 }
 
 .pscontrols a.delete:hover{
-    background-image: url(/resources/images/icons/delete.png);
+    background-image: url(/ps-content/images/icons/delete.png);
     color:red;
 }
 
 .pscontrols a.reply{
-    background-image: url(/resources/images/icons/pencil_nc.png);
+    background-image: url(/ps-content/images/icons/pencil_nc.png);
 }
 
 .pscontrols a.reply:hover{
-    background-image: url(/resources/images/icons/pencil.png);
+    background-image: url(/ps-content/images/icons/pencil.png);
     color:green;
 }
 
 .pscontrols a.history{
-    background: url(/resources/images/icons/history_nc.png) left center no-repeat;
+    background: url(/ps-content/images/icons/history_nc.png) left center no-repeat;
 }
 
 .pscontrols a.history:hover{
     color:royalblue;
-    background: url(/resources/images/icons/history.png) left center no-repeat;
+    background: url(/ps-content/images/icons/history.png) left center no-repeat;
 }
 
 .pscontrols a.edit{
-    background-image: url(/resources/images/icons/edit_nc.png);
+    background-image: url(/ps-content/images/icons/edit_nc.png);
 }
 
 .pscontrols a.edit:hover{
-    background-image: url(/resources/images/icons/edit.png);
+    background-image: url(/ps-content/images/icons/edit.png);
     color: #0173D7;
 }
 
 .pscontrols a.view{
-    background-image: url(/resources/images/icons/view_nc.png);
+    background-image: url(/ps-content/images/icons/view_nc.png);
 }
 
 .pscontrols a.view:hover{
-    background-image: url(/resources/images/icons/view.png);
+    background-image: url(/ps-content/images/icons/view.png);
     color: #51adf5;
 }
 
 .pscontrols a.user{
-    background-image: url(/resources/images/icons/user_nc.png);
+    background-image: url(/ps-content/images/icons/user_nc.png);
 }
 
 .pscontrols a.user:hover{
-    background-image: url(/resources/images/icons/user.png);
+    background-image: url(/ps-content/images/icons/user.png);
     color: #51adf5;
 }
 
 .pscontrols a.copy{
-    background-image: url(/resources/images/icons/copy_nc.png);
+    background-image: url(/ps-content/images/icons/copy_nc.png);
 }
 
 .pscontrols a.copy:hover{
-    background-image: url(/resources/images/icons/copy.png);
+    background-image: url(/ps-content/images/icons/copy.png);
     color: green;
 }
 
 .pscontrols a.confirm{
-    background-image: url(/resources/images/icons/confirm_nc.png);
+    background-image: url(/ps-content/images/icons/confirm_nc.png);
 }
 
 .pscontrols a.confirm:hover{
-    background-image: url(/resources/images/icons/confirm.png);
+    background-image: url(/ps-content/images/icons/confirm.png);
     color:green;
 }
 
 .pscontrols a.brush {
-    background-image: url(/resources/images/icons/brush_nc.png);
+    background-image: url(/ps-content/images/icons/brush_nc.png);
 }
 
 .pscontrols a.brush:hover {
-    background-image: url(/resources/images/icons/brush.png);
+    background-image: url(/ps-content/images/icons/brush.png);
     color:#40b524;
 }
 
@@ -2190,7 +2190,7 @@ ol.anons a:hover {
     text-align: right;
     padding: 25px 25px 66px;
     margin: 10px 0px;
-    background: url(/resources/images/background-bottom-shadow.png) right bottom no-repeat;
+    background: url(/ps-content/images/background-bottom-shadow.png) right bottom no-repeat;
     white-space: nowrap;
     clear: both;
     color: gray;
@@ -2232,24 +2232,24 @@ div.full_read .info * {
 }
 
 .post_meta .commentcount {
-    background: transparent url("/resources/images/icons/comments.png") no-repeat left bottom;
+    background: transparent url("/ps-content/images/icons/comments.png") no-repeat left bottom;
 }
 
 .post_meta .rubric {
-    background: transparent url("/resources/images/icons/folder.png") no-repeat left center;
+    background: transparent url("/ps-content/images/icons/folder.png") no-repeat left center;
 }
 
 .post_meta .video{
-    background: transparent url("/resources/images/icons/video.png") no-repeat left bottom;
+    background: transparent url("/ps-content/images/icons/video.png") no-repeat left bottom;
 }
 
 .post_meta .toggle {
-    background: transparent url(/resources/images/icons/not_passed.png) left bottom no-repeat;
+    background: transparent url(/ps-content/images/icons/not_passed.png) left bottom no-repeat;
     color: gray !important;
 }
 
 .post_meta .toggle.passed {
-    background-image: url(/resources/images/icons/passed.png);
+    background-image: url(/ps-content/images/icons/passed.png);
     color:green !important;
 }
 
@@ -2287,7 +2287,7 @@ div.magTopic h4 {
 
 div.magTopic ul {
     margin-left: 250px;
-    list-style-image: url(/resources/images/icons/anons_tick.jpeg);
+    list-style-image: url(/ps-content/images/icons/anons_tick.jpeg);
 }
 
 div.magTopic h5{
@@ -2306,7 +2306,7 @@ div.magReview{
 /* Красная фишка */
 div.magReview h4 {
     padding: 15px 0px 0px 35px;
-    background: url(/resources/images/icons/issue.png) left bottom no-repeat;
+    background: url(/ps-content/images/icons/issue.png) left bottom no-repeat;
 }
 
 div.magReview ol.anons {
@@ -2574,7 +2574,7 @@ div.comment .meta .controls .vote a.votes {
 
 div.comment .meta .controls .vote a.votes.progress {
     color: transparent !important;
-    background: url(/resources/images/icons/loading/loading12.gif) center center no-repeat;
+    background: url(/ps-content/images/icons/loading/loading12.gif) center center no-repeat;
 }
 
 
@@ -2592,11 +2592,11 @@ div.comment .known {
 }
 
 div.comment a.known {
-    background-image: url(/resources/images/icons/star.png);
+    background-image: url(/ps-content/images/icons/star.png);
 }
 
 div.comment span.known {
-    background-image: url(/resources/images/icons/loading/loading16.gif);
+    background-image: url(/ps-content/images/icons/loading/loading16.gif);
 }
 
 
@@ -2803,7 +2803,7 @@ ul.answers li {
 }
 
 ul.answers li.correct {
-    background: transparent url('/resources/images/icons/checked.png') left center no-repeat;
+    background: transparent url('/ps-content/images/icons/checked.png') left center no-repeat;
 }
 
 ul.answers li input{
@@ -2930,7 +2930,7 @@ span.form_closer {
     width: 14px;
     height: 14px;
     cursor: pointer;
-    background: url(/resources/images/icons/form-closer.png) center top no-repeat;
+    background: url(/ps-content/images/icons/form-closer.png) center top no-repeat;
     position: absolute;
     top: 4px;
     right: 4px;
@@ -2978,30 +2978,30 @@ div.whois .cover img {
 .info_box.info {
     color: #00529B;
     background-color: #BDE5F8;
-    background-image: url('/resources/images/icons/msg/info16.png');
+    background-image: url('/ps-content/images/icons/msg/info16.png');
 }
 .info_box.info.msg {
-    background-image: url('/resources/images/icons/msg/info16_msg.png');
+    background-image: url('/ps-content/images/icons/msg/info16_msg.png');
 }
 .info_box.succ {
     color: #4F8A10;
     background-color: #DFF2BF;
-    background-image:url('/resources/images/icons/msg/succ16.png');
+    background-image:url('/ps-content/images/icons/msg/succ16.png');
 }
 .info_box.warn {
     color: #9F6000;
     background-color: #FEEFB3;
-    background-image: url('/resources/images/icons/msg/warn16.png');
+    background-image: url('/ps-content/images/icons/msg/warn16.png');
 }
 .info_box.err {
     color: #D8000C;
     background-color: #FFBABA;
-    background-image: url('/resources/images/icons/msg/err16.png');
+    background-image: url('/ps-content/images/icons/msg/err16.png');
 }
 .info_box.validation {
     color: #D63301;
     background-color: #FFCCBA;
-    background-image: url('/resources/images/icons/msg/valid_err16.png');
+    background-image: url('/ps-content/images/icons/msg/valid_err16.png');
 }
 
 /*
@@ -3235,7 +3235,7 @@ a.ps-hotkey {
 .ps-page-nav a,
 .ps-page-nav span {
     padding-left: 19px;
-    background: url(/resources/images/icons/double_arrows.png) 6px center no-repeat;
+    background: url(/ps-content/images/icons/double_arrows.png) 6px center no-repeat;
 }
 
 

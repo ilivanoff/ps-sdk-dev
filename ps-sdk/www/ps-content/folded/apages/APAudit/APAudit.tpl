@@ -28,17 +28,6 @@
                     </tr>
                 </tfoot>
             </table>
-            <div class="take-dump-buttons separetedtb">
-                <button data-size="{$portion}">Снять дамп ({$portion})</button>
-            </div>
         </div>
-
-        <br/>
-        <h5>Дампы:</h5>
-        {$dumps}
-        <div class="dump-buttons separetedtb">
-            <button>Перезагрузить</button>
-        </div>
-
     </div>
 </div>

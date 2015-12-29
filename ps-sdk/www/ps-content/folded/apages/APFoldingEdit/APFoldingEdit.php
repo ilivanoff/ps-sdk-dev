@@ -135,13 +135,7 @@ class AP_APFoldingEdit extends BaseAdminPage {
                 $FORM->setSmartyParam('folding', $folding);
 
                 /* @var $TABLE PsTable */
-                $TABLE = TableExporter::inst()->getTable($folding);
-                $FORM->setSmartyParam('table', $TABLE);
                 $FORM->setSmartyParam('rec', $folding->getDbRec4Entity($newIdent));
-                if (!$TABLE) {
-                    $FORM->removeButton(FORM_AdminFoldingCreateForm::BUTTON_SAVE_DB);
-                }
-
 
                 //Форма загрузки
                 $FORM = FORM_AdminFoldingUploadForm::getInstance();

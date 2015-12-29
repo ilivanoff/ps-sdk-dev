@@ -172,8 +172,8 @@
 
 {admin}
 {if $CTXT->isAdminPage()}
-    <link rel="stylesheet" href="/admin/ps-content/css/xxx.css" type="text/css" />
-    <script type="text/javascript" src="/admin/ps-content/js-lib/xxx.js"></script>
+    <link rel="stylesheet" href="/ps-content/css/xxx.css" type="text/css" />
+    <script type="text/javascript" src="/ps-content/js/xxx.js"></script>
 {/if}
 {/admin}
 
@@ -189,6 +189,6 @@
     <link rel="stylesheet" href="/ps-content/css/client.print.css" type="text/css" media="print" />
     <link rel="stylesheet" href="/ps-content/css/test.css" type="text/css" media="all" />
 
-    <script type="text/javascript" src="/admin/ps-content/js-lib/xxx.js"></script>
+    <script type="text/javascript" src="/ps-content/js/xxx.js"></script>
     <script type="text/javascript" src="/ps-content/js/test.js"></script>
 {/if}

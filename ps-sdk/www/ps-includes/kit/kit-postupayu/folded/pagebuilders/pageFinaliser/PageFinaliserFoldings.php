@@ -5,9 +5,11 @@ class PageFinaliserFoldings extends AbstractPageFinalizer {
     protected function doFinalize($CONTENT) {
         //1. Менеджеры, которые могут финализировать страницы, производят это
         /* @var $folding PageFinalizerFolding */
-        foreach (Handlers::getInstance()->getPageFinaliseFoldings() as $folding) {
-            $CONTENT = $folding->finalizePageContent($CONTENT);
-        }
+        /*
+          foreach (Handlers::getInstance()->getPageFinaliseFoldings() as $folding) {
+          $CONTENT = $folding->finalizePageContent($CONTENT);
+          }
+         */
         //2. BubbledFolding добавляют свои ресурсы для быстрого открытия подсказок
         return $CONTENT . $this->getBubbles($CONTENT);
     }

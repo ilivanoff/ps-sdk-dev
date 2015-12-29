@@ -6,7 +6,7 @@
         <div id="header">
             <!--логотип-->
             {page_href code=$smarty.const.PAGE_ADMIN class="logo"}
-            <img src="admin/resources/images/tools.png" alt="Панель администратора"/>
+            <img src="/ps-content/images/tools.png" alt="Панель администратора"/>
             {/page_href}
 
             <!--ссылки-->

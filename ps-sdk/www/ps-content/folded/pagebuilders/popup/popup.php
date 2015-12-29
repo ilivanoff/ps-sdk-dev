@@ -2,10 +2,6 @@
 
 class PB_popup extends AbstractPageBuilder {
 
-    public static function registerWebPages() {
-        WebPages::register('popup.php', 'Всплывающее окно', PAGE_POPUP, self::getIdent(), AuthManager::AUTH_TYPE_NO_MATTER, PAGE_POPUP);
-    }
-
     /** @var PopupPagesManager */
     private $PPM;
 

@@ -2,10 +2,6 @@
 
 class PB_test extends AbstractPageBuilder {
 
-    public static function registerWebPages() {
-        WebPages::register('test.php', 'Тестовая страница', PAGE_TEST, self::getIdent(), AuthManager::AUTH_TYPE_NO_MATTER, null, null, false);
-    }
-
     protected function doProcess(PageContext $ctxt, RequestArrayAdapter $requestParams, ArrayAdapter $buildParams) {
         PsDefines::assertProductionOff(__CLASS__);
         PsUtil::startUnlimitedMode();

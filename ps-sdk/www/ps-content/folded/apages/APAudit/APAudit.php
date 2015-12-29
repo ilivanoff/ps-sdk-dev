@@ -7,15 +7,7 @@ class AP_APAudit extends BaseAdminPage {
     }
 
     public function buildContent() {
-        $SMARTY['dumps'] = $this->getAuditDumpsInfo();
-        $SMARTY['portion'] = 20000; //PsDefines::getTableDumpPortion();
-        return $this->getFoldedEntity()->fetchTpl($SMARTY);
-    }
-
-    public function getAuditDumpsInfo() {
-        $SMARTY['dumps'] = AdminTableDump::getAllDumpsInfo('ps_audit');
-        $dumpsTpl = $this->getFoldedEntity()->getResourcesDm()->getDirItem('src/tpls', 'dumps', PsConst::EXT_TPL);
-        return PSSmarty::template($dumpsTpl, $SMARTY)->fetch();
+        return $this->getFoldedEntity()->fetchTpl();
     }
 
     /** @return AP_APAudit */

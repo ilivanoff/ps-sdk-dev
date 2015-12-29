@@ -165,32 +165,6 @@ define('PS_ACTION_EDIT', 2);
 define('PS_ACTION_DELETE', 3);
 
 /*
- * Страницы
- */
-define('BASE_PAGE_MAP', 0);
-define('BASE_PAGE_INDEX', 1);
-define('BASE_PAGE_MAGAZINE', 2);
-define('PAGE_ISSUE', 21);
-define('BASE_PAGE_BLOG', 3);
-define('PAGE_RUBRIC', 31);
-define('PAGE_POST', 32);
-define('BASE_PAGE_TRAININGS', 4);
-define('PAGE_FILING', 41);
-define('PAGE_LESSON', 42);
-define('PAGE_LESSON_HOW_TO', 43);
-define('BASE_PAGE_UNITS', 5);
-define('PAGE_OFFICE', 51);
-define('PAGE_PARTITION', 52);
-define('PAGE_REGISTRATION', 59);
-define('PAGE_PASS_REMIND', 100);
-define('BASE_PAGE_FEEDBACK', 6);
-define('PAGE_HELPUS', 61);
-define('PAGE_POPUP', 7);
-define('PAGE_TEST', 8);
-
-define('PAGE_ADMIN', 10);
-
-/*
  * Даты копирайта
  */
 define('COPY_DATE_FROM', 2009);
@@ -203,6 +177,19 @@ define('COPY_DATE_TO', date('Y'));
 define('ENTITY_SCOPE_ALL', 'ALL');
 define('ENTITY_SCOPE_SDK', 'SDK');
 define('ENTITY_SCOPE_PROJ', 'PROJ');
+
+
+/*
+ * Страницы
+ */
+define('BASE_PAGE_INDEX', 1);
+define('PAGE_REGISTRATION', 59);
+define('PAGE_PASS_REMIND', 100);
+define('BASE_PAGE_FEEDBACK', 6);
+define('PAGE_POPUP', 7);
+define('PAGE_TEST', 8);
+define('PAGE_ADMIN', 10);
+
 
 /**
  * Проверка версии php

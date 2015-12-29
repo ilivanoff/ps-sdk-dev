@@ -6,8 +6,6 @@
             <th>SmPrefix</th>
             <th>Storable</th>
             <th>VisEnts</th>
-            <th>Lists</th>
-            <th>Path</th>
         </tr>
     </thead>
     <tbody>
@@ -17,9 +15,7 @@
                 <td>{$folding->getClassPrefix()}</td>
                 <td>{$folding->getSmartyPrefix()}</td>
                 <td>{if $folding instanceof StorableFolding}V{/if}</td>
-                <td>{count($folding->getVisibleIdents())}</td>
-                <td>{if $folding->hasLists()}{count($folding->getLists())}{/if}</td>
-                <td>{$folding->getFoldingGroup()}</td>
+                <td>{count($folding->getAllIdents())}</td>
             </tr>
         {/foreach}
     </tbody>

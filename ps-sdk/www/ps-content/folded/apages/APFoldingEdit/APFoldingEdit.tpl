@@ -2,7 +2,7 @@
 {if $mode=='list'}
     <ul class="ap-navigation">
         {foreach $foldings as $folding}
-            <li><a href="{AP_APFoldingEdit::urlFoldingEntitys($folding)}">{$folding->getEntityName()} ({$folding->getFoldingGroup()})</a></li>
+            <li><a href="{AP_APFoldingEdit::urlFoldingEntitys($folding)}">{$folding->getEntityName()} ({$folding->getUnique()})</a></li>
         {/foreach}
     </ul>
 {/if}
@@ -13,7 +13,7 @@
     <div class="ps-tabs" id="ps-folding-edit-tabs">
         <div title="Сущности">
             <ul class="ap-navigation">
-                {foreach $folding->getAccessibleFoldedEntitys() as $entity}
+                {foreach $folding->getFoldedEntitys() as $entity}
                     <li class="level2 f-entity">
                         <a href="{AP_APFoldingEdit::urlFoldingEdit($entity)}">{$entity->getIdent()}</a>
                     </li>
@@ -28,16 +28,6 @@
         <div title="Загрузка">
             {form form_id='AdminFoldingUploadForm'}
         </div>
-
-        {if $folding->hasLists()}
-            <div title="Списки">
-                <ul class="ap-navigation lists" data-unique="{$folding->getUnique()}">
-                    {foreach $folding->getLists() as $list}
-                        <li><a href="{AP_APFoldingEdit::urlFoldingListEdit($folding, $list)}">{$list}</a></li>
-                    {/foreach}
-                </ul>
-            </div>
-        {/if}
 
     </div>
 

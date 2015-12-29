@@ -2,10 +2,6 @@
 
 class PB_admin extends AbstractPageBuilder {
 
-    public static function registerWebPages() {
-        WebPages::register('xxx.php', 'Консоль администратора', PAGE_ADMIN, self::getIdent(), AuthManager::AUTH_TYPE_NO_MATTER, PAGE_ADMIN);
-    }
-
     /** @var BaseAdminPage */
     private $adminPage;
 
@@ -19,7 +15,7 @@ class PB_admin extends AbstractPageBuilder {
         } else {
             if (FORM_AdminLoginForm::getInstance()->isValid4Process()) {
                 if (AdminAuthManager::getInstance()->login()) {
-                    WebPages::reloadCurPage();
+                    PsUtil::redirectToSelf();
                 }
             }
         }

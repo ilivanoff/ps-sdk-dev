@@ -76,8 +76,10 @@ final class PageBuilder extends PageBuilderResources {
         $params['marker'] = AuthManager::getUserSessoinMarker();
 
         /* @var $folding FoldedResources */
-        foreach (Handlers::getInstance()->getFoldingsIndexed() as $unique => $folding) {
-            $params['foldings'][$unique] = $folding->getResourcesDm()->relDirPath();
+        foreach (FoldedStorage::listEntities() as $unique => $foldings) {
+            foreach ($foldings as $ident => $relPath) {
+                $params['foldings'][$unique][$ident] = $relPath;
+            }
         }
 
         return $params;
@@ -134,7 +136,7 @@ final class PageBuilder extends PageBuilderResources {
      */
 
     //На данном этапе запрос уже провалидирован в самой WebPage
-    public final function buildpage($builderIdent, array $buildParams = array()) {
+    public final function buildPage(array $buildParams = array()) {
         header('Content-Type: text/html; charset=utf-8');
         ExceptionHandler::registerPretty();
 
@@ -143,7 +145,8 @@ final class PageBuilder extends PageBuilderResources {
 
         // Подготовим необходимые классы
         $CTXT = PageContext::inst();
-        $BUILDER = $this->getPageBuilder($builderIdent);
+        $PAGE = $CTXT->getPage();
+        $BUILDER = $this->getPageBuilder($CTXT->getPageType());
         $PROFILER = $BUILDER->getProfiler();
 
         $RESOURCES = null;
@@ -166,6 +169,14 @@ final class PageBuilder extends PageBuilderResources {
 
             //Вызываем предварительную обработку страницы
             $BUILDER->preProcessPage($CTXT, $RQ_PARAMS, $BUILD_PARAMS);
+
+            // Оповещаем слушателей
+            /* @var $listener PagePreloadListener */
+            /*
+              foreach (Handlers::getInstance()->getPagePreloadListeners() as $listener) {
+              $listener->onPagePreload($PAGE);
+              }
+             */
 
             //Билдер строит страницу, наполняя контекст. Нам от него нужны будут только данные из контекста
             $PARAMS = $BUILDER->buildPage($CTXT, $BUILDER_CTXT, $RQ_PARAMS, $BUILD_PARAMS);
@@ -214,6 +225,7 @@ final class PageBuilder extends PageBuilderResources {
         if ($PROFILER) {
             // Заканчиваем профилирование
             $PROFILER->stop();
+            PageOpenWatcher::updateUserPageWatch($CTXT->getRequestUrl());
         }
     }
 

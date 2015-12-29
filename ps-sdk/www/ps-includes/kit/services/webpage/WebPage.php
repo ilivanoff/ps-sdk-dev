@@ -8,17 +8,15 @@ final class WebPage {
     private $path;                //index.php
     private $name;                //О проекте
     private $pageCode;            //1
-    private $pageCodeBase;        //Код родительской страницы
     private $pageCodeNoAccess;    //Код страницы, на которую будет произведён редирект при отсутствии доступа
     private $builderIdent;        //Построитель страницы
     private $authType;            //Тип авторизации, необходимый для доступа к данной странице
 
-    public function __construct($path, $name, $pageCode, $authType, $basePageCode, $pageCodeNoAccess, $pageBuilderIdent) {
+    public function __construct($path, $name, $pageCode, $authType, $pageCodeNoAccess, $pageBuilderIdent) {
         $this->path = $path;
         $this->name = $name;
         $this->pageCode = $pageCode;
         $this->authType = $authType;
-        $this->pageCodeBase = $basePageCode;
         $this->pageCodeNoAccess = $pageCodeNoAccess;
         $this->builderIdent = $pageBuilderIdent;
     }
@@ -77,10 +75,6 @@ final class WebPage {
         return AuthManager::hasAccess($this->authType);
     }
 
-    public function isMyBasePage($page) {
-        return $this->isIt($page) || (is_numeric($this->pageCodeBase) && (self::inst($this->pageCodeBase) === self::inst($page, false)));
-    }
-
     /**
      * Метод выполняет редирек на данную страницу. 
      * При этом будет проверено, имеет ли пользователь доступ к ней и, если не имеет,
@@ -94,10 +88,6 @@ final class WebPage {
         //Указана страница на случай отсутствия доступа? Редиректимся на неё.
         if (is_numeric($this->pageCodeNoAccess)) {
             WebPages::getPage($this->pageCodeNoAccess)->redirectHere();
-        }
-        //Есть базовая страница? Редирект на неё.
-        if (is_numeric($this->pageCodeBase)) {
-            WebPages::getPage($this->pageCodeBase)->redirectHere();
         }
         //Редирект на index.php
         WebPages::getPage(BASE_PAGE_INDEX)->redirectHere();
@@ -118,20 +108,6 @@ final class WebPage {
         //Теперь провалидируем установленный контекст
         $ctxt = PageContext::inst();
         check_condition($this->isIt($ctxt->getPage()), PsUtil::getClassName($ctxt) . ' проинициализирован некорректно');
-
-        $redirectPage = self::inst(is_numeric($this->pageCodeBase) ? $this->pageCodeBase : BASE_PAGE_INDEX);
-
-        if ($ctxt->isRubricPage() && !$ctxt->getRubric()) {
-            $redirectPage->redirectHere();
-        }
-
-        if ($ctxt->isPostPage() && !$ctxt->getPost()) {
-            $redirectPage->redirectHere();
-        }
-
-        if ($ctxt->isPopupPage() && !PopupPagesManager::inst()->isValidPageRequested()) {
-            $redirectPage->redirectHere();
-        }
 
         PageBuilder::inst()->buildPage();
     }

@@ -3067,7 +3067,7 @@ var PsFoldingManager = {
     store: new ObjectsStore(),
     FOLDING: function(funique, ident) {
         var eunique = funique+'-'+ident;
-        var basePath = defs['foldings'][funique] + ident;
+        var basePath = defs['foldings'][funique][ident]+'/';
         if(!this.store.has(basePath)) {
             var panelJsParams = defs[CONST.PAGE_JS_GROUP_PANELS] || {};
             var obj = {

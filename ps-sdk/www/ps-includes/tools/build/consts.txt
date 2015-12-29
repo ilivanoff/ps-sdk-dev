@@ -1,2 +1,0 @@
-PS_PRODUCTION=true
-DB_NAME=ps_test
