@@ -14,16 +14,8 @@ abstract class ScientistsResources extends LibResources {
         return '210x';
     }
 
-    protected function isIncludeToList($ident, $list) {
-        
-    }
-
     protected function onEntityChangedImpl($ident) {
         
-    }
-
-    public function getFoldingGroup() {
-        return 'librarys/scientists';
     }
 
     public function getFoldingSubType() {

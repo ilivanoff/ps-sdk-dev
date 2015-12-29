@@ -154,7 +154,8 @@ class AP_APFoldingEdit extends BaseAdminPage {
 
             case self::MODE_FOLDING_LIST_EDIT:
                 $PARAMS['list'] = $flist;
-                $PARAMS['listIdents'] = $folding->getPossibleListIdents($flist);
+                //TODO - выкинуто
+                //$PARAMS['listIdents'] = $folding->getPossibleListIdents($flist);
 
                 $navigation->addPath(self::urlFoldingsList(), 'Список фолдингов');
                 $navigation->addPath(self::urlFoldingEntitys($folding), $folding->getEntityName());

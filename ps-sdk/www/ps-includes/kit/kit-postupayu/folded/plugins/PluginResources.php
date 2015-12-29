@@ -22,14 +22,6 @@ class PluginResources extends FoldedResources implements ImagedFolding, PointsGi
         return null;
     }
 
-    public function getFoldingGroup() {
-        return 'plugins';
-    }
-
-    protected function isIncludeToList($ident, $list) {
-        return true;
-    }
-
     protected function onEntityChangedImpl($ident) {
         
     }

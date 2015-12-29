@@ -22,14 +22,6 @@ class PopupPagesResources extends FoldedResources implements ImagedFolding {
         return null;
     }
 
-    public function getFoldingGroup() {
-        return 'popups';
-    }
-
-    protected function isIncludeToList($ident, $list) {
-        return true;
-    }
-
     protected function onEntityChangedImpl($ident) {
         
     }

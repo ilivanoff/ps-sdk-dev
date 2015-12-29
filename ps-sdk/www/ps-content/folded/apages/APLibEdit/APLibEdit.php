@@ -31,7 +31,7 @@ class AP_APLibEdit extends BaseAdminPage {
                 /* @var $manager FoldedResources */
                 foreach (Handlers::getInstance()->getLibManagers() as $manager) {
                     $PARAMS['foldings'][] = array(
-                        'name' => $manager->getEntityName() . ' (' . $manager->getFoldingGroup() . ')',
+                        'name' => $manager->getEntityName() . ' (' . $manager->getUnique() . ')',
                         'url' => $this->url(array('fsubtype' => $manager->getFoldingSubType()))
                     );
                 }

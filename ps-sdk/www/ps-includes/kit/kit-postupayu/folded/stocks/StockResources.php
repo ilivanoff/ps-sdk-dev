@@ -8,20 +8,12 @@ class StockResources extends FoldedResources implements ImagedFolding {
         return '128x128';
     }
 
-    protected function isIncludeToList($ident, $list) {
-        
-    }
-
     protected function onEntityChangedImpl($ident) {
         
     }
 
     public function getEntityName() {
         return 'Акция';
-    }
-
-    public function getFoldingGroup() {
-        return 'stocks';
     }
 
     public function getFoldingType() {

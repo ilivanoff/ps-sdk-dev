@@ -10,10 +10,6 @@ abstract class EmailResources extends FoldedResources {
     /** Допустимые типы ресурсов */
     protected $RESOURCE_TYPES_ALLOWED = array(self::RTYPE_PHP, self::RTYPE_TPL);
 
-    protected function isIncludeToList($ident, $list) {
-        return false;
-    }
-
     protected function onEntityChangedImpl($ident) {
         
     }
@@ -23,10 +19,6 @@ abstract class EmailResources extends FoldedResources {
     }
 
     public function getFoldingType() {
-        return 'email';
-    }
-
-    public function getFoldingGroup() {
         return 'email';
     }
 

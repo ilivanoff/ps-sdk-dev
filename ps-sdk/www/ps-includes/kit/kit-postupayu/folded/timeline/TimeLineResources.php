@@ -8,19 +8,11 @@ class TimeLineResources extends FoldedResources {
         return 'Хронологическая шкала';
     }
 
-    public function getFoldingGroup() {
-        return 'timelines';
-    }
-
     public function getFoldingType() {
         return 'tl';
     }
 
     public function getFoldingSubType() {
-        
-    }
-
-    protected function isIncludeToList($ident, $list) {
         
     }
 

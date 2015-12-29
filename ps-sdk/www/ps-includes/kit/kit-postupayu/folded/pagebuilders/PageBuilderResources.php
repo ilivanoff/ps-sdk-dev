@@ -14,19 +14,11 @@ class PageBuilderResources extends FoldedResources {
         return 'Построитель страниц';
     }
 
-    public function getFoldingGroup() {
-        return 'pagebuilders';
-    }
-
     public function getFoldingType() {
         return 'pb';
     }
 
     public function getFoldingSubType() {
-        
-    }
-
-    protected function isIncludeToList($ident, $list) {
         
     }
 

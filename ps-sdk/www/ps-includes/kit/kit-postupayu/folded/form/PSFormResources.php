@@ -9,16 +9,8 @@ class PSFormResources extends FoldedResources {
         return $this->getEntityClassInst($formId);
     }
 
-    protected function isIncludeToList($ident, $list) {
-        return false;
-    }
-
     public function getEntityName() {
         return 'Форма';
-    }
-
-    public function getFoldingGroup() {
-        return 'forms';
     }
 
     public function getFoldingType() {

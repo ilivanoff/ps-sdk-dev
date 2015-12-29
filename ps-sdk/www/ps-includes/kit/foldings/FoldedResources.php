@@ -70,9 +70,6 @@ abstract class FoldedResources extends AbstractSingleton {
     //Подтип foldings (null, is, tr...)
     public abstract function getFoldingSubType();
 
-    //Группа foldings (путь к папке от директории foldings, в которой лежат ресурсы фолдинга)
-    public abstract function getFoldingGroup();
-
     //Название сущности
     public abstract function getEntityName();
 
@@ -166,7 +163,7 @@ abstract class FoldedResources extends AbstractSingleton {
 
     //Уникальный идентификатор фолдинга, либо сущности внутри фолдинга (если передана)
     public function getUnique($ident = null) {
-        return $this->UNIQUE . ($ident ? '-' . $ident : '');
+        return $ident ? $this->UNIQUE . '-' . $ident : $this->UNIQUE;
     }
 
     private static function smartyPrefix($type, $subtype = null) {
@@ -997,81 +994,6 @@ abstract class FoldedResources extends AbstractSingleton {
     }
 
     /*
-     * ==============================
-     * = LISTS - работа со списками =
-     * ==============================
-     */
-
-    /**
-     * Метод проверяет, может ли сущность входить в список.
-     * При этом проверяется именно сама сущность, а не права доступа к ней.
-     * Права будут проверены позднее.
-     */
-    protected abstract function isIncludeToList($ident, $list);
-
-    /**
-     * Возвращает допустимые списки, с которыми работает фолдинг.
-     * Для того, чтобы объявить список - поддерживаемым, нужно в классе добавить константу
-     * с префиксом LIST_
-     */
-    public final function getLists() {
-        return PsUtil::getClassConsts(get_called_class(), 'LIST_');
-    }
-
-    /**
-     * Признак - есть ли у данного фолдинга списки, с которыми можно работать
-     */
-    public final function hasLists() {
-        return count($this->getLists()) > 0;
-    }
-
-    /**
-     * Метод возвращает элемент директории для списка фолдинга
-     * 
-     * @param type $list
-     * @return DirItem
-     */
-    private function getListDi($list) {
-        check_condition(in_array($list, $this->getLists()), "Фолдинг $this не работает со списком [$list]");
-        return $this->getResourcesDm()->getDirItem(null, $list, 'txt');
-    }
-
-    //Сущности, входящие в списки
-    private $LINES = array();
-
-    /**
-     * Основной метод, возвращающий содержимое списка.
-     * Пользователь получит все сущности из списка, к которым у него есть доступ.
-     * 
-     * @param string $list - название списка
-     * @return array идентификаторы из списка
-     */
-    private function getListContent($list) {
-        if (!array_key_exists($list, $this->LINES)) {
-            //Инициализируем хранилища
-            $this->LINES[$list] = array();
-
-            //Загрузим строки
-            $lines = $this->getListDi($list)->getTextFileAdapter()->getLines();
-            foreach ($lines as $line) {
-                $marked = ends_with($line, '+');
-                $line = $marked ? cut_string_end($line, '+') : $line;
-                if ($this->hasAccess($line) && $this->isIncludeToList($line, $list)) {
-                    $this->LINES[$list][$line] = $marked;
-                }
-            }
-        }
-        return $this->LINES[$list];
-    }
-
-    /**
-     * Метод загружает все сущности из списка
-     */
-    protected function getListIdents($list) {
-        return array_keys($this->getListContent($list));
-    }
-
-    /*
      * МЕТОДЫ ДЛЯ РАБОТЫ С БАЗОЙ
      */
 
@@ -1294,7 +1216,7 @@ abstract class FoldedResources extends AbstractSingleton {
             );
         }
         foreach ($this->getAllIdents() as $ident) {
-            if (!array_key_exists($ident, $result) && $this->isIncludeToList($ident, $list)) {
+            if (!array_key_exists($ident, $result)) {
                 $result[$ident] = array(
                     'i' => false, //included
                     'm' => false  //marked
@@ -1302,20 +1224,6 @@ abstract class FoldedResources extends AbstractSingleton {
             }
         }
         return $result;
-    }
-
-    /**
-     * Метод сохраняет содержимое списка
-     */
-    public final function saveList($list, array $idents) {
-        $this->assertAdminCanDo(__FUNCTION__, $list);
-        $content = array();
-        foreach ($idents as $ident => $marked) {
-            if ($this->existsEntity($ident) && $this->isIncludeToList($ident, $list)) {
-                $content[] = $ident . ($marked ? '+' : '');
-            }
-        }
-        $this->getListDi($list)->writeToFile(implode("\n", $content), true);
     }
 
     /**

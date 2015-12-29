@@ -20,16 +20,8 @@ abstract class PoetsResources extends LibResources {
         return $this->getResourcesDm($ident)->getDirContent('verses', PsConst::EXT_TPL);
     }
 
-    protected function isIncludeToList($ident, $list) {
-        
-    }
-
     protected function onEntityChangedImpl($ident) {
         
-    }
-
-    public function getFoldingGroup() {
-        return 'librarys/poets';
     }
 
     public function getFoldingSubType() {

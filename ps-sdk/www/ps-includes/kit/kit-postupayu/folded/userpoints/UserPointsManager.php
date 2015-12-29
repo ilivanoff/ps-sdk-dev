@@ -25,20 +25,12 @@ class UserPointsManager extends FoldedResources implements PointsGiverFolding {
 
     protected $RESOURCE_TYPES_ALLOWED = array(self::RTYPE_PHP, self::RTYPE_TPL);
 
-    protected function isIncludeToList($ident, $list) {
-        return false;
-    }
-
     protected function onEntityChangedImpl($ident) {
         
     }
 
     public function getEntityName() {
         return 'Очки пользователя';
-    }
-
-    public function getFoldingGroup() {
-        return 'userpoints';
     }
 
     public function getFoldingType() {

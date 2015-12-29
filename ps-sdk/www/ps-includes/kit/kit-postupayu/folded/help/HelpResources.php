@@ -14,10 +14,6 @@ abstract class HelpResources extends FoldedResources {
         return array('info' => PsBubble::spanFoldedEntityBubble($ident, $this->getUnique($ident)), 'content' => $this->fetchTplImpl($ident));
     }
 
-    protected function isIncludeToList($ident, $list) {
-        
-    }
-
     protected function onEntityChangedImpl($ident) {
         
     }
@@ -32,10 +28,6 @@ abstract class HelpResources extends FoldedResources {
 
     public function getFoldingSubType() {
         return null;
-    }
-
-    public function getFoldingGroup() {
-        return 'help';
     }
 
 }
