@@ -53,7 +53,7 @@ class AdminPagesManager {
             }
         }
 
-        //Оставшие страницы добавим в общую группу
+        //Оставшиеся страницы добавим в общую группу
         if (count($pages) > 0) {
             $LAY->addItem('Все страницы', 1);
             foreach ($pages as $page) {
