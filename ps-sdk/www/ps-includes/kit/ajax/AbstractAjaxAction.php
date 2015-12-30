@@ -32,6 +32,7 @@ abstract class AbstractAjaxAction {
         $params = RequestArrayAdapter::inst()->copy();
         check_condition($params->str(AJAX_ACTION_PARAM) == $id, "Действие [$id] не может быть выполнено.");
         $params->remove(AJAX_ACTION_PARAM);
+        $params->remove(AJAX_ACTION_GROUP_PARAM);
 
         //Проверка доступа
         AuthManager::checkAccess($this->getAuthType());

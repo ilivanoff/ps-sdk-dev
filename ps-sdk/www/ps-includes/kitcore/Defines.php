@@ -65,6 +65,7 @@ define('TIMELINE_LOADING_MARK', '_tlload_');
  * Параметр ajax действия
  */
 define('AJAX_ACTION_PARAM', 'ajax_action');
+define('AJAX_ACTION_GROUP_PARAM', 'ajax_group');
 
 /*
  * Идентификатор акции
@@ -189,7 +190,6 @@ define('BASE_PAGE_FEEDBACK', 6);
 define('PAGE_POPUP', 7);
 define('PAGE_TEST', 8);
 define('PAGE_ADMIN', 10);
-
 
 /**
  * Проверка версии php

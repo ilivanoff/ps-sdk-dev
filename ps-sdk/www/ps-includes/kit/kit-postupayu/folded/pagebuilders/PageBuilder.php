@@ -53,6 +53,7 @@ final class PageBuilder extends PageBuilderResources {
             'EMAIL_MAXLEN' => EMAIL_MAXLEN,
             'REMIND_CODE_LENGTH' => REMIND_CODE_LENGTH,
             'AJAX_ACTION_PARAM' => AJAX_ACTION_PARAM,
+            'AJAX_ACTION_GROUP_PARAM' => AJAX_ACTION_GROUP_PARAM,
             'PAGING_PARAM' => GET_PARAM_PAGE_NUM,
             'POPUP_WINDOW_PARAM' => POPUP_WINDOW_PARAM,
             'IDENT_PAGE_PARAM' => IDENT_PAGE_PARAM,

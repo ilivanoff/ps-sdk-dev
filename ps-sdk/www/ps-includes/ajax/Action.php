@@ -9,28 +9,47 @@ function psExecuteAjaxAction() {
 
     /*
      * Название действия должно быть в переменной запроса. Оно же - название класса, который будет выполнен.
+     * Группа действия должны быть не обязательна, при определении действия группа нужна обязательно.
      */
     $actionName = RequestArrayAdapter::inst()->str(AJAX_ACTION_PARAM);
+    $actionGroup = RequestArrayAdapter::inst()->str(AJAX_ACTION_GROUP_PARAM, 'client');
+
+    if (!PsCheck::notEmptyString($actionName) || !PsCheck::notEmptyString($actionGroup)) {
+        return json_error('Не передан код действия или его группа'); //---
+    }
+
+    /*
+     * Экземпляр класса действия - должен быть наследником AbstractAjaxAction
+     */
+    $action = null;
 
     /*
      * Поищем в проектных действиях, они для нас имеют больший приоритет
      */
-    $action = Classes::getClassInstance(next_level_dir(PATH_BASE_DIR, PS_DIR_ADDON, 'ajax'), DirManager::DIR_AJAX_ACTIONS, $actionName, AbstractAjaxAction::getClassName(), false);
+    foreach (ConfigIni::ajaxActionsAbs($actionGroup) as $dirAbsPath) {
+        $classPath = file_path($dirAbsPath, $actionName, PsConst::EXT_PHP);
+        if (is_file($classPath)) {
+            /*
+             * Нашли файл. Загрузим и проверим, является ли он наследником AbstractAjaxAction
+             */
+            require_once $classPath;
 
-    /*
-     * Поищем объект ajax действия в SDK
-     */
-    if (!$action) {
-        $action = Classes::getClassInstance(__DIR__, DirManager::DIR_AJAX_ACTIONS, $actionName, AbstractAjaxAction::getClassName());
+            if (!PsUtil::isInstanceOf($actionName, AbstractAjaxAction::getClassName())) {
+                continue; //---
+            }
+
+            $action = new $actionName();
+
+            break; //---
+        }
     }
-
 
     /*
      * Проверим, существует ли действие.
      * Для безопасности не будем писать детали обработки.
      */
     if (!$action || !($action instanceof AbstractAjaxAction)) {
-        json_error('Действие не опеределено');
+        return json_error('Действие не опеределено'); //---
     }
 
     /*
