@@ -50,7 +50,7 @@ final class PSSmarty extends AbstractSingleton {
          */
         PSSmartyFilter::inst()->bind($this->smarty);
 
-        return; //---
+        //return; //---
 
         /*
          * TODO - доработать

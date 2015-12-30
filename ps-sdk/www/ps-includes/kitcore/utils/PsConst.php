@@ -13,6 +13,7 @@ final class PsConst {
     const EXT_PHP = 'php';
     const EXT_CSS = 'css';
     const EXT_SQL = 'sql';
+    const EXT_M3U = 'm3u';
     const EXT_JS = 'js';
     const EXT_TPL = 'tpl';
     const EXT_ZIP = 'zip';

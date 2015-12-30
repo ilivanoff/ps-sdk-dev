@@ -12,3 +12,6 @@
 /ps-sdk/www/ps-includes/processes/mosaic/*.log
 /ps-sdk/www/ps-includes/processes/mosaic/output
 /ps-sdk/www/ps-includes/processes/lock/*.log
+/ps-sdk/www/ps-includes/processes/prankota/dest
+/ps-sdk/www/ps-includes/processes/prankota/*.log
+/ps-sdk/www/ps-includes/processes/prankota/*.list
