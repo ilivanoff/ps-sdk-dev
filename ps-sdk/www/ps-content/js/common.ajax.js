@@ -27,9 +27,9 @@ function ajax_result(data) {
         if (bSuccess) {
             success = _json['res'];
         } else
-        {
+{
             error = _json && _json.hasOwnProperty('err') ? _json['err'] : data;
-            //error = isEmpty(error) ? '' : '' + error;
+        //error = isEmpty(error) ? '' : '' + error;
         }
 
         return {
@@ -83,20 +83,20 @@ function processAjaxResponse(response, successCallback, errorCallback, ctxt) {
     {
         ret = successCallback.call(ctxt, result.res);
     } else
-    {
+{
         var isByTimeout = isString(result.err) && (!result.err || result.err.indexOf('Maximum execution time of') != -1);
 
         if ($.isFunction(errorCallback)) {
             ret = errorCallback.call(ctxt, result.err, isByTimeout);
         } else if (PsIs.string(errorCallback)) {
             InfoBox.popupError('Ошибка выполнения действия [' + errorCallback + '], причина:<br/>' +
-                    (isByTimeout ? 'прервано по таймауту' : result.err));
+                (isByTimeout ? 'прервано по таймауту' : result.err));
         } else if (PsIs.jQuery(errorCallback)) {
             errorCallback.replaceWith(span_error(isByTimeout ? 'Прервано по таймауту' : result.err));
         } else
-        {
+{
             InfoBox.popupError('Ошибка выполнения действия:<br/>' +
-                    (isByTimeout ? 'прервано по таймауту' : result.err));
+                (isByTimeout ? 'прервано по таймауту' : result.err));
         }
     }
 
@@ -137,17 +137,22 @@ var AjaxExecutor = {
             url: 'ps-ajax.php',
             ctxt: null,
             type: 'GET',
+            group: null,
             action: null,
             clbcOk: null,
             clbcErr: null,
             clbcAfter: null
         },
-                this.shedules.shift());
+        this.shedules.shift());
 
         this.cur = options.num;
         this.logger.logInfo('> Запрос #{} на {} {} [{}] отправлен, параметры: {}', options.num, options.url, options.type, options.action, options.dataStr);
 
         options.data[defs.AJAX_ACTION_PARAM] = options.action;
+        
+        if (options.group) {
+            options.data[defs.AJAX_ACTION_GROUP_PARAM] = options.group;
+        }
 
         var processResp = function (response) {
             this.logger.logInfo('< Запрос #{} на {} {} [{}] выполнен за {} секунд.', options.num, options.url, options.type, options.action, SECUNDOMER.stop());
@@ -159,7 +164,7 @@ var AjaxExecutor = {
                     {
                         ret = processAjaxResponse(response, options.clbcOk, options.clbcErr, options.ctxt);
                     } else
-                    {
+{
                         ret = options.clbcOk.call(options.ctxt, response);
                     }
                     if ($.isFunction(options.clbcAfter)) {

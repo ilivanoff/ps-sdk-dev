@@ -3,9 +3,9 @@ PsLocalStore.ADMIN = PsLocalStore.inst('admin');
 var AdminAjaxExecutor = {
     execute: function (action, data, callback, callbackErr, callbackAfter) {
         AjaxExecutor.scheduleExecute({
-            url: 'admin/ajax/Action.php',
             data: data,
             type: 'GET',
+            group: 'admin',
             action: action,
             clbcOk: callback,
             clbcErr: callbackErr,
@@ -14,9 +14,9 @@ var AdminAjaxExecutor = {
     },
     executePost: function (action, data, callback, callbackErr, callbackAfter) {
         AjaxExecutor.scheduleExecute({
-            url: 'admin/ajax/Action.php',
             data: data,
             type: 'POST',
+            group: 'admin',
             action: action,
             clbcOk: callback,
             clbcErr: callbackErr,
