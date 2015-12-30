@@ -31,7 +31,7 @@ $(function() {
     $('.adminControls a.logout').one('click', function(event) {
         event.preventDefault();
         $(this).addClass('processing');
-        $.get('ajax/Logout.php', locationReload);
+        $.get('/ps-includes/ajax/Logout.php', locationReload);
     });
     
     //Прокрутка

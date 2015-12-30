@@ -1207,7 +1207,7 @@ jQuery.fn.psUploadify = function(options) {
     
     var params = {
         'swf'  : '/resources/scripts/uploadify/uploadify.swf',
-        'uploader'    : '/ajax/FileUpload.php',
+        'uploader'    : '/ps-includes/ajax/FileUpload.php',
         'file_post_name': defs.FORM_PARAM_FILE,
         'postData'    : {//Должна обязательно быть переопределена извне
             type: 'X',
@@ -2034,7 +2034,7 @@ var PsUnloadListener = {
         
         $.ajax({
             type: "GET",
-            url: "ajax/BeforePageUnload.php",
+            url: "/ps-includes/ajax/BeforePageUnload.php",
             async: false,
             data: send
         });

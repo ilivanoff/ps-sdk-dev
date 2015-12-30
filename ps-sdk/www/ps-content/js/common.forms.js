@@ -606,7 +606,7 @@ var FormHelper = {
                 required: true,
                 //Мы ещё добавим проверку на длину капчи, чтобы лишний раз не посылать запрос на сервер
                 exactlength: CONST.CAPTCHA_LENGTH,
-                remote: 'ajax/Pscapture.php'
+                remote: '/ps-includes/ajax/Pscapture.php'
             };
             
             options.validator.messages[captureField] = 'Требуется валидный код с картинки';
