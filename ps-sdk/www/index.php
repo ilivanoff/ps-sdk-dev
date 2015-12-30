@@ -9,7 +9,7 @@ require_once 'ps-includes/MainImportAdmin.php';
 //print_r(FoldingsIni::foldingsRel());
 //print_r(FoldingsIni::foldingsAbs());
 
-print_r(FoldedStorage::listEntities());
+print_r(ConfigIni::ajaxActionsAbs('admin'));
 
 
 die('index.php');

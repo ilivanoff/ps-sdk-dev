@@ -13,6 +13,11 @@ final class ConfigIni extends AbstractIni {
     const GROUP_FOLDINGS = 'foldings';
     const GROUP_SMARTY = 'smarty';
     const GROUP_CACHE = 'cache';
+    const GROUP_AJAX_ACTIONS = 'ajax-actions';
+
+    /*
+     * CORE
+     */
 
     public static function projectName() {
         return self::getProp(self::GROUP_CORE, 'project');
@@ -26,6 +31,10 @@ final class ConfigIni extends AbstractIni {
         return self::getPropCheckType(self::GROUP_CORE, 'web-pages', array(PsConst::PHP_TYPE_STRING));
     }
 
+    /*
+     * CACHE
+     */
+
     public static function cacheEngine() {
         return self::getPropCheckType(self::GROUP_CACHE, 'engine', array(PsConst::PHP_TYPE_STRING));
     }
@@ -34,9 +43,17 @@ final class ConfigIni extends AbstractIni {
         return self::getPropCheckType(self::GROUP_CACHE, 'cache-file-lifetime', array(PsConst::PHP_TYPE_STRING));
     }
 
+    /*
+     * CRON
+     */
+
     public static function cronProcesses() {
         return self::getPropCheckType(self::CRON_PROCESS, 'cron', array(PsConst::PHP_TYPE_ARRAY, PsConst::PHP_TYPE_NULL));
     }
+
+    /*
+     * SMARTY
+     */
 
     public static function smartyFilter() {
         return self::getPropCheckType(self::GROUP_SMARTY, 'filter', array(PsConst::PHP_TYPE_STRING));
@@ -48,6 +65,16 @@ final class ConfigIni extends AbstractIni {
 
     public static function smartyTemplates() {
         return DirManager::relToAbs(self::getPropCheckType(self::GROUP_SMARTY, 'templates', array(PsConst::PHP_TYPE_ARRAY, PsConst::PHP_TYPE_NULL)));
+    }
+
+    /*
+     * AJAX ACTIONS
+     */
+
+    private static $ajax = array();
+
+    public static function ajaxActionsAbs($group) {
+        return array_key_exists($group, self::$ajax) ? self::$ajax[$group] : self::$ajax[$group] = DirManager::relToAbs(self::getPropCheckType(self::GROUP_AJAX_ACTIONS, $group, array(PsConst::PHP_TYPE_ARRAY)));
     }
 
     public static function isSdk() {
