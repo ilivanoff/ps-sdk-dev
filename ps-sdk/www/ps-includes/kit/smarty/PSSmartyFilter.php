@@ -6,7 +6,6 @@
  */
 class PSSmartyFilter {
 
-    private $CALLS;
     private $CALLTTL = 0;
 
     /**
@@ -115,29 +114,8 @@ class PSSmartyFilter {
      */
     private function onBeforeCall($filterType, Smarty_Internal_Template $template) {
         if (PsLogger::isEnabled()) {
-            PsLogger::inst(__CLASS__)->info("{} {}.{}({})", pad_right(++$this->CALLTTL . '.', 3, ' '), get_called_class(), $filterType, $template->template_resource);
+            PsLogger::inst(__CLASS__)->info("{} {}.{}({})", pad_right( ++$this->CALLTTL . '.', 3, ' '), get_called_class(), $filterType, $template->template_resource);
         }
-    }
-
-    public function __call($method, $arguments) {
-        $method = first_char_remove($method);
-
-        $source = $arguments[0];
-
-        /* @var $template Smarty_Internal_Template */
-        $template = $arguments[1];
-        $tplPath = $template->template_resource;
-
-        //PsProfiler::inst(__CLASS__)->start($method);
-        $result = $this->$method($source);
-        //PsProfiler::inst(__CLASS__)->stop();
-
-        $call = ++$this->CALLS[$method];
-        $callttl = ++$this->CALLTTL;
-        $callInfo = pad_right("[$callttl-$call].", 10, ' ');
-        PsLogger::inst(__CLASS__)->info("{} {} filter called for template {}.", $callInfo, ucfirst($method), $tplPath);
-
-        return $result;
     }
 
     /** @var PSSmartyFilter */
