@@ -1,11 +1,11 @@
-{psplugin name='mathfuncs'}.{/psplugin}
+{*psplugin name='mathfuncs'}.{/psplugin*}
 
 {*psplugin name='trigkrug'}.{/psplugin*}
 
 {*psplugin name='trigkrug'}.{/psplugin*}
 
 {*psplugin name='trainprogramm'}.{/psplugin*}
-{*psplugin name='pascal'}.{/psplugin*}
+{psplugin name='pascal'}.{/psplugin}
 
 {*psplugin name='matrixmult'}.{/psplugin}
 {psplugin name='matches'}.{/psplugin}

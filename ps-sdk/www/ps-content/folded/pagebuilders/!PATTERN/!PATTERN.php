@@ -2,10 +2,6 @@
 
 class PB_pattern extends AbstractPageBuilder {
 
-    public static function registerWebPages() {
-        //HtmlPages::register('xxx.php', 'Консоль администратора', PAGE_ADMIN, self::getIdent(), AuthManager::AUTH_TYPE_NO_MATTER);
-    }
-
     /**
      * Метод позволит подготовить параметры, необходимые для отображения страницы.
      * Здесь - самое место, чтобы обработать сабмит формы и выполнить редирект, чтобы не дожидаться полного построения.

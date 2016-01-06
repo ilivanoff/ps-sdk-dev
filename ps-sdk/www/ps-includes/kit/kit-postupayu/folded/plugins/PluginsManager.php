@@ -71,10 +71,6 @@ final class PluginsManager extends PluginResources {
         try {
             $pluginContent = $plugin->getPluginContent($content, $params, PluginFetchingContext::getInstance());
 
-            if (PostFetchingContext::getInstance()->isSetted()) {
-                PostFetchingContext::getInstance()->registerPlugin($ident, $pluginContent->getPostData());
-            }
-
             $tpl = PSSmarty::template('psplugins/BASE.tpl');
             $tpl->assign('url', $popupUrl);
             $tpl->assign('ident', $ident);

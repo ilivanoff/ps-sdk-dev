@@ -19,7 +19,7 @@ abstract class AbstractPageBuilder extends FoldedClass {
     //Предварительная проверка возможности построить страницу и выполнить действия по инициализации
     protected abstract function doProcess(PageContext $ctxt, RequestArrayAdapter $requestParams, ArrayAdapter $buildParams);
 
-    //Построение страницы с наполнением контекста. Метод должен вернуть параметры Smatry для шаблона.
+    //Построение страницы с наполнением контекста. Метод должен вернуть параметры Smarty для шаблона.
     protected abstract function doBuild(PageContext $ctxt, PageBuilderContext $builderCtxt, RequestArrayAdapter $requestParams, ArrayAdapter $buildParams);
 
     /*

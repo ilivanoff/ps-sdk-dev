@@ -32,7 +32,6 @@ class PB_test extends AbstractPageBuilder {
         $smartyParams['cnt'] = $cnt;
         $smartyParams['galls'] = $galls;
         $smartyParams['content'] = $content;
-        $smartyParams['processors'] = Handlers::getInstance()->getPostsProcessors();
 
         return $smartyParams;
     }

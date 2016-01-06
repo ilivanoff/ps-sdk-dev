@@ -2,8 +2,7 @@
 
 /**
  * Хранилище всех WebPage, которые только есть в системе.
- * Перед началом работы мы пробегаемся по всем "построителям страниц" и просим их зарегистрировать
- * страницы, которые они могут строить, в хранилище.
+ * Данный класс является статической надстройкой над WebPagesStorage.
  */
 class WebPages {
 
@@ -16,6 +15,11 @@ class WebPages {
         return WebPagesStorage::inst()->getCurPage();
     }
 
+    /**
+     * Проверияет, установлена ли текущая страницаы
+     * 
+     * @return type
+     */
     public final static function hasCurrentPage() {
         return WebPagesStorage::inst()->hasCurPage();
     }
@@ -29,6 +33,9 @@ class WebPages {
         return WebPagesStorage::inst()->isCurPage($page);
     }
 
+    /**
+     * Метод перезагружает текущую страницу
+     */
     public static function reloadCurPage() {
         self::getCurPage()->redirectHere();
     }

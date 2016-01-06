@@ -32,17 +32,6 @@
             <a href="test.php?pagetype=formules">Формулы</a>
             {/text}
 
-
-            {foreach $processors as $proc}
-                <br/>
-                <h4>{$proc->postsTitle()}:</h4>
-                {text}
-                {foreach $proc->getPosts() as $post}
-                    <a href="test.php?type={$post->getPostType()}&post_id={$post->getId()}">{$post->getName()}</a>
-                {/foreach}
-                {/text}
-            {/foreach}
-
         </div>
         <div style="clear:both"></div>
     </div>
