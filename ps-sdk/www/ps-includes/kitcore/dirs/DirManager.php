@@ -17,11 +17,9 @@ class DirManager {
     const DIR_LIB = 'lib';
     const DIR_KIT = 'kit';
     const DIR_SRC = 'src';
-    const DIR_UPLOAD = 'upload';
     const DIR_FORMULES = 'formules';
     const DIR_SERVICE = 'service';
     const DIR_SPRITES = 'sprites';
-    const DIR_SMARTY = 'smarty';
 
     private $relPath;
     private $absPath;
@@ -34,11 +32,6 @@ class DirManager {
     //auto-no-del
     public static function autoNoDel($dirs = null) {
         return self::inst(PS_DIR_CONTENT, array(self::DIR_AUTO_NO_DEL, $dirs));
-    }
-
-    //uploads
-    public static function uploads($dirs = null) {
-        return self::inst(PS_DIR_CONTENT, array(self::DIR_UPLOAD, $dirs));
     }
 
     /*
@@ -68,11 +61,6 @@ class DirManager {
     //mmedia
     public static function mmedia($notCkeckDirs = null, $dirs = null) {
         return self::instShifted('mmedia/', $notCkeckDirs, $dirs);
-    }
-
-    /** @return DirManager */
-    public static function gallery($subDirs = null) {
-        return self::mmedia(array('gallery', $subDirs));
     }
 
     //smarty
@@ -267,7 +255,6 @@ class DirManager {
     /**
      * Тип получения содержимого директории
      */
-
     const DC_MAP = 1; // Карта: название элемента->DirItem
     const DC_NAMES = 2; // Только названия файлов
     const DC_NAMES_NO_EXT = 3; // Только названия файлов без расширения

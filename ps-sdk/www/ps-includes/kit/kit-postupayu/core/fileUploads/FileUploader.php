@@ -19,9 +19,12 @@ abstract class FileUploader {
     /** @var SimpleDataCache */
     private $CACHE;
 
+    /** @var DirManager */
+    private $DIR_MANAGER;
+
     /** @return DirItem */
     private function makeTmpDirItem() {
-        $path = DirManager::uploads()->cdToHashFolder()->absDirPath();
+        $path = $this->DIR_MANAGER->getHashedDirItem()->makePath()->getAbsPath();
         $tmpFilePath = tempnam($path, 'upload_');
         check_condition($tmpFilePath, 'Не удаётся создать временный файл');
         return DirItem::inst($tmpFilePath);
@@ -175,7 +178,7 @@ abstract class FileUploader {
             $dbMsg = $this->onBeforeSave($source, $userId, $aa);
             $this->LOGGER->info("\tDone!");
         } catch (Exception $ex) {
-            $this->LOGGER->info('Error occured in onBeforeSave method: ' . $ex->getMessage());
+            $this->LOGGER->info('Error occurred in onBeforeSave method: ' . $ex->getMessage());
             $this->LOGGER->info('Source file will be deleted ? {}.', var_export(!!$uploaded, true));
             if ($uploaded) {
                 $uploaded->remove();
@@ -277,8 +280,11 @@ abstract class FileUploader {
         $this->CLASS = get_called_class();
         $this->CACHE = new SimpleDataCache();
         $this->DBTYPE = $this->isStoreToDb() ? $this->CLASS : null;
+        $this->DIR_MANAGER = DirManager::inst(array(ConfigIni::uploadsDirRel(), $this->CLASS));
+
         $this->LOGGER = PsLogger::inst($this->CLASS);
         $this->LOGGER->info('Instance created. Work with db ? {}. Is autonomous ? {}.', var_export($this->isStoreToDb(), true), var_export($this->isAutonomous(), true));
+        $this->LOGGER->info('Upload dir: [{}].', $this->DIR_MANAGER->relDirPath());
         $this->LOGGER->info();
     }
 

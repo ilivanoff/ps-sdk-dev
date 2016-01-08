@@ -13,6 +13,7 @@ final class ConfigIni extends AbstractIni {
     const GROUP_FOLDINGS = 'foldings';
     const GROUP_SMARTY = 'smarty';
     const GROUP_CACHE = 'cache';
+    const GROUP_UPLOADS = 'uploads';
     const GROUP_AJAX_ACTIONS = 'ajax-actions';
 
     /*
@@ -65,6 +66,14 @@ final class ConfigIni extends AbstractIni {
 
     public static function smartyTemplates() {
         return DirManager::relToAbs(self::getPropCheckType(self::GROUP_SMARTY, 'templates', array(PsConst::PHP_TYPE_ARRAY, PsConst::PHP_TYPE_NULL)));
+    }
+
+    /*
+     * UPLOADS
+     */
+
+    public static function uploadsDirRel() {
+        return self::getPropCheckType(self::GROUP_UPLOADS, 'dir', array(PsConst::PHP_TYPE_STRING));
     }
 
     /*
