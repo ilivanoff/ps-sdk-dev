@@ -11,8 +11,8 @@ class AvatarUploader extends FileUploader {
         return AuthManager::AUTH_TYPE_AUTHORIZED;
     }
 
-    protected function getUploadType() {
-        return UploadsBean::TYPE_AVATAR;
+    protected function isStoreToDb() {
+        return true;
     }
 
     protected function isAutonomous() {

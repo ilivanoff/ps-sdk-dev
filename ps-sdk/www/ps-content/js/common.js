@@ -1199,17 +1199,17 @@ jQuery.fn.psUploadify = function(options) {
         return error;
     }
     if (onError(PsIs.object(options), 'В psUploadify не переданы options')) return $input;//---
-    if (onError(PsIs.object(options.postData), 'В psUploadify не переданы options.postData')) return $input;//---
-    if (onError(options.postData.hasOwnProperty('type'), 'В psUploadify не передан postData.type')) return $input;//---
-    if (onError(defs.marker, 'В psUploadify не передан postData.type')) return $input;//---
+    if (onError(PsIs.object(options.formData), 'В psUploadify не переданы options.postData')) return $input;//---
+    if (onError(options.formData.hasOwnProperty('type'), 'В psUploadify не передан postData.type')) return $input;//---
+    if (onError(defs.marker, 'Не указан маркер сессии пользователя')) return $input;//---
     
-    options.postData.marker = defs.marker;
+    options.formData.marker = defs.marker;
     
     var params = {
-        'swf'  : '/resources/scripts/uploadify/uploadify.swf',
-        'uploader'    : '/ps-includes/ajax/FileUpload.php',
-        'file_post_name': defs.FORM_PARAM_FILE,
-        'postData'    : {//Должна обязательно быть переопределена извне
+        swf : '/ps-content/js-lib/uploadify/Uploadify-3.2.1/uploadify.swf',
+        uploader : '/ps-includes/ajax/FileUpload.php',
+        fileObjName: defs.FORM_PARAM_FILE,
+        formData    : {//Должна обязательно быть переопределена извне
             type: 'X',
             marker: defs.marker
         },
@@ -1222,13 +1222,25 @@ jQuery.fn.psUploadify = function(options) {
         'auto'           : true,
         'requeueErrors'  : false,
         'fileTypeExts'   : '*.gif;*.jpg;*.jpeg;*.png',
+        ctxt: null, //Контекст выполнения onSuccess
+        onSuccess: function(ok, file) {
+            alert('The file ' + file.name + ' was successfully uploaded with a response: ' + ok);
+        },
+        onError: function(err, file) {
+            alert('The file ' + file.name + ' was uploaded with error: ' + err);
+        },
         'onUploadComplete' : function(event, data, c, d) {
-            InfoBox.popupSuccess('Загрузка файла завершена');
+            //InfoBox.popupSuccess('Файл успешно загружен');
+            //InfoBox.popupSuccess('Загрузка файла завершена');
         },
-        'onUploadSuccess' : function(event, data) {
-            InfoBox.popupSuccess('Файл успешно загружен');
+        onUploadSuccess : function(file, data, response) {
+            processAjaxResponse(data, function(ok) {
+                params.onSuccess.call(params.ctxt, ok, file);
+            }, function(err) {
+                params.onError.call(params.ctxt, err, file);
+            });
         },
-        'onUploadError'  : function(file, errorCode, errorMsg) {
+        'onUploadError' : function(file, errorCode, errorMsg) {
             InfoBox.popupError('Произошла ошибка загрузки ['+errorMsg+']');
         }
     }

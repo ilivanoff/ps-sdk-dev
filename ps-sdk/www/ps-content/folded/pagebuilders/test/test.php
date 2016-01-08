@@ -16,7 +16,7 @@ class PB_test extends AbstractPageBuilder {
         //3. SMARTY RESOURCES
         $builderCtxt->setSmartyParam4Resources('MATHJAX_DISABLE', true);
         $builderCtxt->setSmartyParam4Resources('TIMELINE_ENABE', true);
-
+        $builderCtxt->setSmartyParam4Resources('UPLOADIFY_ENABE', true);
 
         //4. GET SMARTY PARAMS FOR TPL
         //Подсчитаем кол-во тестовых страниц по кол-ву шаблонов
@@ -157,13 +157,6 @@ class PB_test extends AbstractPageBuilder {
             }
 
             return $content;
-        }
-
-        $post_type = Handlers::getInstance()->extractPostType($params->str(GET_PARAM_TYPE), false);
-        $post_id = $params->int(GET_PARAM_POST_ID);
-
-        if ($post_type && $post_id) {
-            return Handlers::getInstance()->getPostsProcessorByPostType($post_type)->getPostContentProvider($post_id)->getPostContent(false)->getContent();
         }
 
         //Тестовая страница

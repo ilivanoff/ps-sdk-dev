@@ -14,6 +14,9 @@
 ===Кнопки-горячие клавиши===
 <a href="#Ctrl+Alt+S" class="ps-hotkey">Ctrl+Alt+S</a>
 
+===Загрнузка файлов===
+<input id="file_upload" name="file_upload" type="file" />
+
 ===Таблицы===
 
 <h5>Классы таблиц:</h5>
@@ -158,10 +161,6 @@
 
 
 
-===Галлерея===
-{gallery dir='bohrneils' lazy=1}
-
-
 ===Блок {ldelim}text{rdelim}...{ldelim}/text{rdelim}===
 {text}
 «Кораблю безопасней в порту, но он не для этого строился».
@@ -247,7 +246,7 @@
 <div class="textarea cantComment">
     <p>Срок поддержки истёк и поэтому участие в обсуждении юнита <span class="red">недоступно</span>.
         <br />
-        Для участия Вам следует {page_href code=$smarty.const.PAGE_REGISTRATION}зарегистрироваться{/page_href} {gray}(или <a href="#Login">авторизоваться</a>){/gray}.
+        Для участия Вам следует {page_href code=$smarty.const.BASE_PAGE_INDEX}зарегистрироваться{/page_href} {gray}(или <a href="#Login">авторизоваться</a>){/gray}.
     </p>
 </div>
 

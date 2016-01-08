@@ -63,7 +63,7 @@ values
 
     public function unsetAvatarUploads($userId) {
         $this->update('update users SET id_avatar = null WHERE id_user = ?', $userId);
-        $this->update('delete from ps_upload where id_user=? and type=?', array($userId, UploadsBean::TYPE_AVATAR));
+        $this->update('delete from ps_upload where id_user=? and type=?', array($userId, AvatarUploader::inst()->getDbType()));
     }
 
     public function getRandomUserId() {

@@ -19,12 +19,23 @@ session_id($sessionId);
 require_once 'AjaxTools.php';
 
 check_user_session_marker($marker);
+
+$LOGGER = PsLogger::inst('AjaxFileUpload');
+
 try {
     FileUploader::inst($type)->assertAutonomous();
     FileUploader::inst($type)->saveUploadedFile(true, null, $_POST);
+    json_success('OK');
 } catch (Exception $ex) {
-    PsLogger::inst('AjaxFileUpload')->info('Ошибка загрузки файла');
-    PsLogger::inst('AjaxFileUpload')->info($ex->getTraceAsString());
+    $exMessage = $ex->getMessage();
+    //Отлогируем
+    if ($LOGGER->isEnabled()) {
+        $LOGGER->info('Ошибка загрузки файла: {}', $exMessage);
+        $LOGGER->info($ex->getTraceAsString());
+    }
+    //Снимем дамп ошибки
     ExceptionHandler::dumpError($ex);
+    //Запишем ошибку в ответ
+    json_error($exMessage ? $exMessage : 'Файл небыл загружен');
 }
 ?>

@@ -19,8 +19,8 @@ class SimpleUploader extends FileUploader {
      * С базой данный класс не работает.
      * Если это нужно - пишите полноценный FileUploader.
      */
-    protected function getUploadType() {
-        return null;
+    protected function isStoreToDb() {
+        return false;
     }
 
     /**

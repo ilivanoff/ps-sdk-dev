@@ -2,8 +2,6 @@
 
 final class Handlers {
 
-    private $postTypes = array();
-    private $rubricsProcessors = array();
     private $postsProcessors = array();
     private $foldings = array();
     private $libs = array();
@@ -120,24 +118,6 @@ final class Handlers {
         return $folding;
     }
 
-    /**
-     * Метод патыется получить путь к сущности фолдинга по названию класса.
-     * Все классы для сущностей фолдинга начинаются на префикс с подчёркиванием,
-     * например PL_, на этом и основан способ подключени класса.
-     * 
-     * Метод должен быть статическим, так как если мы попытаемся получить путь к
-     * классу фолидна, создаваемому Handlers, то никогда его не загрузим.
-     */
-    public static function tryGetFoldedEntityClassPath($className) {
-        $prefix = FoldedResources::extractPrefixFromClass($className);
-        $folding = $prefix ? self::getInstance()->getFoldingByClassPrefix($prefix, false) : null;
-        if ($folding) {
-            $ident = FoldedResources::extractIdentFormClass($className);
-            return $folding->getClassPath($ident);
-        }
-        return null;
-    }
-
     /** @return FoldedEntity */
     public function getFoldedEntityByUnique($unique, $assert = true) {
         $parts = explode('-', trim($unique));
@@ -214,37 +194,15 @@ final class Handlers {
     }
 
     /**
-     * Метод валидирует и извлекает тип поста
-     */
-    public function extractPostType($postType, $assert = true) {
-        $type = lowertrim($postType);
-        if (!$type) {
-            check_condition(!$assert, 'Передан пустой тип поста');
-            return null; //---
-        }
-        if (!in_array($type, $this->postTypes)) {
-            check_condition(!$assert, "Некорректный тип поста: [$postType]");
-            return null; //---
-        }
-        return $type;
-    }
-
-    /**
      * Получение обработчика
      */
     private function getHandlerImpl(array $handlers, $postType, $isEnsure) {
-        $postType = $this->extractPostType($postType);
         if (array_key_exists($postType, $handlers)) {
             return $handlers[$postType];
         } else {
             check_condition(!$isEnsure, "Неизвестный тип поста: [$postType]");
         }
         return null;
-    }
-
-    /** @return RubricsProcessor */
-    public function getRubricsProcessorByPostType($postType, $isEnsure = true) {
-        return $this->getHandlerImpl($this->rubricsProcessors, $postType, $isEnsure);
     }
 
     /** @return PostsProcessor */

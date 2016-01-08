@@ -255,11 +255,13 @@ final class AuthManager {
     private static $SESSION_MARKER_SALT = 'c4ca4238a0b923820dcc509a6f75849b6a9sg6jvb4dj1i94i1u1fltga4';
 
     public static function getUserSessoinMarker() {
-        return self::isAuthorized() ? md5(self::$SESSION_MARKER_SALT . self::getUserId()) . session_id() : null;
+        //return self::isAuthorized() ? md5(self::$SESSION_MARKER_SALT . self::getUserId()) . session_id() : null;
+        return md5(self::$SESSION_MARKER_SALT . self::getUserIdOrNull() . session_id()) . session_id();
     }
 
     public static function checkUserSessionMarker($marker) {
-        return PsCheck::isMd5($marker) && self::checkAuthorized() && (self::getUserSessoinMarker() === $marker);
+        //return PsCheck::isMd5($marker) && self::checkAuthorized() && (self::getUserSessoinMarker() === $marker);
+        return self::getUserSessoinMarker() === $marker;
     }
 
     /*

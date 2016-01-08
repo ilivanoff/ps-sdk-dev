@@ -21,79 +21,11 @@ final class FoldedResourcesManager extends AbstractSingleton implements Destruct
     }
 
     /**
-     * КАРТА ТАБЛИЦА/ПРЕДСТАВЛЕНИЕ -> СУЩНОСТЬ ФОЛДИНГА, РАБОТАЮЩАЯ С НЕЙ
-     */
-    private $DB_FOLDING_MAP;
-
-    private function getDbFoldingMap($type, $scope = ENTITY_SCOPE_ALL) {
-        if (!is_array($this->DB_FOLDING_MAP[$scope])) {
-            $this->DB_FOLDING_MAP[$scope] = array('T' => array(), 'V' => array());
-
-            /* @var $folding FoldedResources */
-            foreach (FoldingsStore::inst()->getFoldings($scope) as $folding) {
-                if ($folding->isWorkWithTable()) {
-                    $T = $folding->getTableName();
-                    $V = $folding->getTableView();
-                    $this->DB_FOLDING_MAP[$scope]['T'][$T][] = $folding;
-                    if ($T != $V) {
-                        $this->DB_FOLDING_MAP[$scope]['V'][$V][] = $folding;
-                    }
-                }
-            }
-
-            if ($this->LOGGER->isEnabled()) {
-                foreach (array('T' => 'Карта зависимости таблиц:', 'V' => 'Карта зависимости представлений:') as $itype => $title) {
-                    $this->LOGGER->info();
-                    $this->LOGGER->info("[$scope] [$itype] $title");
-                    foreach ($this->DB_FOLDING_MAP[$scope][$itype] as $table => $foldings) {
-                        $this->LOGGER->info("\t$table:");
-                        foreach ($foldings as $folding) {
-                            $this->LOGGER->info("\t\t" . $folding->getUnique());
-                        }
-                    }
-                }
-            }
-        }
-        return array_get_value($type, $this->DB_FOLDING_MAP[$scope]);
-    }
-
-    /**
      * DirManager директории, в которой находится основная функциональность для работы с фолдингами
      * @return DirManager
      */
     public function getFoldedDir() {
         return DirManager::inst(__DIR__);
-    }
-
-    /** Связь таблицы с фолдингами, которые в ней хрантся */
-    public function getTableFoldingsMap($scope = ENTITY_SCOPE_ALL) {
-        return $this->getDbFoldingMap('T', $scope);
-    }
-
-    /** Связь таблицы с фолдингами, которые в ней хрантся */
-    public function getViewsFoldingsMap($scope = ENTITY_SCOPE_ALL) {
-        return $this->getDbFoldingMap('V', $scope);
-    }
-
-    /**
-     * Возвращает все фолдинги, хранимые в указанной таблице.
-     */
-    public function getTableFoldings($table, $scope = ENTITY_SCOPE_ALL) {
-        return array_get_value($table, $this->getTableFoldingsMap($scope), array());
-    }
-
-    /**
-     * Возвращает все фолдинги, хранимые в указанной таблице.
-     */
-    public function getViewFoldings($view, $scope = ENTITY_SCOPE_ALL) {
-        return array_get_value($view, $this->getViewsFoldingsMap($scope), array());
-    }
-
-    /**
-     * Возвращает все фолдинги, хранимые в указанной таблице или представлении.
-     */
-    public function getTableOrViewFoldings($tableOrView) {
-        return array_merge($this->getTableFoldings($tableOrView), $this->getViewFoldings($tableOrView));
     }
 
     /**

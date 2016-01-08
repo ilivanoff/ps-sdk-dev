@@ -13,8 +13,8 @@ class GalleryImgUploader extends FileUploader {
         return AuthManager::AUTH_TYPE_AUTHORIZED;
     }
 
-    protected function getUploadType() {
-        return null;
+    protected function isStoreToDb() {
+        return false;
     }
 
     protected function isAutonomous() {

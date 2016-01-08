@@ -7,16 +7,8 @@
  */
 class UploadsBean extends BaseBean {
 
-    const TYPE_AVATAR = 'A';
-
-    private static function getTypes() {
-        return PsUtil::getClassConsts(__CLASS__, 'TYPE_');
-    }
-
     private static function assertValidType($type) {
-        check_condition($type, 'Не передан тип загрузки файла');
-        check_condition(in_array($type, self::getTypes()), "Тип загрузки [$type] не поддерживается");
-        return $type;
+        return PsCheck::notEmptyString($type);
     }
 
     /**
@@ -34,7 +26,7 @@ VALUES
      * Совсем удаляет запись о файле из базы (вызывается в случае ошибки)
      */
     public function clearFileUpload($uploadId) {
-        if (is_numeric($uploadId)) {
+        if (is_inumeric($uploadId)) {
             $this->update('delete from ps_upload where id_upload=?', $uploadId);
         }
     }
@@ -131,12 +123,6 @@ VALUES
     /** @return UploadsBean */
     public static function inst() {
         return parent::inst();
-    }
-
-    protected function __construct() {
-        $consts = self::getTypes();
-        check_condition(count($consts) == count(array_unique($consts)), 'Класс ' . __CLASS__ . ' содержит повторяющиеся константы: ' . array_to_string($consts, false));
-        parent::__construct();
     }
 
 }

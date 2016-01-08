@@ -10,11 +10,11 @@ abstract class FileUploader {
     /** Название класса */
     protected $CLASS;
 
-    /** Тип для работы с базой */
-    protected $DBTYPE;
-
     /** @var PsLoggerInterface */
     protected $LOGGER;
+
+    /** Тип для работы с базой */
+    private $DBTYPE;
 
     /** @var SimpleDataCache */
     private $CACHE;
@@ -28,18 +28,17 @@ abstract class FileUploader {
     }
 
     /**
-     * Признак - сохраняется ли информация о загруженных файлах в базу данных?
-     * Если да, то файлы после обработки не будут удаляться.
-     */
-    private function isStoreToDb() {
-        return !empty($this->DBTYPE);
-    }
-
-    /**
      * Утверждение того, что класс работает с базой.
      */
     private function assertCanUseDb($__FUNCTION__) {
-        check_condition($this->isStoreToDb(), 'Функиця ' . __CLASS__ . '#' . $__FUNCTION__ . ' не может быть вызвана, так как класс не работает в БД');
+        check_condition($this->isStoreToDb(), 'Функиця ' . $this->CLASS . '#' . $__FUNCTION__ . ' не может быть вызвана, так как класс не работает в БД');
+    }
+
+    /**
+     * Утверждение того, что класс работает автономно.
+     */
+    public final function assertAutonomous($msg = 'файл не будет загружен') {
+        check_condition($this->isAutonomous(), "Класс {$this->CLASS} не работает автономно, $msg");
     }
 
     /**
@@ -52,17 +51,6 @@ abstract class FileUploader {
     }
 
     /**
-     * Тип для хранения файлов в базе - должен ссылаться на константу UploadsBean::TYPE_XXX.
-     * Если данный тип не задан, то работа с базой не ведётся.
-     */
-    protected abstract function getUploadType();
-
-    /**
-     * Уровень доступа, необходимый для загрузки файлов данного типа.
-     */
-    protected abstract function getAuthType();
-
-    /**
      * Признак того, что класс самостоятельно может обработать загруженный файл.
      * 1. Это позволит его вызвать через ajax/FileUpload.
      * 2. Файл после обработки будет удалён (если только данный класс не работает с базой)
@@ -70,11 +58,15 @@ abstract class FileUploader {
     protected abstract function isAutonomous();
 
     /**
-     * Утверждение того, что класс работает автономно.
+     * Признак - сохраняется ли информация о загруженных файлах в базу данных?
+     * Если да, то файлы после обработки не будут удаляться.
      */
-    public final function assertAutonomous($msg = 'файл не будет загружен') {
-        check_condition($this->isAutonomous(), "Класс {$this->CLASS} не работает автономно, $msg");
-    }
+    protected abstract function isStoreToDb();
+
+    /**
+     * Уровень доступа, необходимый для загрузки файлов данного типа.
+     */
+    protected abstract function getAuthType();
 
     /**
      * Метод вызывается после переноса файла во временную директорию и до его сохранения в базе,
@@ -86,6 +78,15 @@ abstract class FileUploader {
      * Метод вызывается уже после того, как все действия с файлом были произведены.
      */
     protected abstract function onAfterSave(DirItem $uploaded, $userId, ArrayAdapter $params);
+
+    /**
+     * Метод возвращает тип загрузки файла в БД
+     * 
+     * @return type
+     */
+    public function getDbType() {
+        return $this->DBTYPE;
+    }
 
     public final function getUploadedFilesIds($userId = null, $asc = true) {
         $this->assertCanUseDb(__FUNCTION__);
@@ -234,7 +235,7 @@ abstract class FileUploader {
         } catch (Exception $ex) {
             $this->LOGGER->info('Error occured in onAfterSave method: ' . $ex->getMessage());
 
-            if (is_numeric($uploadId)) {
+            if (is_inumeric($uploadId)) {
                 $this->LOGGER->info('Deleting db record...');
                 UploadsBean::inst()->clearFileUpload($uploadId);
                 $uploadId = null;
@@ -267,20 +268,15 @@ abstract class FileUploader {
 
     /** @return FileUploader */
     public static final function inst($classPrefix = null) {
-        $class = null;
-        if ($classPrefix) {
-            $class = ensure_ends_with($classPrefix, 'Uploader');
-            check_condition(PsUtil::isInstanceOf($class, __CLASS__), "Class $class is not instance of " . __CLASS__);
-        } else {
-            $class = get_called_class();
-        }
+        $class = $classPrefix ? ensure_ends_with($classPrefix, 'Uploader') : get_called_class();
+        check_condition(PsUtil::isInstanceOf($class, __CLASS__), "Class $class is not instance of " . __CLASS__);
         return array_key_exists($class, self::$insts) ? self::$insts[$class] : self::$insts[$class] = new $class();
     }
 
     private function __construct() {
         $this->CLASS = get_called_class();
         $this->CACHE = new SimpleDataCache();
-        $this->DBTYPE = $this->getUploadType();
+        $this->DBTYPE = $this->isStoreToDb() ? $this->CLASS : null;
         $this->LOGGER = PsLogger::inst($this->CLASS);
         $this->LOGGER->info('Instance created. Work with db ? {}. Is autonomous ? {}.', var_export($this->isStoreToDb(), true), var_export($this->isAutonomous(), true));
         $this->LOGGER->info();

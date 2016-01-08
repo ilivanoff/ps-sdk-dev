@@ -8,23 +8,6 @@ final class TestManager extends AbstractSingleton {
     /** @var TESTBean */
     private $BEAN;
 
-    private function getPostsProcessor($postType) {
-        if ($postType) {
-            $proc = Handlers::getInstance()->getPostsProcessorByPostType($postType, false);
-            return $proc ? array($postType => $proc) : array();
-        } else {
-            return Handlers::getInstance()->getPostsProcessors();
-        }
-    }
-
-    private function getRubricsProcessor($postType) {
-        if ($postType) {
-            $proc = Handlers::getInstance()->getRubricsProcessorByPostType($postType, false);
-            return $proc ? array($postType => $proc) : array();
-        } else {
-            return Handlers::getInstance()->getRubricsProcessors();
-        }
-    }
 
     /*
      * 
@@ -39,7 +22,6 @@ final class TestManager extends AbstractSingleton {
      * 
      * 
      */
-
     private $avatars;
 
     /** @return DirItem */
@@ -190,75 +172,6 @@ final class TestManager extends AbstractSingleton {
                     VotesManager::inst()->addVote($threadUnique, $msgId, $userId, $authorId, $votes);
                 }
             }
-        }
-    }
-
-    /*
-     * 
-     * 
-     * 
-     * 
-     * =============================
-     *        РУБРИКИ И ПОСТЫ
-     * =============================
-     * 
-     * 
-     * 
-     * 
-     */
-
-    /**
-     * Генерация тестовых постов и рубрик. 
-     * Перед генерацией будут удалены предыдущие тестовые посты и рубрики.
-     * 
-     * rubricsCnt - кол-во рубрик, которое будет сгенерировано
-     * postsCnt - общее кол-во постов, которое будет сгенерировано
-     */
-    public final function generateTestPostsAndRubrics($rubricsCnt = 10, $postsCnt = 30, $postType = null) {
-        $this->deleteTestPostsAndRubrics($postType);
-
-        $rproc = $this->getRubricsProcessor($postType);
-        /* @var $rp RubricsProcessor */
-        foreach ($rproc as $rp) {
-            for ($index = 0; $index < $rubricsCnt; $index++) {
-                $suffix = getRandomString();
-                TESTBean::inst()->createRubric(
-                        $rp->dbBean()->getRubricsTable(), //
-                        getRandomString(15, true), //
-                        "test_$suffix", //
-                        getRandomString(1000, true)
-                );
-            }
-
-            for ($index = 0; $index < $postsCnt; $index++) {
-                $suffix = getRandomString();
-                TESTBean::inst()->createPost(
-                        $rp->dbBean()->getRubricsTable(), //
-                        $rp->dbBean()->getPostsTable(), //
-                        getRandomString(20, true), //
-                        "test_$suffix", //
-                        getRandomString(10000, true), //
-                        getRandomString(1000, true));
-            }
-        }
-    }
-
-    /**
-     * Удаление тестовых постов и рубрик
-     */
-    public final function deleteTestPostsAndRubrics($postType = null) {
-        $this->deleteAllComments($postType);
-
-        $proc = $this->getPostsProcessor($postType);
-        /* @var $rp PostsProcessor */
-        foreach ($proc as $rp) {
-            TESTBean::inst()->deleteTestPosts($rp->dbBean()->getPostsTable());
-        }
-
-        $proc = $this->getRubricsProcessor($postType);
-        /* @var $rp RubricsProcessor */
-        foreach ($proc as $rp) {
-            TESTBean::inst()->deleteTestRubrics($rp->dbBean()->getRubricsTable());
         }
     }
 

@@ -62,11 +62,17 @@
 <script type="text/javascript" src="/ps-content/js-lib/Timepicker/jquery-ui-timepicker-addon.js"></script>
 {*<script type="text/javascript" src="/ps-content/js-lib/Timepicker/jquery-ui-sliderAccess.js"></script>*}
 <script type="text/javascript" src="/ps-content/js-lib/Timepicker/jquery-ui-timepicker-ps-ru.js"></script>
-
+<!--
 {if isset($UPLOADIFY_ENABE) && $UPLOADIFY_ENABE}
     <link rel="stylesheet" href="/ps-content/js-lib/uploadify/uploadify.css" type="text/css" media="all" />
     {*<script type="text/javascript" src="/ps-content/js-lib/uploadify/swfobject.js"></script>*}
     <script type="text/javascript" src="/ps-content/js-lib/uploadify/jquery.uploadify.min.js"></script>
+{/if}
+-->
+{if isset($UPLOADIFY_ENABE) && $UPLOADIFY_ENABE}
+    <link rel="stylesheet" href="/ps-content/js-lib/uploadify/Uploadify-3.2.1/uploadify.css" type="text/css" media="all" />
+    {*<script type="text/javascript" src="/ps-content/js-lib/uploadify/swfobject.js"></script>*}
+    <script type="text/javascript" src="/ps-content/js-lib/uploadify/Uploadify-3.2.1/jquery.uploadify.min.js"></script>
 {/if}
 
 {if isset($ATOOL_ENABLE) && $ATOOL_ENABLE}
