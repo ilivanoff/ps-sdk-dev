@@ -32,16 +32,20 @@ abstract class FileUploader {
 
     /**
      * Утверждение того, что класс работает с базой.
+     * @return FileUploader
      */
     private function assertCanUseDb($__FUNCTION__) {
         check_condition($this->isStoreToDb(), 'Функиця ' . $this->CLASS . '#' . $__FUNCTION__ . ' не может быть вызвана, так как класс не работает в БД');
+        return $this;
     }
 
     /**
      * Утверждение того, что класс работает автономно.
+     * @return FileUploader
      */
     public final function assertAutonomous($msg = 'файл не будет загружен') {
         check_condition($this->isAutonomous(), "Класс {$this->CLASS} не работает автономно, $msg");
+        return $this;
     }
 
     /**

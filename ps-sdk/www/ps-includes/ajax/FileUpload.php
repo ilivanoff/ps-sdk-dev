@@ -23,8 +23,7 @@ check_user_session_marker($marker);
 $LOGGER = PsLogger::inst('AjaxFileUpload');
 
 try {
-    FileUploader::inst($type)->assertAutonomous();
-    FileUploader::inst($type)->saveUploadedFile(true, null, $_POST);
+    FileUploader::inst($type)->assertAutonomous()->saveUploadedFile(true, null, $_POST);
     json_success('OK');
 } catch (Exception $ex) {
     $exMessage = $ex->getMessage();

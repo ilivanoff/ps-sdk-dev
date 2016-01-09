@@ -21,7 +21,7 @@ class AvatarUploader extends FileUploader {
 
     protected function onBeforeSave(DirItem $source, $userId, ArrayAdapter $params) {
         $source->assertIsImg();
-        check_condition($this->getUploadedFilesCount($userId) < 2, 'Больше нельзя загружать аватары');
+        //check_condition($this->getUploadedFilesCount($userId) < 2, 'Больше нельзя загружать аватары');
     }
 
     protected function onAfterSave(DirItem $uploaded, $userId, ArrayAdapter $params) {
