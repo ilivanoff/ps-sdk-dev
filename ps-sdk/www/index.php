@@ -9,10 +9,12 @@ require_once 'ps-includes/MainImportAdmin.php';
 //print_r(FoldingsIni::foldingsRel());
 //print_r(FoldingsIni::foldingsAbs());
 //print_r(ConfigIni::ajaxActionsAbs('admin'));
-
 //echo DirManager::inst('/../ps-uploads')->makePath();
+//echo ConfigIni::uploadsDirRel();
 
-echo ConfigIni::uploadsDirRel();
+ExceptionHandler::registerPretty();
+
+print_r(PopupPagesManager::inst()->getPagesList());
 
 die('');
 

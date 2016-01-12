@@ -45,7 +45,7 @@ class DirManager {
 
     //images
     public static function images($subDirs = null) {
-        return self::instShifted('resources/images', $subDirs);
+        return self::inst(PS_DIR_CONTENT . DIR_SEPARATOR . 'images');
     }
 
     //sprites

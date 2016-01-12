@@ -21,7 +21,7 @@ class WebPagesStorage {
         $this->register('index.php', 'Главная страница', BASE_PAGE_INDEX, PB_admin::getIdent());
         $this->register('ps-admin.php', 'Консоль администратора', PAGE_ADMIN, PB_admin::getIdent());
         $this->register('test.php', 'Тестовая страница', PAGE_TEST, PB_test::getIdent(), AuthManager::AUTH_TYPE_NO_MATTER, null, false);
-        $this->register('popup.php', 'Всплывающее окно', PAGE_POPUP, PB_popup::getIdent());
+        $this->register('ps-popup.php', 'Всплывающее окно', PAGE_POPUP, PB_popup::getIdent());
     }
 
     /**

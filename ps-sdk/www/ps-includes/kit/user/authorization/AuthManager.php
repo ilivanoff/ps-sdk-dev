@@ -274,7 +274,7 @@ final class AuthManager {
         //Дадим очки за регистрацию
         UP_registration::inst()->givePoints($user);
         //Привяжем ему набор дефолтных страниц - плагинов
-        PopupPagesManager::inst()->bindDefaultPages2User($user->getId());
+        //PopupPagesManager::inst()->bindDefaultPages2User($user->getId());
     }
 
     private static function afterLogin(PsUser $user) {

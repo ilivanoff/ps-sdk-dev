@@ -11,6 +11,11 @@ class PB_popup extends AbstractPageBuilder {
     protected function doProcess(PageContext $ctxt, RequestArrayAdapter $requestParams, ArrayAdapter $buildParams) {
         $this->PPM = PopupPagesManager::inst();
 
+        //Проверим, что в случае открытия popup страницы все параметры переданы корректно
+        if (!$this->PPM->isValidPageRequested()) {
+            WebPage::inst(PAGE_POPUP)->redirectHere();
+        }
+
         $this->popupPage = $this->PPM->getCurPage();
         $this->popupPage->checkAccess();
 

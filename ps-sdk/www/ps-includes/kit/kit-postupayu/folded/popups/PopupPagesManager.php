@@ -1,10 +1,10 @@
 <?php
 
 class PopupPagesManager extends PopupPagesResources {
+
     /**
      * Типы popup плагинов (плагинов, которые могут быть отображены в popup окне или popup старниц, работающих как плагины)
      */
-
     const TYPE_PAGE = 'P';
     const TYPE_PLUGIN = 'L';
 
@@ -12,93 +12,45 @@ class PopupPagesManager extends PopupPagesResources {
      * Константы для кеша
      */
     const CACHABLE_VISIBLE = 'VISIBLE';
-    const CACHABLE_DEFAULT = 'DEFAULT';
+
+    /**
+     * Список видимых сущностей
+     * @var type 
+     */
+    private $SNAPSHOT = null;
 
     /**
      * Плагины, использованные в постах
      */
-    public function getSnapshot() {
-        $SNAPSOT = PSCacheGroups::POPUPS()->getFromCache('POPUP_PAGES_SNAPSOT', PsUtil::getClassConsts(__CLASS__, 'CACHABLE_'));
-        if (!is_array($SNAPSOT)) {
-
-            $this->LOGGER->info('Building plugins SNAPSHOT...');
-
-            //Сначала соберём все плагины, использованные в постах
-            $USED = array();
-            /* @var $pp PostsProcessor */
-            foreach (Handlers::getInstance()->getPostsProcessors() as $pp) {
-                $pp->preloadAllPostsContent();
-                /* @var $post Post */
-                foreach ($pp->getPosts() as $post) {
-                    $plugins = $pp->getPostContentProvider($post->getId())->getPostParams()->getUsedPlugins();
-                    if (empty($plugins)) {
-                        //В посте не используются плагины
-                        continue;
-                    }
-                    $this->LOGGER->info('Plugins [{}] used in post [{}].', implode(',', $plugins), IdHelper::ident($post));
-                    $USED = array_merge($USED, $plugins);
-                }
-            }
-            $USED = array_unique($USED);
-
-            $this->LOGGER->info('Full list of used plugins: [{}].', implode(',', $USED));
+    public function getVisiblePages() {
+        if (!is_array($this->SNAPSHOT)) {
+            $this->SNAPSHOT = array();
 
             //Соберём все видимые попап-страницы и плагины
-            $ENTITYS = array();
-            foreach (array($this->getEntityClassInsts(), PluginsManager::inst()->getEntityClassInsts()) as $popups) {
-                foreach ($popups as $ident => $popup) {
-                    $visType = $popup->getPopupVisibility();
-                    $take = PopupVis::isAllwaysVisible($visType) || ($visType == PopupVis::BYPOST && in_array($ident, $USED));
-                    if ($take) {
-                        $ENTITYS[] = $popup;
-                    }
+            foreach ($this->getEntityClassInsts() as $ident => $popup) {
+                if ($popup->getPopupVisibility()) {
+                    $this->SNAPSHOT[self::TYPE_PAGE . '_' . $ident] = $popup;
+                }
+            }
+            foreach (PluginsManager::inst()->getEntityClassInsts() as $ident => $popup) {
+                if ($popup->getPopupVisibility()) {
+                    $this->SNAPSHOT[self::TYPE_PLUGIN . '_' . $ident] = $popup;
                 }
             }
 
             //Отсортируем собранные сущности по названию
-            usort($ENTITYS, function($e1, $e2) {
-                        $str1 = $e1 instanceof BasePopupPage ? $e1->getTitle() : $e1->getName();
-                        $str2 = $e2 instanceof BasePopupPage ? $e2->getTitle() : $e2->getName();
-                        return strcasecmp($str1, $str2);
-                    });
-
-            $VISIBLE = array();
-            $DEFAULT = array();
-            foreach ($ENTITYS as $entity) {
-                $visType = $entity->getPopupVisibility();
-                if ($entity instanceof BasePopupPage) {
-                    $type = self::TYPE_PAGE;
-                    $ident = $entity->getIdent();
-                }
-                if ($entity instanceof BasePlugin) {
-                    $type = self::TYPE_PLUGIN;
-                    $ident = $entity->getIdent();
-                }
-
-                $VISIBLE[$type . '_' . $ident] = array('type' => $type, 'ident' => $ident);
-                if ($visType == PopupVis::TRUE_DEFAULT) {
-                    $DEFAULT[$type . '_' . $ident] = array('type' => $type, 'ident' => $ident);
-                }
-            }
-
-            $SNAPSOT = array(
-                self::CACHABLE_VISIBLE => $VISIBLE,
-                self::CACHABLE_DEFAULT => $DEFAULT
-            );
-
-            $SNAPSOT = PSCacheGroups::POPUPS()->saveToCache($SNAPSOT, 'POPUP_PAGES_SNAPSOT');
+            uasort($this->SNAPSHOT, function($e1, $e2) {
+                $str1 = $e1 instanceof BasePopupPage ? $e1->getTitle() : $e1->getName();
+                $str2 = $e2 instanceof BasePopupPage ? $e2->getTitle() : $e2->getName();
+                return strcasecmp($str1, $str2);
+            });
         }
-        return $SNAPSOT;
+        return $this->SNAPSHOT;
     }
 
     /** @return BasePopupPage */
     public function getPage($ident) {
         return $this->getEntityClassInst($ident);
-    }
-
-    //ВИДИМЫЕ страницы, разбитые по типам
-    private function getVisiblePages() {
-        return array_get_value(self::CACHABLE_VISIBLE, $this->getSnapshot(), array());
     }
 
     public function isPageVisible($type, $ident) {
@@ -107,24 +59,6 @@ class PopupPagesManager extends PopupPagesResources {
 
     protected function isPageAsPlugin($ident) {
         return $this->isPageVisible(self::TYPE_PAGE, $ident);
-    }
-
-    /**
-     * Возвращает тип popup-visibility для плагина.
-     */
-    private function getPagePopupVisibility($type, $ident) {
-        switch ($type) {
-            case self::TYPE_PAGE:
-                return $this->getPage($ident)->getPopupVisibility();
-            case self::TYPE_PLUGIN:
-                return PluginsManager::inst()->getPlugin($ident)->getPopupVisibility();
-        }
-        check_condition(false, "Неизвестный тип страницы: [$type].");
-    }
-
-    //ДЕФОЛТНЫЕ страницы
-    private function getDefaultPages() {
-        return array_get_value(self::CACHABLE_DEFAULT, $this->getSnapshot(), array());
     }
 
     /**
@@ -144,13 +78,11 @@ class PopupPagesManager extends PopupPagesResources {
         }
 
         $pageIdent = $RQ->str(POPUP_WINDOW_PARAM);
-        /*
-         * Выкинута проверка доступа
-         * 
-          if (!$this->hasAccess($pageIdent, true)) {
-          return false;
-          }
-         */
+
+        if (!$this->hasAccess($pageIdent, true)) {
+            return false;
+        }
+
         $PARAMS[POPUP_WINDOW_PARAM] = $pageIdent;
 
         if ($pageIdent != PP_plugin::getIdent()) {
@@ -188,43 +120,12 @@ class PopupPagesManager extends PopupPagesResources {
         return in_array($ident, $headerPages) || $this->isPageAsPlugin($ident);
     }
 
-    //ИЗБРАННЫЕ страницы пользователя
-
-    private $USER_FAVORITES;
-
-    private function getCurrentUserFavorites() {
-        if (isset($this->USER_FAVORITES)) {
-            return $this->USER_FAVORITES;
-        }
-        $this->USER_FAVORITES = array();
-
-        if (!AuthManager::isAuthorized()) {
-            return $this->USER_FAVORITES;
-        }
-
-        $dataArr = PopupBean::inst()->getUserFavorites(AuthManager::getUserId());
-        foreach ($dataArr as $data) {
-            $type = $data['v_type'];
-            $ident = $data['v_ident'];
-            //Обязательна проверка на видимость, так как плагин может быть отключён
-            if ($this->isPageVisible($type, $ident)) {
-                $this->USER_FAVORITES[$type . '_' . $ident] = array('type' => $type, 'ident' => $ident);
-            }
-        }
-        return $this->USER_FAVORITES;
-    }
-
-    private function isCurrentUserFavorite($type, $ident) {
-        return array_key_exists($type . '_' . $ident, $this->getCurrentUserFavorites());
-    }
-
     /**
      * Ссылки на popup-страницы
      */
     public function getPageUrl($page, array $params = array()) {
         $ident = $page instanceof BasePopupPage ? $page->getIdent() : $page;
-        $this->assertExistsEntity($ident);
-        $params[POPUP_WINDOW_PARAM] = $ident;
+        $params[POPUP_WINDOW_PARAM] = $this->assertExistsEntity($ident);
         return WebPage::inst(PAGE_POPUP)->getUrl(false, $params);
     }
 
@@ -245,30 +146,24 @@ class PopupPagesManager extends PopupPagesResources {
         $PLM = PluginsManager::inst();
 
         foreach ($typeIdentArr as $id => $page) {
-            $type = $page['type'];
-            $ident = $page['ident'];
-
             $item['id'] = $id; //id - уникальная связка типа и идентификатора
-            $item['type'] = $type;
-            $item['ident'] = $ident;
-            $item['fav'] = $this->isCurrentUserFavorite($type, $ident) ? 1 : 0;
 
-            switch ($type) {
-                case self::TYPE_PAGE:
-                    $popup = $this->getPage($ident);
-                    $item['name'] = $popup->getTitle();
-                    $item['url'] = $this->getPageUrl($popup);
-                    $item['cover'] = $this->getCover($ident, '36x36')->getRelPath();
-                    $item['descr'] = $popup->getDescr();
-                    break;
+            if ($page instanceof BasePopupPage) {
+                $item['type'] = self::TYPE_PAGE;
+                $item['ident'] = $page->getIdent();
+                $item['name'] = $page->getTitle();
+                $item['url'] = $this->getPageUrl($page);
+                $item['cover'] = $this->getCover($page->getIdent(), '36x36')->getRelPath();
+                $item['descr'] = $page->getDescr();
+            }
 
-                case self::TYPE_PLUGIN:
-                    $plugin = $PLM->getPlugin($ident);
-                    $item['name'] = $plugin->getName();
-                    $item['url'] = $this->getPageUrl(PP_plugin::getIdent(), array(GET_PARAM_PLUGIN_IDENT => $ident));
-                    $item['cover'] = $PLM->getCover($ident, '36x36')->getRelPath();
-                    $item['descr'] = $plugin->getDescr();
-                    break;
+            if ($page instanceof BasePlugin) {
+                $item['type'] = self::TYPE_PLUGIN;
+                $item['ident'] = $page->getIdent();
+                $item['name'] = $page->getName();
+                $item['url'] = $this->getPageUrl(PP_plugin::getIdent(), array(GET_PARAM_PLUGIN_IDENT => $page->getIdent()));
+                $item['cover'] = $PLM->getCover($page->getIdent(), '36x36')->getRelPath();
+                $item['descr'] = $page->getDescr();
             }
 
             $RESULT[] = $item;
@@ -282,44 +177,6 @@ class PopupPagesManager extends PopupPagesResources {
      */
     public function getPagesList() {
         return $this->getPagesInfo($this->getVisiblePages());
-    }
-
-    public function getCurrentUserPagesList() {
-        return $this->getPagesInfo(AuthManager::isAuthorized() ? $this->getCurrentUserFavorites() : $this->getDefaultPages());
-    }
-
-    /**
-     * Привязывает дефолтные страницы к пользователю посте регистрации
-     */
-    public function bindDefaultPages2User($userId) {
-        PopupBean::inst()->saveUserPlugins($userId, $this->getDefaultPages());
-    }
-
-    /**
-     * Обновляет порядок планинов пользователя после сортировки.
-     */
-    public function updateCurrentUserPagesOrder(array $items) {
-        $cnt = count($items);
-        if ($cnt == 0) {
-            return 'Состояния не переданы';
-        }
-
-        $favorites = $this->getCurrentUserFavorites();
-
-        if (count($favorites) != $cnt) {
-            return 'Переданное и текущее состояния не совпадают';
-        }
-
-        foreach ($items as $item) {
-            $id = $item['type'] . '_' . $item['ident'];
-            if (!array_key_exists($id, $favorites)) {
-                return 'Переданное и текущее состояния не совпадают';
-            }
-        }
-
-        PopupBean::inst()->saveUserPlugins(AuthManager::getUserId(), $items);
-
-        return true;
     }
 
     /**
@@ -353,17 +210,6 @@ class PopupPagesManager extends PopupPagesResources {
             'info' => $page->getTitle(),
             'content' => $this->getPopupPageContent($page)
         );
-    }
-
-    /**
-     * Привязка popup-страницы к пользователю.
-     * Метод должен работать максимально быстро - не будем проверять видимость страницы, просто проверим,
-     * существует ли она.
-     */
-    public function toggleUserPopup($isAdd, $type, $ident) {
-        $canBeVis = PopupVis::isCanBeVisible($this->getPagePopupVisibility($type, $ident));
-        check_condition($canBeVis, "Незарегистрированный плагин с типом [$type] и идентификатором [$ident]");
-        PopupBean::inst()->toggleUserPopup(AuthManager::getUserId(), $isAdd, $type, $ident);
     }
 
     /** @return PopupPagesManager */

@@ -926,7 +926,7 @@ abstract class FoldedResources extends AbstractSingleton {
      */
     private function getCoverOriginal($ident) {
         $this->assertImagesFactoryEnabled();
-        return $this->getResourcesDm()->getDirItem($ident, $ident, SYSTEM_IMG_TYPE);
+        return $this->getResourcesDm($ident)->getDirItem(null, $ident, SYSTEM_IMG_TYPE);
     }
 
     /**
@@ -947,7 +947,7 @@ abstract class FoldedResources extends AbstractSingleton {
 
         //Передать сущность нужно именно в качестве первого параметра метода getDirItem,
         //чтобы не проверять доступ, так как дефолтная картинка должна быть доступна всегда
-        $dfltDi = $this->getResourcesDm()->getDirItem(self::PATTERN_NAME, self::PATTERN_NAME, SYSTEM_IMG_TYPE);
+        $dfltDi = $this->getResourcesDm(self::PATTERN_NAME)->getDirItem(null, self::PATTERN_NAME, SYSTEM_IMG_TYPE);
 
         //Выполняем resize
         return $scrDi ? PsImgEditor::resize($scrDi, $dim, $dfltDi) : PsImgEditor::resize($dfltDi, $dim);

@@ -41,7 +41,7 @@ class PL_testing extends BasePlugin implements PointsGiver {
     /** Видимость для popup */
     public function getPopupVisibility() {
         //Нельзя вот так просто взять и перейти на плагин с тестированием - нужны же данные:)
-        return PopupVis::FALSE;
+        return false;
     }
 
     /*

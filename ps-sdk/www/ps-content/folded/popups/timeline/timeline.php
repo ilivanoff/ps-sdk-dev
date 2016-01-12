@@ -33,8 +33,8 @@ class PP_timeline extends BasePopupPage {
             $options[] = array('content' => $inst->getTitle(), 'value' => $this->getPageUrl(array('type' => $ident)));
         }
         usort($options, function($e1, $e2) {
-                    return strcasecmp($e1['content'], $e2['content']);
-                });
+            return strcasecmp($e1['content'], $e2['content']);
+        });
 
         $current = RequestArrayAdapter::inst()->str('type');
         $current = $current && in_array($current, $idents) ? $current : $idents[0];
@@ -62,7 +62,7 @@ class PP_timeline extends BasePopupPage {
     }
 
     public function getPopupVisibility() {
-        return PopupVis::TRUE_DEFAULT;
+        return true;
     }
 
 }

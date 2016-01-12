@@ -31,7 +31,7 @@ class PP_calculator extends BasePopupPage {
     }
 
     public function getPopupVisibility() {
-        return PopupVis::TRUE_DEFAULT;
+        return true;
     }
 
 }

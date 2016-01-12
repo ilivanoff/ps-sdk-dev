@@ -37,7 +37,7 @@ class PP_formula extends BasePopupPage {
     }
 
     public function getPopupVisibility() {
-        return PopupVis::TRUE_DEFAULT;
+        return true;
     }
 
 }

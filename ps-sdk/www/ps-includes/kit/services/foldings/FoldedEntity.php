@@ -13,7 +13,7 @@ class FoldedEntity implements Spritable {
 
     private function __construct(FoldedResources $folding, $ident) {
         $this->folding = $folding;
-        $this->ident = $ident;
+        $this->ident = strval($ident);
     }
 
     private static $items = array();

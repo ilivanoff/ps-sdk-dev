@@ -291,7 +291,7 @@
 <a href="#" pageIdent="">Пустой</a>
 <a href="#" pageIdent="Plugin?name=trigcalc">Plugin?name=trigcalc</a>
 <a href="#" pageIdent="window=Plugin&name=trigcalc">window=Plugin&name=trigcalc</a>
-<a href="#" pageIdent="popup.php?window=Plugin&name=trigcalc">popup.php?window=Plugin&name=trigcalc</a>
+<a href="#" pageIdent="ps-popup.php?window=Plugin&name=trigcalc">ps-popup.php?window=Plugin&name=trigcalc</a>
 {/text}
 
 

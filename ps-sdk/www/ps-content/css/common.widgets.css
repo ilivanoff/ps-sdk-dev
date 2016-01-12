@@ -135,7 +135,7 @@ http://www.ejschart.com/ - взять окно легенды
     line-height: 16px;
     overflow: hidden;
     padding-left: 13px;
-    background: #EEEEEE url('/resources/images/icons/grabber.png') 3px center no-repeat;
+    background: #EEEEEE url('/ps-content/images/icons/grabber.png') 3px center no-repeat;
 }
 
 .ps-legend .ps-legend-caption .ps-legend-controls {
@@ -344,7 +344,7 @@ http://www.ejschart.com/ - взять окно легенды
     position: absolute;
     background-color: #DFF2BF;
     text-align: center;
-    background: url(/resources/images/tile80.png) center center no-repeat;
+    background: url(/ps-content/images/tile80.png) center center no-repeat;
     color: white;
     font-weight: bold;
     font-size: 20px;
@@ -360,7 +360,7 @@ http://www.ejschart.com/ - взять окно легенды
 
 .ps-pyatnashki.disabled .cell {
     cursor: default;
-    background-image: url(/resources/images/tile80_gray.png);
+    background-image: url(/ps-content/images/tile80_gray.png);
     color: #F0F0F0;
 }
 
@@ -579,11 +579,11 @@ div.timeline-event-bubble-title {
 }
 
 #ps-page-scroller.up .ps-page-scroller-bg {
-    background-image: url('/resources/images/icons/arrow-up.png');
+    background-image: url('/ps-content/images/icons/arrow-up.png');
 }
 
 #ps-page-scroller.down .ps-page-scroller-bg {
-    background-image: url('/resources/images/icons/arrow-down.png');
+    background-image: url('/ps-content/images/icons/arrow-down.png');
 }
 
 #ps-page-scroller.scrollable {

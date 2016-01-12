@@ -18,7 +18,7 @@ class PL_advgraph extends BasePlugin {
     }
 
     public function getPopupVisibility() {
-        return PopupVis::TRUE_DEFAULT;
+        return true;
     }
 
 }

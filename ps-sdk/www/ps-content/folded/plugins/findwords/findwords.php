@@ -19,7 +19,7 @@ class PL_findwords extends BasePlugin {
     /** Видимость для popup */
     public function getPopupVisibility() {
         //Этот плагин можно видеть только с передачей данных в него
-        return PopupVis::FALSE;
+        return false;
     }
 
 }

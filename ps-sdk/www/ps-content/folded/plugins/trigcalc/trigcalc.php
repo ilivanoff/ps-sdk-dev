@@ -18,7 +18,7 @@ class PL_trigcalc extends BasePlugin {
     }
 
     public function getPopupVisibility() {
-        return PopupVis::TRUE;
+        return true;
     }
 
 }

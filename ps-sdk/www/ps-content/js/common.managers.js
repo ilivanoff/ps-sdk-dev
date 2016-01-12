@@ -1,12 +1,12 @@
 /**
  * Менеджер открывает popup - окна.
  * pageIdent может быть задан в виде:
- * 1) popup.php?window=Plugin&ident=atom
+ * 1) ps-popup.php?window=Plugin&ident=atom
  * 2) Plugin?ident=atom
- * Если он пуст, то откроется базовая страница popup.php
+ * Если он пуст, то откроется базовая страница ps-popup.php
  */
 var popupWindowManager = {
-    base: 'popup.php',
+    base: 'ps-popup.php',
     windowWidth: /*635*/720,
     windowHeight: 770,
     logger: PsLogger.inst('PopupWindowManager').setDebug()/*.disable()*/,

@@ -109,6 +109,7 @@ final class WebPage {
         $ctxt = PageContext::inst();
         check_condition($this->isIt($ctxt->getPage()), PsUtil::getClassName($ctxt) . ' проинициализирован некорректно');
 
+        //Строим страницу
         PageBuilder::inst()->buildPage();
     }
 

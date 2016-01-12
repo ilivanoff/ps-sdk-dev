@@ -10,7 +10,7 @@
                     {page_href code=7 class="logo" title="К списку плагинов"}{PSHOST}{/page_href}
                     &mdash;
                     {$page->getTitle()}
-                    {ctrl_button class='list' href='popup.php' action='lists' title='К списку плагинов' hoverable=1}
+                    {ctrl_button class='list' href='ps-popup.php' action='lists' title='К списку плагинов' hoverable=1}
                 {/if}
             </div>
         {/if}

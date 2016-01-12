@@ -26,7 +26,7 @@ abstract class BasePlugin extends FoldedClass implements PointsGiverMaster {
 
     /** Видимость для popup */
     public function getPopupVisibility() {
-        return PopupVis::BYPOST;
+        return false;
     }
 
     /**

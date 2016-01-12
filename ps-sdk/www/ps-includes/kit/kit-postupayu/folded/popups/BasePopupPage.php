@@ -25,7 +25,7 @@ abstract class BasePopupPage extends FoldedClass {
     //Видимость страницы
     public function getPopupVisibility() {
         //По умолчанию считается, что на страницу нельзя перейти как на плагин
-        return PopupVis::FALSE;
+        return false;
     }
 
     /*
