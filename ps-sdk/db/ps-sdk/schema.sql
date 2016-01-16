@@ -1,6 +1,6 @@
 ﻿/*
 Created: 14.08.2010
-Modified: 20.01.2015
+Modified: 16.01.2016
 Model: MySQL 5.1
 Database: MySQL 5.1
 */
@@ -80,9 +80,8 @@ CREATE TABLE ps_upload
   original_name Varchar(255) NOT NULL,
   mime_type Varchar(255) NOT NULL,
   dt_event Int UNSIGNED NOT NULL,
-  type Char(1) NOT NULL
-  COMMENT 'Тип файла:
-A-аватар',
+  type Varchar(255) NOT NULL
+  COMMENT 'Класс загрузчика',
   b_deleted Bool NOT NULL DEFAULT 0,
   v_params Text,
  PRIMARY KEY (id_upload),
