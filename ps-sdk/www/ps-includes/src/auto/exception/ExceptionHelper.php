@@ -25,9 +25,9 @@ final class ExceptionHelper {
 
     /**
      * Метод каждое сообщение из стека оборачивает в див с отступом, соответствующим номеру сообщения.
-     * 0# C:\www\postupayu.ru\www\kit\content\ContentHelper.php (39)
+     * 0# C:\www\postupayu.ru\www\src\common\content\ContentHelper.php (39)
      *  1# C:\www\postupayu.ru\www\resources\folded\pagebuilders\basic\basic.php (53)
-     *   2# C:\www\postupayu.ru\www\kit\folded\pagebuilders\AbstractPageBuilder.php (55)
+     *   2# C:\www\postupayu.ru\www\src\common\folded\pagebuilders\AbstractPageBuilder.php (55)
      */
     private static function formatTraceMessagesHtml(Exception $ex) {
         $stack = '';
@@ -53,9 +53,9 @@ final class ExceptionHelper {
 
     /**
      * Метод каждое сообщение из стека оборачивает в див с отступом, соответствующим номеру сообщения.
-     * 0# C:\www\postupayu.ru\www\kit\content\ContentHelper.php (39)
+     * 0# C:\www\postupayu.ru\www\src\common\content\ContentHelper.php (39)
      *  1# C:\www\postupayu.ru\www\resources\folded\pagebuilders\basic\basic.php (53)
-     *   2# C:\www\postupayu.ru\www\kit\folded\pagebuilders\AbstractPageBuilder.php (55)
+     *   2# C:\www\postupayu.ru\www\src\common\folded\pagebuilders\AbstractPageBuilder.php (55)
      */
     private static function formatTraceMessagesFile(Exception $ex) {
         $stack = '';

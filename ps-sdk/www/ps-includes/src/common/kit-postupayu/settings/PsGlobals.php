@@ -154,7 +154,7 @@ final class PsGlobals extends AbstractSingleton {
 
     protected function __construct() {
         $this->LOGGER = PsLogger::inst(__CLASS__);
-        $this->DI = DirItem::inst('kitcore', 'Globals.php');
+        $this->DI = DirItem::inst(array(DirManager::DIR_SRC, DirManager::DIR_AUTO), 'Globals.php');
         $this->load();
     }
 

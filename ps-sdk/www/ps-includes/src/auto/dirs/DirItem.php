@@ -133,7 +133,7 @@ class DirItem implements Spritable {
     /**
      * Время последней модификации файла.
      * $format = DF_COMMENTS
-     * DatesTools - не подключается в kitcore!
+     * DatesTools - не подключается в src/auto!
      */
     public function getModificationTime($format = null) {
         if (!is_file($this->absPath)) {

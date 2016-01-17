@@ -44,9 +44,9 @@ if (!isset($_SESSION)) {
 }
 
 /*
- * Подключим все классы из kitcore
+ * Подключим все классы из src/auto
  */
-include_once __DIR__ . '/kitcore/PsCoreIncluder.php';
+include_once __DIR__ . '/src/auto/PsCoreIncluder.php';
 PsCoreIncluder::inst()->includeCore();
 
 /*

@@ -2,7 +2,7 @@
 
 /**
  * Auto generated messages for file:
- * C:/www/postupayu.ru/www/kit/core/formules/tex/messages/TexMessages.msgs
+ * C:/www/postupayu.ru/www/src/common/core/formules/tex/messages/TexMessages.msgs
  * 
  * Gen date:
  * 2015-01-21 16:45:47

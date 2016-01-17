@@ -18,6 +18,9 @@ final class Autoload {
     /** Признак - зарегистрирован ли автолоадер */
     private $IS_REGISTERED = false;
 
+    /** Путь к директории с классами для SDK */
+    private $SDK_SRC_DIR;
+
     /**
      * Регистрирует функцию {@link Autoload::load} как класслоадер
      */
@@ -86,7 +89,6 @@ final class Autoload {
         if (array_key_exists($di->getRelPath(), $this->DIRS)) {
             return; //---
         }
-        //$dirAbsPath = [C:/www/postupayu.ru/www/kit/]
         $dirAbsPath = $di->getAbsPath();
         //Проверим, является ли путь - директорией
         if (!$di->isDir()) {
@@ -103,7 +105,7 @@ final class Autoload {
      * Метод подключает админскую директорию
      */
     public function registerAdminBaseDir() {
-        $this->registerBaseDir(PS_DIR_INCLUDES . DIR_SEPARATOR . DirManager::DIR_ADMIN);
+        $this->registerBaseDir($this->SDK_SRC_DIR . DirManager::DIR_ADMIN);
     }
 
     /**
@@ -235,10 +237,12 @@ final class Autoload {
         $this->LOGGER = self::getLogger();
         $this->AUTOLOAD = array($this, 'load');
         $this->COMMON_EXCLUDED_DI = DirManager::autogen('classpath')->getDirItem(null, 'excluded');
+        $this->SDK_SRC_DIR = PS_DIR_INCLUDES . DIR_SEPARATOR . DirManager::DIR_SRC . DIR_SEPARATOR;
+
         /*
-         * Директория kit должна быть подключена всегда
+         * Директория src/common должна быть подключена всегда
          */
-        $this->registerBaseDir(PS_DIR_INCLUDES . DIR_SEPARATOR . DirManager::DIR_KIT);
+        $this->registerBaseDir($this->SDK_SRC_DIR . DirManager::DIR_COMMON);
         /*
          * Если мы работаем в рамках проекта, то подключим папку classes из PS_DIR_ADDON
          */

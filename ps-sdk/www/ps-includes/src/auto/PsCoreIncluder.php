@@ -13,8 +13,8 @@ final class PsCoreIncluder {
     private $CALLED = false;
 
     /**
-     * Карта `Название класса`=>`Путь к классу` из kitcore. Пример:
-     * [PsUtil] => C:/www/postupayu.ru/www/kitcore/utils/PsUtil.php
+     * Карта `Название класса`=>`Путь к классу` из src/auto. Пример:
+     * [PsUtil] => C:/www/postupayu.ru/www/src/auto/utils/PsUtil.php
      */
     private $PATHES;
 
@@ -26,7 +26,7 @@ final class PsCoreIncluder {
     private $INCLUDED;
 
     /**
-     * Основной метод, выполняющий подключение всех классов из kitcore.
+     * Основной метод, выполняющий подключение всех классов из src/auto.
      * Нужно постараться сделать так, чтобы он отрабатывал максимально быстро,
      * так как мы используем его вместо принудительного подключения всех классов
      * через require_once.
@@ -57,7 +57,7 @@ final class PsCoreIncluder {
         $this->INCLUDED = array();
 
         /*
-         * Собираем классы из kitcore, которые нужно подключить.
+         * Собираем классы из src/auto, которые нужно подключить.
          * Пути к php-классам будут собраны в переменную класса, чтобы к ним был
          * доступ и из функции autoload.
          */
@@ -110,9 +110,9 @@ final class PsCoreIncluder {
      * Метод рекурсивно собирает все классы в директории.
      * 
      * @param string $dirAbsPath - путь к директории
-     * @param array $classes - карта [PsUtil] => [C:/www/postupayu.ru/www/kitcore/utils/PsUtil.php]
+     * @param array $classes - карта [PsUtil] => [C:/www/postupayu.ru/www/src/auto/utils/PsUtil.php]
      * @param bool $skipDirClasses - пропускать ли классы в корневой директории.
-     * Флаг позволит не подключать классы, лежащие в корне kitcore,
+     * Флаг позволит не подключать классы, лежащие в корне src/auto,
      * так как их мы подключим сами (Globals, Defines, PsCoreIncluder)
      */
     public static function loadClassPath($dirAbsPath, array &$classes, $skipDirClasses) {
