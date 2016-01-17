@@ -226,7 +226,6 @@ final class PageBuilder extends PageBuilderResources {
         if ($PROFILER) {
             // Заканчиваем профилирование
             $PROFILER->stop();
-            PageOpenWatcher::updateUserPageWatch($CTXT->getRequestUrl());
         }
     }
 

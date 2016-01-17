@@ -45,7 +45,10 @@ class AdminFoldedManager extends AbstractSingleton {
         check_condition($group, 'Не передана группа для фолдинга');
         check_condition($classPrefix, 'Не передан префикс для классов фолдинга');
 
-        $classesDi = DirItem::inst(array(Autoload::DIR_KIT, 'folded'), $group);
+        //TODO - определять директорию для воздания менеджера фолдингов.
+        die('Folding dir is not deffined.');
+
+        $classesDi = DirItem::inst(array('sdk/kit', 'folded'), $group);
         check_condition(!$classesDi->isDir(), "Директория $classesDi уже существует");
         check_condition(!$classesDi->isFile(), "Элемент $classesDi не может быть файлом");
 

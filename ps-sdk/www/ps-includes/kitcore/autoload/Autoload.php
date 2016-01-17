@@ -5,10 +5,6 @@
  * так что регистрируем его первым.
  */
 final class Autoload {
-    /** Директории подключаемых классов */
-
-    const DIR_KIT = 'sdk/kit';
-    const DIR_TESTS = 'tests';
 
     /** @var PsLoggerInterface */
     private $LOGGER;
@@ -108,10 +104,6 @@ final class Autoload {
      */
     public function registerAdminBaseDir() {
         $this->registerBaseDir(PS_DIR_INCLUDES . DIR_SEPARATOR . DirManager::DIR_ADMIN);
-    }
-
-    public function registerTestsBaseDir() {
-        $this->registerBaseDir(self::DIR_TESTS);
     }
 
     /**

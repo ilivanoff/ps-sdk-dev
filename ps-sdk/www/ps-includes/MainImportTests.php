@@ -5,5 +5,5 @@
  */
 
 include_once 'MainImportAdmin.php';
-Autoload::inst()->registerTestsBaseDir();
+//Autoload::inst()->registerTestsBaseDir();
 ?>
