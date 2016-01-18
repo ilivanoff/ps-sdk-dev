@@ -5,7 +5,7 @@
  *
  * @author azazello
  */
-class PSWPBridge extends AbstractSingleton {
+class PsWpBridge extends AbstractSingleton {
 
     public function init() {
         PsLogger::inst(__CLASS__)->info(__FUNCTION__);
@@ -19,7 +19,7 @@ class PSWPBridge extends AbstractSingleton {
         PsLogger::inst(__CLASS__)->info(__FUNCTION__);
     }
 
-    /** @return PSWPBridge */
+    /** @return PsWpBridge */
     public static function inst() {
         return parent::inst();
     }
