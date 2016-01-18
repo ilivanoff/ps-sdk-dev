@@ -20,6 +20,7 @@ class DirManager {
     const DIR_FORMULES = 'formules';
     const DIR_SERVICE = 'service';
     const DIR_SPRITES = 'sprites';
+    const DIR_WORDPRESS = 'wordpress';
 
     private $relPath;
     private $absPath;

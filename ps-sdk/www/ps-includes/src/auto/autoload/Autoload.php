@@ -109,6 +109,13 @@ final class Autoload {
     }
 
     /**
+     * Метод подключает директорию с классами wordpress
+     */
+    public function registerWorPressBaseDir() {
+        $this->registerBaseDir($this->SDK_SRC_DIR . DirManager::DIR_WORDPRESS);
+    }
+
+    /**
      * Основной метод, возвращающий путь к классу
      */
     public function getClassPath($className) {

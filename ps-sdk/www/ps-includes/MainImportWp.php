@@ -5,4 +5,5 @@
  */
 
 include_once 'MainImport.php';
+Autoload::inst()->registerWorPressBaseDir();
 ?>

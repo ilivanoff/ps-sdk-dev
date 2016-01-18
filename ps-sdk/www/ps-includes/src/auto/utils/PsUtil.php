@@ -458,6 +458,13 @@ final class PsUtil {
         die($msg);
     }
 
+    /**
+     * Метод проверят, выполняется ли код в контексте WordPress
+     */
+    public static function isWordPress() {
+        return function_exists('add_action') && defined('ABSPATH');
+    }
+
 }
 
 ?>
