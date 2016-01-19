@@ -8,59 +8,6 @@
 class UtilsBean extends BaseBean {
     /*
      * =====================================
-     * ======== ПРОСМОТРЫ СТРАНИЦ ==========
-     * =====================================
-     */
-
-    public function savePageWatch($userId, $pageIdent) {
-        $params[] = $pageIdent;
-
-        $userRestriction = '';
-        if ($userId) {
-            $params[] = $userId;
-            $userRestriction = '= ?';
-        } else {
-            $userRestriction = 'is null';
-        }
-
-        $affected = $this->update('
-update page_watch
-   set dt_event = UNIX_TIMESTAMP(), watch_count = watch_count + 1
- where page_ident = ? and id_user ' . $userRestriction, $params);
-
-        if ($affected < 1) {
-            $this->update('
-insert into page_watch
-  (id_user, page_ident, dt_event, watch_count)
-values
-  (?, ?, UNIX_TIMESTAMP(), 1)', array(
-                $userId,
-                $pageIdent));
-        }
-    }
-
-    public function getLastPageWatch($user_id, $page_ident) {
-        return $this->getInt('
-select dt_event
-  from page_watch
- where id_user is not null and id_user = ?
-   and page_ident = ?', array($user_id, $page_ident));
-    }
-
-    //$userId can be null
-    public function isPageWasOpened($url, $userId = null) {
-        $params[] = $url;
-        if ($userId === null) {
-            $user = 'is null';
-        } else {
-            $user = '= ?';
-            $params[] = $userId;
-        }
-        return $this->getCnt('select count(1) as cnt from page_watch where page_ident=? and id_user ' . $user, $params) > 0;
-    }
-
-    /*
-     * =====================================
      * ===== АВТОРИЗАЦИИ ПОЛЬЗОВАТЕЛЯ ======
      * =====================================
      */

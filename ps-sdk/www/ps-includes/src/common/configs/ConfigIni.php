@@ -7,6 +7,7 @@
  */
 final class ConfigIni extends AbstractIni {
 
+    const GROUP_AUTH = 'auth';
     const GROUP_CORE = 'core';
     const CRON_PROCESS = 'cron-pocess';
     const GROUP_CONNECTIONS = 'connection-pool';
@@ -30,6 +31,14 @@ final class ConfigIni extends AbstractIni {
 
     public static function webPagesStore() {
         return self::getPropCheckType(self::GROUP_CORE, 'web-pages', array(PsConst::PHP_TYPE_STRING));
+    }
+
+    /*
+     * AUTH
+     */
+
+    public static function authEngine() {
+        return self::getPropCheckType(self::GROUP_AUTH, 'provider', array(PsConst::PHP_TYPE_STRING, PsConst::PHP_TYPE_NULL));
     }
 
     /*
