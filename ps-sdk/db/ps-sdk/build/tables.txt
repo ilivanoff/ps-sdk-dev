@@ -1,8 +1,6 @@
 ps_audit
 ps_db_changes
 ps_folded_codes
-ps_gallery
-ps_gallery_images
 ps_inflects
 ps_lib_item
 ps_mappings

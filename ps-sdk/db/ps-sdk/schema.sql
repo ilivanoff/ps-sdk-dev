@@ -172,43 +172,6 @@ CREATE TABLE ps_props
 ALTER TABLE ps_props ADD UNIQUE v_prop (v_prop)
 ;
 
--- Table ps_gallery
-
-CREATE TABLE ps_gallery
-(
-  id_gallery Int UNSIGNED NOT NULL AUTO_INCREMENT,
-  v_dir Varchar(255) NOT NULL,
-  v_name Varchar(255),
- PRIMARY KEY (id_gallery)
-)
-  DEFAULT CHARACTER SET utf8
-  COLLATE utf8_general_ci
-;
-
-ALTER TABLE ps_gallery ADD UNIQUE v_dir (v_dir)
-;
-
--- Table ps_gallery_images
-
-CREATE TABLE ps_gallery_images
-(
-  id_image Int UNSIGNED NOT NULL AUTO_INCREMENT,
-  v_dir Varchar(255) NOT NULL,
-  v_file Varchar(255) NOT NULL,
-  v_name Varchar(255),
-  v_descr Varchar(255),
-  n_order Tinyint UNSIGNED NOT NULL,
-  b_show Bool NOT NULL DEFAULT 0,
-  b_web Bool NOT NULL DEFAULT 0,
- PRIMARY KEY (id_image)
-)
-  DEFAULT CHARACTER SET utf8
-  COLLATE utf8_general_ci
-;
-
-CREATE UNIQUE INDEX idx_galleryimages_dir_file ON ps_gallery_images (v_dir,v_file)
-;
-
 -- Table ps_mappings
 
 CREATE TABLE ps_mappings
