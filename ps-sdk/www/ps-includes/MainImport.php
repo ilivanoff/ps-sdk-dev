@@ -64,6 +64,11 @@ ExceptionHandler::register();
  */
 Autoload::inst()->register();
 
+/*
+ * Инициализируем окружение, если мы работаем под ним
+ */
+PsEnvironment::init();
+
 //Подключаемся к продуктиву, если автоконнект разрещён
 if (!isset($PS_NO_AUTO_CONNECT) || !$PS_NO_AUTO_CONNECT) {
     PsConnectionPool::configure(PsConnectionParams::production());

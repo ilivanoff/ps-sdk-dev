@@ -9,6 +9,7 @@ final class ConfigIni extends AbstractIni {
 
     const GROUP_AUTH = 'auth';
     const GROUP_CORE = 'core';
+    const GROUP_ENV = 'environment';
     const CRON_PROCESS = 'cron-pocess';
     const GROUP_CONNECTIONS = 'connection-pool';
     const GROUP_FOLDINGS = 'foldings';
@@ -25,16 +26,24 @@ final class ConfigIni extends AbstractIni {
         return self::getProp(self::GROUP_CORE, 'project');
     }
 
-    public static function environment() {
-        return self::getPropCheckType(self::GROUP_CORE, 'environment', array(PsConst::PHP_TYPE_STRING, PsConst::PHP_TYPE_NULL));
-    }
-
     public static function libsIncluder() {
         return self::getPropCheckType(self::GROUP_CORE, 'libs', array(PsConst::PHP_TYPE_STRING));
     }
 
     public static function webPagesStore() {
         return self::getPropCheckType(self::GROUP_CORE, 'web-pages', array(PsConst::PHP_TYPE_STRING));
+    }
+
+    /*
+     * ENVIROMENTS
+     */
+
+    public static function environment() {
+        return self::getPropCheckType(self::GROUP_ENV, 'environment', array(PsConst::PHP_TYPE_STRING, PsConst::PHP_TYPE_NULL));
+    }
+
+    public static function environments() {
+        return DirManager::relToAbs(self::getPropCheckType(self::GROUP_ENV, 'environments', array(PsConst::PHP_TYPE_ARRAY)));
     }
 
     /*
