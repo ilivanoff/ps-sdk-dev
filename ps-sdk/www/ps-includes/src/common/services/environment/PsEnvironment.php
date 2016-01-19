@@ -72,9 +72,13 @@ class PsEnvironment {
         //Выполним необходимое действие
         $PROFILER = PsProfiler::inst(__CLASS__);
         try {
+            $LOGGER->info('{');
+
             $PROFILER->start($env);
-            self::initImpl($envIncFile);
+            self::initImpl($LOGGER, $envIncFile);
             $secundomer = $PROFILER->stop();
+
+            $LOGGER->info('}');
             $LOGGER->info('Inc file included for {} sec', $secundomer->getTime());
         } catch (Exception $ex) {
             $PROFILER->stop(false);
@@ -83,8 +87,14 @@ class PsEnvironment {
         }
     }
 
-    public static function initImpl($_envIncFile_) {
-        require_once $_envIncFile_;
+    /**
+     * include выполняем в отдельном методе, так как вызываемый файл получит в контекст все наши переменные.
+     * 
+     * @param PsLoggerInterface $LOGGER - логгер для записи логов
+     * @param string $_INC_FILE_ - абсолютный путь к файлу, оторый выполнит включение окружения.
+     */
+    private static function initImpl($LOGGER, $_INC_FILE_) {
+        require_once $_INC_FILE_;
     }
 
 }

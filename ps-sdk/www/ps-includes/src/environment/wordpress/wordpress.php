@@ -11,11 +11,14 @@ if (PsUtil::isWordPress()) {
      * Мы уже работаем как часть WordPress, ничего делать не нужно.
      * Классы src подключатся автоматически.
      */
+    $LOGGER->info('WordPress is already loaded, skip including...');
 } else {
     /*
      * Нас вызвали раньше wordpress. Это может быть процесс, или ajax, или ещё что-либо.
      * Подключим ядро WordPress.
      */
-    require_once PATH_BASE_DIR . 'wp-load.php';
+    $wpInc = PATH_BASE_DIR . 'wp-load.php';
+    $LOGGER->info('WordPress is not loaded yet, include wp core [{}]', $wpInc);
+    require_once $wpInc;
 }
 ?>
