@@ -12,6 +12,10 @@ require_once 'ps-includes/MainImportAdmin.php';
 //echo DirManager::inst('/../ps-uploads')->makePath();
 //echo ConfigIni::uploadsDirRel();
 
+
+echo PsEnvironment::isEnv(PsEnvironment::ENV_WP);
+die;
+
 PsSecurity::provider();
 
 die;

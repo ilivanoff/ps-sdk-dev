@@ -25,6 +25,10 @@ final class ConfigIni extends AbstractIni {
         return self::getProp(self::GROUP_CORE, 'project');
     }
 
+    public static function environment() {
+        return self::getPropCheckType(self::GROUP_CORE, 'environment', array(PsConst::PHP_TYPE_STRING, PsConst::PHP_TYPE_NULL));
+    }
+
     public static function libsIncluder() {
         return self::getPropCheckType(self::GROUP_CORE, 'libs', array(PsConst::PHP_TYPE_STRING));
     }

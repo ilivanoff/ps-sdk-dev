@@ -50,7 +50,7 @@ include_once __DIR__ . '/src/auto/PsCoreIncluder.php';
 PsCoreIncluder::inst()->includeCore();
 
 /*
- * Зарегистрируем наш обработчие для php ошибок
+ * Зарегистрируем наш обработчик для php ошибок
  */
 ExceptionHandler::register4errors();
 
