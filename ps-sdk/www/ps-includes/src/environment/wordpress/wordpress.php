@@ -19,6 +19,11 @@ if (PsUtil::isWordPress()) {
      */
     $wpInc = PATH_BASE_DIR . 'wp-load.php';
     $LOGGER->info('WordPress is not loaded yet, include wp core [{}]', $wpInc);
-    require_once $wpInc;
+
+    if (is_file($wpInc)) {
+        require_once $wpInc;
+    } else {
+        PsUtil::raise('WordPress core file not found, environment cannot be loaded.');
+    }
 }
 ?>
