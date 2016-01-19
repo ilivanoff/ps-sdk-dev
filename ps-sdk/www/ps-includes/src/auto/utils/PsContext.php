@@ -32,11 +32,22 @@ final class PsContext {
     }
 
     /**
+     * Метод проверяет, выполняем ли мы php процесс
+     */
+    public static function isCmdProcess() {
+        return self::isCmd() && defined('PS_PROCESS_CONTEXT') && !!PS_PROCESS_CONTEXT;
+    }
+
+    /**
      * Метод описывает контекст выполнения скрипта
      */
     public static function describe() {
         if (self::isAjax()) {
             return 'ajax request'; //---
+        }
+
+        if (self::isCmdProcess()) {
+            return 'command line process';
         }
 
         if (self::isCmd()) {

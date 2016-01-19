@@ -1,5 +1,8 @@
 <?php
 
+//Определим константу, которая однозначно будет означать, что мы выполняем php процесс
+define('PS_PROCESS_CONTEXT', true);
+
 //Определим название функции, которая должна быть определена в файле процесса
 define('PROCESS_FUNCTION_NAME', 'executeProcess');
 
@@ -47,7 +50,7 @@ check_condition(is_file($CALLED_FILE), "Programm file $CALLED_FILE is not found"
 check_condition(is_callable(PROCESS_FUNCTION_NAME), PROCESS_FUNCTION_NAME . ' is not callable');
 
 //Проверим, что программа вызвана из командной строки
-check_condition(is_array($argv) && PsContext::isCmd(), "Programm $CALLED_FILE can be runned only from console");
+check_condition(is_array($argv) && PsContext::isCmdProcess(), "Programm $CALLED_FILE can be runned only from console");
 
 //В необязательном режиме подключим папку src нашего процесса
 Autoload::inst()->registerBaseDir(array(dirname($CALLED_FILE), DirManager::DIR_SRC), false);
