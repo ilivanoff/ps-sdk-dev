@@ -46,7 +46,7 @@ check_condition(is_file($CALLED_FILE), "Programm file $CALLED_FILE is not found"
 //Функция должна быть определена запущенным процессом
 check_condition(is_callable(PROCESS_FUNCTION_NAME), PROCESS_FUNCTION_NAME . ' is not callable');
 
-//ПРоверим, что программа вызвана из командной строки
+//Проверим, что программа вызвана из командной строки
 check_condition(is_array($argv), "Programm $CALLED_FILE can be runned only from console");
 
 //В необязательном режиме подключим папку src нашего процесса

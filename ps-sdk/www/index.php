@@ -12,8 +12,6 @@ require_once 'ps-includes/MainImportAdmin.php';
 //echo DirManager::inst('/../ps-uploads')->makePath();
 //echo ConfigIni::uploadsDirRel();
 
-PsEnvironment::init();
-
 echo PsEnvironment::env();
 die;
 

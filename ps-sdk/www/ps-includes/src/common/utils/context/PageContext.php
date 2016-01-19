@@ -5,17 +5,9 @@
  */
 class PageContext extends AbstractSingleton {
 
-    //Признак - является ли выполнение ajax-запросом
-    private $isAjax;
-
     //Метод возвращает признак - является ли контекст выполнения запросом ajax
     public function isAjax() {
-        return $this->isAjax || ServerArrayAdapter::IS_AJAX();
-    }
-
-    //Метод позволяет форированно установить признак выполнения Ajax контекста
-    public function setAjaxContext() {
-        $this->isAjax = true;
+        return (defined('PS_AJAX_CONTEXT') && !!PS_AJAX_CONTEXT) || ServerArrayAdapter::IS_AJAX();
     }
 
     /** @return WebPage */
