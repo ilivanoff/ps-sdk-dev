@@ -12,6 +12,5 @@ ps_timeline
 ps_timeline_item
 ps_upload
 ps_user_codes
-ps_user_popups
 ps_views_state
 users

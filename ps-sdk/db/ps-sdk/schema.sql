@@ -133,21 +133,6 @@ CREATE TABLE ps_user_codes
 CREATE UNIQUE INDEX idx_usercodes_type_code ON ps_user_codes (v_type,v_code)
 ;
 
--- Table ps_user_popups
-
-CREATE TABLE ps_user_popups
-(
-  id_user Int UNSIGNED NOT NULL,
-  v_type Char(1) NOT NULL,
-  v_ident Varchar(255) NOT NULL,
-  n_order Int UNSIGNED NOT NULL,
-  dt_event Int UNSIGNED NOT NULL
-)
-  DEFAULT CHARACTER SET utf8
-  COLLATE utf8_general_ci
-  COMMENT = 'Избранные всплывающие страницы пользователя'
-;
-
 -- Table ps_lib_item
 
 CREATE TABLE ps_lib_item
@@ -317,25 +302,7 @@ ALTER TABLE ps_inflects ADD UNIQUE v_word (v_word)
 
 -- Create relationships section ------------------------------------------------- 
 
-ALTER TABLE ps_misprint ADD CONSTRAINT Relationship40 FOREIGN KEY (id_user) REFERENCES users (id_user) ON DELETE NO ACTION ON UPDATE NO ACTION
-;
-
-ALTER TABLE ps_upload ADD CONSTRAINT Relationship41 FOREIGN KEY (id_user) REFERENCES users (id_user) ON DELETE NO ACTION ON UPDATE NO ACTION
-;
-
 ALTER TABLE ps_timeline_item ADD CONSTRAINT Relationship44 FOREIGN KEY (id_timeline) REFERENCES ps_timeline (id_timeline) ON DELETE NO ACTION ON UPDATE NO ACTION
-;
-
-ALTER TABLE ps_user_popups ADD CONSTRAINT Relationship82 FOREIGN KEY (id_user) REFERENCES users (id_user) ON DELETE NO ACTION ON UPDATE NO ACTION
-;
-
-ALTER TABLE ps_user_codes ADD CONSTRAINT Relationship89 FOREIGN KEY (id_user) REFERENCES users (id_user) ON DELETE NO ACTION ON UPDATE NO ACTION
-;
-
-ALTER TABLE ps_audit ADD CONSTRAINT Relationship91 FOREIGN KEY (id_user_authed) REFERENCES users (id_user) ON DELETE NO ACTION ON UPDATE NO ACTION
-;
-
-ALTER TABLE ps_audit ADD CONSTRAINT Relationship92 FOREIGN KEY (id_user) REFERENCES users (id_user) ON DELETE NO ACTION ON UPDATE NO ACTION
 ;
 
 
