@@ -1,6 +1,6 @@
 ﻿/*
 Created: 14.08.2010
-Modified: 16.01.2016
+Modified: 19.01.2016
 Model: MySQL 5.1
 Database: MySQL 5.1
 */
@@ -37,19 +37,6 @@ CREATE TABLE users
 ;
 
 ALTER TABLE users ADD UNIQUE email (email)
-;
-
--- Table page_watch
-
-CREATE TABLE page_watch
-(
-  id_user Int UNSIGNED,
-  dt_event Int UNSIGNED NOT NULL,
-  page_ident Char(80) NOT NULL,
-  watch_count Int UNSIGNED NOT NULL DEFAULT 0
-)
-  DEFAULT CHARACTER SET utf8
-  COLLATE utf8_general_ci
 ;
 
 -- Table ps_misprint
@@ -329,9 +316,6 @@ ALTER TABLE ps_inflects ADD UNIQUE v_word (v_word)
 ;
 
 -- Create relationships section ------------------------------------------------- 
-
-ALTER TABLE page_watch ADD CONSTRAINT Relationship28 FOREIGN KEY (id_user) REFERENCES users (id_user) ON DELETE NO ACTION ON UPDATE NO ACTION
-;
 
 ALTER TABLE ps_misprint ADD CONSTRAINT Relationship40 FOREIGN KEY (id_user) REFERENCES users (id_user) ON DELETE NO ACTION ON UPDATE NO ACTION
 ;

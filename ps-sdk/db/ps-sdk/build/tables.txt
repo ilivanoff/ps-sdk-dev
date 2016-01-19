@@ -1,4 +1,3 @@
-page_watch
 ps_audit
 ps_db_changes
 ps_folded_codes
