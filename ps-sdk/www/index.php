@@ -12,7 +12,7 @@ require_once 'ps-includes/MainImportAdmin.php';
 //echo DirManager::inst('/../ps-uploads')->makePath();
 //echo ConfigIni::uploadsDirRel();
 
-PsSecurity::inst();
+PsSecurity::provider();
 
 die;
 

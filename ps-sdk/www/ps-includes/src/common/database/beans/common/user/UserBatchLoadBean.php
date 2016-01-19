@@ -49,21 +49,21 @@ abstract class UserBatchLoadBean extends BaseBean {
             return $this->CACHE->get($userId);
         }
 
-        $this->LOGGER->info('Loading user: ' . $userId);
+        $this->LOGGER->info('Loading user: {}', $userId);
 
         /*
          * Соберём пачку для загрузки
          */
         $batch = array();
-        foreach ($this->CACHE->keys() as $userId) {
-            if ($this->CACHE->isArray($userId)) {
+        foreach ($this->CACHE->keys() as $_userId) {
+            if ($this->CACHE->isArray($_userId)) {
                 continue;
             }
             if (count($batch) >= self::LOAD_BATCH_SIZE) {
                 $this->preloadUsersByIds($batch);
                 $batch = array();
             }
-            $batch[] = $userId;
+            $batch[] = $_userId;
         }
         $this->preloadUsersByIds($batch);
 

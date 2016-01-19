@@ -10,8 +10,8 @@ final class PsSecurity {
     const BASE_CLASS = 'PsSecurityProvider';
     const WP_CLASS = 'PsWpSecurityProvider';
 
-    /** @var PsSecurityInterface */
-    private static $inst;
+    /** @var PsSecurityProvider */
+    private static $provider;
 
     /**
      * Метод возвращает экземпляр класса, отвечающего за вопросы авторизации.
@@ -21,11 +21,11 @@ final class PsSecurity {
      * Это позволит:
      * 1. Использовать сторонний механизм авторизации и регистрации пользователей
      * 
-     * @return PsSecurityInterface
+     * @return PsSecurityProvider
      */
-    public static final function inst() {
-        if (isset(self::$inst)) {
-            return self::$inst; //----
+    public static final function provider() {
+        if (isset(self::$provider)) {
+            return self::$provider; //----
         }
 
         /*
@@ -36,13 +36,15 @@ final class PsSecurity {
         /*
          * Класс провайдера может быть не задан. В таком случае определим его автоматически.
          */
-        if (!$class && PsUtil::isWordPress()) {
-            if (class_exists(self::WP_CLASS)) {
-                $class = self::WP_CLASS;
-            } else {
-                return PsUtil::raise('Cannot find {} class', self::WP_CLASS);
-            }
-        }
+        /*
+          if (!$class && PsUtil::isWordPress()) {
+          if (class_exists(self::WP_CLASS)) {
+          $class = self::WP_CLASS;
+          } else {
+          return PsUtil::raise('Cannot find {} class', self::WP_CLASS);
+          }
+          }
+         */
 
         /*
          * До сих пор не нашли класс? Ошибка!
@@ -66,17 +68,17 @@ final class PsSecurity {
             return PsUtil::raise('Указанный провайдер безопасности [{}] не является наследником класса [{}]', $class, self::BASE_CLASS);
         }
 
-        self::$inst = new $class();
+        self::$provider = new $class();
 
         $LOGGER = PsLogger::inst($class);
         if ($LOGGER->isEnabled()) {
             $LOGGER->info('Using provider: {}', $class);
-            $LOGGER->info('Is authorized: ? {}', var_export(self::$inst->isAuthorized(), true));
-            $LOGGER->info('Is authorized as admin: ? {}', var_export(self::$inst->isAuthorizedAsAdmin(), true));
-            $LOGGER->info('User ID: {}', self::$inst->getUserId());
+            $LOGGER->info('Is authorized: ? {}', var_export(self::$provider->isAuthorized(), true));
+            $LOGGER->info('Is authorized as admin: ? {}', var_export(self::$provider->isAuthorizedAsAdmin(), true));
+            $LOGGER->info('User ID: {}', self::$provider->getUserId());
         }
 
-        return self::$inst; //---
+        return self::$provider; //---
     }
 
     /**
