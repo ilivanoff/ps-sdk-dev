@@ -127,20 +127,6 @@ class PsUser extends PsUserBase {
     }
 
     /**
-     * Строит id-card с информацией о данном пользователе
-     */
-    public function getIdCard() {
-        return PsHtml::div(array('class' => 'user_info'), $this->getIdCardContent());
-    }
-
-    /**
-     * Строит содержимое для id-card
-     */
-    public function getIdCardContent() {
-        return normalize_string(PSSmarty::template('idcard/content.tpl', array('user' => $this))->fetch());
-    }
-
-    /**
      * =============
      * = СИНГЛТОНЫ =
      * =============
@@ -198,24 +184,6 @@ class PsUser extends PsUserBase {
      */
     public static function instOrNull() {
         return AuthManager::isAuthorized() ? self::inst() : null;
-    }
-
-    /**
-     * Дефолтный администратор
-     * 
-     * @return PsUser
-     */
-    public static function defaultAdmin() {
-        return self::inst(DEFAULT_ADMIN_USER);
-    }
-
-    /**
-     * Пользователь - система. Нужен для выполнения различных сервисных действий.
-     * 
-     * @return PsUser
-     */
-    public static function systemUser() {
-        return self::inst(DEFAULT_SYSTEM_USER);
     }
 
 }

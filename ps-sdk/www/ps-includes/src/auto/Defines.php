@@ -152,12 +152,6 @@ define('SESSION_AUDIT_ACTION', 'ps_audit');
 
 
 /*
- * Код дефолтного пользователя - администратора, который есть всегда
- */
-define('DEFAULT_ADMIN_USER', 1);
-define('DEFAULT_SYSTEM_USER', 2);
-
-/*
  * Действия
  */
 define('PS_ACTION_NONE', 0);

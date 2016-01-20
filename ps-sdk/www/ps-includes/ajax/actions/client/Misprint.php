@@ -26,10 +26,12 @@ class Misprint extends AbstractAjaxAction {
         /*
          * Если пользователь не просматривал эту страницу и это не администратор - игнорируем.
          */
-        $wasOpened = PageOpenWatcher::isPageOpenedByUser($url, PsUser::instOrNull());
-        if (!$wasOpened && !AuthManager::isAuthorizedAsAdmin()) {
-            return 'Пользователь не открывал страницу'; //---
-        }
+        /*
+          $wasOpened = PageOpenWatcher::isPageOpenedByUser($url, PsUser::instOrNull());
+          if (!$wasOpened && !AuthManager::isAuthorizedAsAdmin()) {
+          return 'Пользователь не открывал страницу'; //---
+          }
+         */
 
         $text = UserInputTools::safeShortText($text);
         $note = $note ? UserInputTools::safeLongText($note) : $note;
