@@ -22,21 +22,22 @@ final class PsSecurity {
         self::$inited = check_condition(!self::$inited, 'Cannot initialize ' . __CLASS__ . ' twice');
 
         if (self::$provider instanceof PsSecurityProvider) {
-            PsLogger::inst(__CLASS__)->info('Using environment security provider: \'{}\'', get_class(self::$provider));
-            return; //---
-        }
-
-        check_condition(is_null(self::$provider), __CLASS__ . ' is not correctly initialized');
-
-        if (PsContext::isCmd()) {
-            //Если работаем под процессом - установим специальный провайдер безопастности
-            self::$provider = new PsSecurityProviderCmd();
+            //Провайдер безопастности был уже установлен
         } else {
-            //Устанавливаем базовый провайдер безопасности на основе сессии
-            self::$provider = new PsSecurityProviderSdk();
+            check_condition(is_null(self::$provider), __CLASS__ . ' is not correctly initialized');
+
+            if (PsContext::isCmd()) {
+                //Если работаем под процессом - установим специальный провайдер безопастности
+                self::$provider = new PsSecurityProviderCmd();
+            } else {
+                //Устанавливаем базовый провайдер безопасности на основе сессии
+                self::$provider = new PsSecurityProviderSdk();
+            }
         }
 
-        PsLogger::inst(__CLASS__)->info('Using custom security provider \'{}\' for context \'{}\'', get_class(self::$provider), PsContext::describe());
+        check_condition(!PsContext::isCmd() || self::$provider instanceof PsSecurityProviderCmd, 'Invalid security provider for cmd process');
+
+        PsLogger::inst(__CLASS__)->info('Using \'{}\' for context \'{}\'', get_class(self::$provider), PsContext::describe());
     }
 
     /**
@@ -70,3 +71,5 @@ final class PsSecurity {
     }
 
 }
+
+?>

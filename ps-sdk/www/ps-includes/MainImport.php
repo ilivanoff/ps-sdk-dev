@@ -65,7 +65,19 @@ ExceptionHandler::register();
 Autoload::inst()->register();
 
 /*
- * Инициализируем окружение, если мы работаем под ним
+ * Если мы работаем под процессом - не подключаемся автоматически к DB и используем специальный провайдер безопасности
+ */
+if (PsContext::isCmd()) {
+    //Установим специальный провайдер
+    PsSecurity::set(new PsSecurityProviderCmd());
+} else {
+    //Автоматически подключаемся к БД
+    PsConnectionPool::configure(PsConnectionParams::production());
+}
+
+/*
+ * Инициализируем окружение, если мы работаем под ним.
+ * Подключаемое окружение может установить свой провайдер безопасности.
  */
 PsEnvironment::init();
 
@@ -73,11 +85,6 @@ PsEnvironment::init();
  * Инициализируем подсистему безопасности
  */
 PsSecurity::init();
-
-//Подключаемся к продуктиву, если автоконнект разрещён
-if (!isset($PS_NO_AUTO_CONNECT) || !$PS_NO_AUTO_CONNECT) {
-    PsConnectionPool::configure(PsConnectionParams::production());
-}
 
 //Зарегистрируем функцию, подключающую админские ресурсы
 function ps_admin_on($force = false) {

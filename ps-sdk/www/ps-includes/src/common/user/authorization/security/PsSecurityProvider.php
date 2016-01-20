@@ -23,3 +23,5 @@ interface PsSecurityProvider {
      */
     public function isAuthorizedAsAdmin();
 }
+
+?>

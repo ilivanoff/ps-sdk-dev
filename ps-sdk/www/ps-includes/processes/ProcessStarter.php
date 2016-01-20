@@ -10,12 +10,10 @@ $LOGGING_STREAM = 2;
 //Ограничим список логгеров
 $LOGGERS_LIST[] = 'PROCESS';
 $LOGGERS_LIST[] = 'PsLogger';
+$LOGGERS_LIST[] = 'PsSecurity';
 
 //Запускаем профилирование
 $PROFILING_ENABLED = true;
-
-//Отключаем автоматический коннект к БД. Все процессы должны коннектиться сами.
-$PS_NO_AUTO_CONNECT = true;
 
 //Установим глобальный массив, чтобы не получать ошибку в момент попытки стартовать сессию
 $_SESSION = array();
@@ -89,7 +87,7 @@ function saveResult2Html($tplName, $params = null, $__DIR__ = __DIR__, $htmlName
     DirItem::inst($__DIR__, $htmlName)->writeToFile($html, true);
 }
 
-//Убедимся, что мы не подключены
+//Убедимся, что мы не подключены к БД. Все процессы должны сами коннектиться.
 PsConnectionPool::assertDisconnectied();
 
 /**
