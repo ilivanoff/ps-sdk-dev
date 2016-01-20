@@ -1,10 +1,7 @@
 <?php
 
-//Определим константу, которая однозначно будет означать, что мы выполняем php процесс
-define('PS_PROCESS_CONTEXT', true);
-
 //Определим название функции, которая должна быть определена в файле процесса
-define('PROCESS_FUNCTION_NAME', 'executeProcess');
+define('PS_PROCESS_FUNCTION_NAME', 'executeProcess');
 
 //Включаем логирование, перенаправляем его в консоль и устанавливаем логгеры
 $LOGGING_ENABLED = true;
@@ -47,7 +44,7 @@ check_condition($CALLED_FILE, 'Global variable $CALLED_FILE is not set');
 check_condition(is_file($CALLED_FILE), "Programm file $CALLED_FILE is not found");
 
 //Функция должна быть определена запущенным процессом
-check_condition(is_callable(PROCESS_FUNCTION_NAME), PROCESS_FUNCTION_NAME . ' is not callable');
+check_condition(is_callable(PS_PROCESS_FUNCTION_NAME), PS_PROCESS_FUNCTION_NAME . ' is not callable');
 
 //Проверим, что программа вызвана из командной строки
 check_condition(is_array($argv) && PsContext::isCmdProcess(), "Programm $CALLED_FILE can be runned only from console");
@@ -99,6 +96,6 @@ PsConnectionPool::assertDisconnectied();
  * После того, как мы определили все глобальные функции, вызовем функцию 
  * обработки, передав на вход параметры командной строки
  */
-$PROCESS_FUNCTION_NAME = PROCESS_FUNCTION_NAME;
-$PROCESS_FUNCTION_NAME($argv);
+$PS_PROCESS_FUNCTION_NAME = PS_PROCESS_FUNCTION_NAME;
+$PS_PROCESS_FUNCTION_NAME($argv);
 ?>

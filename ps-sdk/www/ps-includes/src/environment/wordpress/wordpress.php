@@ -15,12 +15,16 @@ if (PsUtil::isWordPress()) {
 } else {
     /*
      * Нас вызвали раньше wordpress. Это может быть процесс, или ajax, или ещё что-либо.
-     * Подключим ядро WordPress.
+     * Необходимо проанализировать контекст выполнения, нужно ли подключить ядро.
      */
 
-    if (PsContext::isAjax()) {
+    $LOGGER->info('WordPress is not loaded yet. Check need include for ps context [{}].', PsContext::describe());
+
+    if (PsContext::isCmdProcess()) {
+        $LOGGER->info('- WordPress core will not be included');
+    } else {
         $wpInc = PATH_BASE_DIR . 'wp-load.php';
-        $LOGGER->info('WordPress is not loaded yet, include wp core [{}]', $wpInc);
+        $LOGGER->info('+ Include wp core [{}]', $wpInc);
 
         /*
          * Если файл есть - подключаем, нет - ругаемся.
@@ -30,8 +34,6 @@ if (PsUtil::isWordPress()) {
         } else {
             PsUtil::raise('WordPress core file not found, environment cannot be loaded.');
         }
-    } else {
-        $LOGGER->info('WordPress core will not be included for context [{}]', PsContext::describe());
     }
 }
 ?>

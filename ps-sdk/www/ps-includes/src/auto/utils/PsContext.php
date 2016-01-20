@@ -35,7 +35,7 @@ final class PsContext {
      * Метод проверяет, выполняем ли мы php процесс
      */
     public static function isCmdProcess() {
-        return self::isCmd() && defined('PS_PROCESS_CONTEXT') && !!PS_PROCESS_CONTEXT;
+        return self::isCmd() && defined('PS_PROCESS_FUNCTION_NAME') && is_callable(PS_PROCESS_FUNCTION_NAME);
     }
 
     /**
