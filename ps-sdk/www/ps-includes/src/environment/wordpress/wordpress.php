@@ -20,7 +20,7 @@ if (PsUtil::isWordPress()) {
 
     $LOGGER->info('WordPress is not loaded yet. Check need include for ps context [{}].', PsContext::describe());
 
-    if (PsContext::isCmdProcess()) {
+    if (PsContext::isCmdPsProcess()) {
         $LOGGER->info('- WordPress core will not be included');
     } else {
         $wpInc = PATH_BASE_DIR . 'wp-load.php';

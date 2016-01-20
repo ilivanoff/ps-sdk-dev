@@ -34,27 +34,35 @@ final class PsContext {
     /**
      * Метод проверяет, выполняем ли мы php процесс
      */
-    public static function isCmdProcess() {
-        return self::isCmd() && defined('PS_PROCESS_FUNCTION_NAME') && is_callable(PS_PROCESS_FUNCTION_NAME);
+    public static function isCmdPsProcess() {
+        return self::isCmd() && defined('PS_PROCESS_FUNCTION_NAME') && is_string(PS_PROCESS_FUNCTION_NAME) && is_callable(PS_PROCESS_FUNCTION_NAME);
     }
 
     /**
      * Метод описывает контекст выполнения скрипта
      */
     public static function describe() {
+        $decr = self::describeImpl();
+        return php_sapi_name() . ($decr ? "[$decr]" : '');
+    }
+
+    /**
+     * Метод описывает детали контекста выполнения скрипта
+     */
+    private static function describeImpl() {
         if (self::isAjax()) {
-            return 'ajax request'; //---
+            return 'ajax'; //---
         }
 
-        if (self::isCmdProcess()) {
-            return 'command line process';
+        if (self::isCmdPsProcess()) {
+            return 'cmd-ps-process';
         }
 
         if (self::isCmd()) {
-            return 'command line'; //---
+            return 'cmd-process'; //---
         }
 
-        return 'default';
+        return '';
     }
 
 }

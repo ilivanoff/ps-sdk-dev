@@ -49,6 +49,7 @@ class FileLogWriter extends AbstractLogWriter {
         $this->doAppend($fileCommon, 'REQUEST: ' . (isset($_REQUEST) ? print_r($_REQUEST, true) : ''));
         $this->doAppend($fileCommon, 'SESSION: ' . (isset($_SESSION) ? print_r($_SESSION, true) : ''));
         $this->doAppend($fileCommon, 'FILES: ' . (isset($_FILES) ? print_r($_FILES, true) : ''));
+        $this->doAppend($fileCommon, 'CTXT: ' . PsContext::describe());
 
         //Установим переменные класса
         $this->sessionDM = $DM;

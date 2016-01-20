@@ -1,11 +1,4 @@
-[2015-12-26 13:27:07] Shell command execution started...
-[2015-12-26 13:27:07] PsCron: Executing PsCron
-[2015-12-26 13:27:07] PsCron: Configured processes: ['PsCronProcessImpl2']
-[2015-12-26 13:27:07] PsCron: Lock accured ? true
-[2015-12-26 13:27:07] PsCron: Lock file NOT EXISTS: /ps-content/auto-no-del/service/PsCron.lock
-
-[2015-12-26 13:27:07] PsCron: External process execution started...
-[2015-12-26 13:27:07] PsCron: Executing cron process PsCronProcessImpl2
-[2015-12-26 13:27:12] PsCron:  > Cron process 'PsCronProcessImpl2' executed in 5.1742959022522 seconds
-[2015-12-26 13:27:12] PsCron: Removing cron lock file.
-[2015-12-26 13:27:12] Shell command execution finished in 5.193 seconds.
+[2016-01-20 14:07:16] Shell command execution started...
+[2016-01-20 14:07:16] PsCron: Executing PsCron
+[2016-01-20 14:07:16] PsCron: No cron processes configured, fast return...
+[2016-01-20 14:07:16] Shell command execution finished in 0.009 seconds.
