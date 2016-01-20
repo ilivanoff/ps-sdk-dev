@@ -16,3 +16,4 @@
 /ps-sdk/www/ps-includes/processes/prankota/*.log
 /ps-sdk/www/ps-includes/processes/prankota/*.list
 /ps-sdk/www/ps-content/upload
+/ps-sdk/www/ps-includes/processes/cron/*.log
