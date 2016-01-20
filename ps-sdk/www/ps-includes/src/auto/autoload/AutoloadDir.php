@@ -102,8 +102,9 @@ final class AutoloadDir {
              * Нашли класс! 
              * Если файл был вычитан из кеша, проверим, существует ли файл до сих пор.
              * Возможно, его переместили?
+             * Также проверим, что класс лежит в пакете проекта, так как classpath могли просто скопировать.
              */
-            if (!$this->rebuilded && !file_exists($path)) {
+            if (!$this->rebuilded && ((0 !== strpos($path, PATH_BASE_DIR)) || !file_exists($path))) {
                 $this->LOGGER->info("Class [$class] was cached for $this, but now cannot be found on [$path]. Rebuilding...");
 
                 $path = array_get_value($class, $this->rebuild()->pathes);

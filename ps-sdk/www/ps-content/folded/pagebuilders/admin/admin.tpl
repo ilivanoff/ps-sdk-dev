@@ -16,7 +16,9 @@
             <div class="adminControls">
                 {page_href blank=1}.{/page_href}
                 <a href="#" class="edit">Редактировать</a>
-                <a href="#" class="logout">Выход</a>
+                {if $isBasic}
+                    <a href="#" class="logout">Выход</a>
+                {/if}
             </div>
 
             <div style="clear:both"></div>
@@ -50,6 +52,6 @@
     {else}
         <div class="ps-external-auth">
             Необходимо авторизоваться средствами используемой CMS
-        {/if}
-    </div>
+        </div>
+    {/if}
 {/if}
