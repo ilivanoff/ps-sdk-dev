@@ -17,23 +17,13 @@ if (PsUtil::isWordPress()) {
      * Нас вызвали раньше wordpress. Это может быть процесс, или ajax, или ещё что-либо.
      * Необходимо проанализировать контекст выполнения, нужно ли подключить ядро.
      */
+    $wpInc = PATH_BASE_DIR . 'wp-load.php';
+    $LOGGER->info('WordPress is not loaded yet, include wp core \'{}\'', $wpInc);
 
-    $LOGGER->info('WordPress is not loaded yet. Check need include for ps context [{}].', PsContext::describe());
-
-    if (PsContext::isCmdPsProcess()) {
-        $LOGGER->info('- WordPress core will not be included');
+    if (is_file($wpInc)) {
+        require_once $wpInc;
     } else {
-        $wpInc = PATH_BASE_DIR . 'wp-load.php';
-        $LOGGER->info('+ Include wp core [{}]', $wpInc);
-
-        /*
-         * Если файл есть - подключаем, нет - ругаемся.
-         */
-        if (is_file($wpInc)) {
-            require_once $wpInc;
-        } else {
-            PsUtil::raise('WordPress core file not found, environment cannot be loaded.');
-        }
+        PsUtil::raise('WordPress core file not found, environment cannot be loaded.');
     }
 }
 ?>

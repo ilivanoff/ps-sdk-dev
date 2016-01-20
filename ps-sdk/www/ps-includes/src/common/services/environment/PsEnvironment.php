@@ -24,6 +24,13 @@ class PsEnvironment {
     }
 
     /**
+     * Метод проверяет, нужно ли подключать окружение.
+     */
+    private static function isSkipIncludeEnv() {
+        return PsContext::isCmd();
+    }
+
+    /**
      * Метод вызывается для инициализации окружения:
      * 1. Директория ресурсов окружения будет подключена в Autoload
      * 2. Файл, включающий окружение, будет выполнен
@@ -34,6 +41,13 @@ class PsEnvironment {
         }
 
         self::$inited = true; //---
+
+        /*
+         * Проверим, нужно ли подключать окружение
+         */
+        if (self::isSkipIncludeEnv()) {
+            return; //---
+        }
 
         $env = self::env();
 
@@ -60,7 +74,7 @@ class PsEnvironment {
 
         $LOGGER = PsLogger::inst(__CLASS__);
         if ($LOGGER->isEnabled()) {
-            $LOGGER->info('Using [{}]', $env);
+            $LOGGER->info('Including \'{}\' environment for context \'{}\'', $env, PsContext::describe());
             $LOGGER->info('Env dir:  {}', $envDir);
             $LOGGER->info('Src dir:  {}', $envSrcDir);
             $LOGGER->info('Inc file: {}', $envIncFile);

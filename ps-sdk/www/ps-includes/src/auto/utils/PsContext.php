@@ -1,7 +1,12 @@
 <?php
 
 /**
- * Класс отвечает за определение контекста, в котором выполняется скрипт
+ * Класс отвечает за определение контекста, в котором выполняется скрипт.
+ * Различаем следующие контексты:
+ * 1. ajax - асинхронный запрос
+ * 2. cmd  - выполнение из командной строки
+ * 3. text - выполнение тестов (TODO)
+ * 4. dflt - всё остальное мы считаем обычным выполнением скрипта
  *
  * @author azazello
  */
@@ -28,14 +33,7 @@ final class PsContext {
      * Метод проверяет, работаем ли мы из командной строки
      */
     public static function isCmd() {
-        return php_sapi_name() === 'cli';
-    }
-
-    /**
-     * Метод проверяет, выполняем ли мы php процесс
-     */
-    public static function isCmdPsProcess() {
-        return self::isCmd() && defined('PS_PROCESS_FUNCTION_NAME') && is_string(PS_PROCESS_FUNCTION_NAME) && is_callable(PS_PROCESS_FUNCTION_NAME);
+        return (php_sapi_name() === 'cli') || (defined('PS_PROCESS_FUNCTION_NAME') && is_string(PS_PROCESS_FUNCTION_NAME) && is_callable(PS_PROCESS_FUNCTION_NAME));
     }
 
     /**
@@ -54,12 +52,8 @@ final class PsContext {
             return 'ajax'; //---
         }
 
-        if (self::isCmdPsProcess()) {
-            return 'cmd-ps-process';
-        }
-
         if (self::isCmd()) {
-            return 'cmd-process'; //---
+            return 'cmd'; //---
         }
 
         return '';
