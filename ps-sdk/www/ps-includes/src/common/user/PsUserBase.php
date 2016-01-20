@@ -66,6 +66,7 @@ abstract class PsUserBase {
     }
 
     public function getTimezone() {
+        return PS_DEFAULT_TZ;//TODO
         return trim($this->timezone);
     }
 

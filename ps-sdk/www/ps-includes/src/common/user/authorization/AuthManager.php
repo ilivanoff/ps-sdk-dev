@@ -24,7 +24,7 @@ final class AuthManager {
      * @return boolean      - признак авторизованности
      */
     private static final function checkAccessImpl($authType, $assert) {
-        $authorized = SessionArrayHelper::hasInt(SESSION_USER_PARAM);
+        $authorized = PsSecurity::provider()->isAuthorized();
 
         switch ($authType) {
             case self::AUTH_TYPE_NO_MATTER:
@@ -39,7 +39,7 @@ final class AuthManager {
                 return !$authorized;
 
             case self::AUTH_TYPE_AUTHORIZED_AS_ADMIN:
-                $authorizedAsAdmin = $authorized && UserBean::inst()->isAdmin(SessionArrayHelper::getInt(SESSION_USER_PARAM));
+                $authorizedAsAdmin = $authorized && PsSecurity::provider()->isAuthorizedAsAdmin();
                 check_condition(!$assert || $authorizedAsAdmin, 'Ошибка доступа');
                 return $authorizedAsAdmin;
         }
@@ -100,7 +100,7 @@ final class AuthManager {
      * Возвращает код текущего авторизованного пользователя.
      */
     public static function getUserId($nullAllowed = false) {
-        return $nullAllowed || self::checkAuthorized() ? SessionArrayHelper::getInt(SESSION_USER_PARAM) : null;
+        return $nullAllowed || self::checkAuthorized() ? PsSecurity::provider()->getUserId() : null;
     }
 
     /**

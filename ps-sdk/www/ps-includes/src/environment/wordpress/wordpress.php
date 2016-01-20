@@ -12,6 +12,10 @@ if (PsUtil::isWordPress()) {
      * Классы src подключатся автоматически.
      */
     $LOGGER->info('WordPress is already loaded, skip including...');
+
+    //Нужно подключить данный класс, так как он подключается после пагинов
+    //Код подключения находится в файле /wp-settings.php
+    require_once ABSPATH . WPINC . '/pluggable.php';
 } else {
     /*
      * Нас вызвали раньше wordpress. Это может быть процесс, или ajax, или ещё что-либо.

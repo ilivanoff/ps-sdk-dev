@@ -37,7 +37,14 @@ final class PsSecurity {
 
         check_condition(!PsContext::isCmd() || self::$provider instanceof PsSecurityProviderCmd, 'Invalid security provider for cmd process');
 
-        PsLogger::inst(__CLASS__)->info('Using \'{}\' for context \'{}\'', get_class(self::$provider), PsContext::describe());
+        $LOGGER = PsLogger::inst(__CLASS__);
+        if ($LOGGER->isEnabled()) {
+            $LOGGER->info('Context:       {}', PsContext::describe());
+            $LOGGER->info('Provider:      {}', get_class(self::$provider));
+            $LOGGER->info('Is authorized: {}', var_export(self::$provider->isAuthorized(), true));
+            $LOGGER->info('Is admin:      {}', var_export(self::$provider->isAuthorizedAsAdmin(), true));
+            $LOGGER->info('User ID:       {}', self::$provider->getUserId());
+        }
     }
 
     /**
