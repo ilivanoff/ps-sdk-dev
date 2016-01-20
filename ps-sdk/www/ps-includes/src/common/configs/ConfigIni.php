@@ -7,7 +7,6 @@
  */
 final class ConfigIni extends AbstractIni {
 
-    const GROUP_AUTH = 'auth';
     const GROUP_CORE = 'core';
     const GROUP_ENV = 'environment';
     const CRON_PROCESS = 'cron-pocess';
@@ -44,14 +43,6 @@ final class ConfigIni extends AbstractIni {
 
     public static function environments() {
         return DirManager::relToAbs(self::getPropCheckType(self::GROUP_ENV, 'environments', array(PsConst::PHP_TYPE_ARRAY)));
-    }
-
-    /*
-     * AUTH
-     */
-
-    public static function authEngine() {
-        return self::getPropCheckType(self::GROUP_AUTH, 'provider', array(PsConst::PHP_TYPE_STRING, PsConst::PHP_TYPE_NULL));
     }
 
     /*

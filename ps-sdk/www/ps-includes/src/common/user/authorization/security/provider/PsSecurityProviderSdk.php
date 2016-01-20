@@ -5,7 +5,7 @@
  *
  * @author azaz
  */
-class PsSdkSecurityProvider implements PsSecurityProvider {
+class PsSecurityProviderSdk implements PsSecurityProvider {
 
     private $userId;
     private $loggedIn;

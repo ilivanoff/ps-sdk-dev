@@ -1,17 +1,52 @@
 <?php
 
 /**
- * Задача класса - определить и создать экземпляр провайдера, занимающегося вопросами авторизации.
+ * Класс является хранилищем ссылки на актуальный провайдер безопасности.
+ * Провайдер может быть установлен в рабочим окружении (см. PsEnvironment).
  * 
  * @author azaz
  */
 final class PsSecurity {
 
-    const BASE_CLASS = 'PsSecurityProvider';
-    const WP_CLASS = 'PsWpSecurityProvider';
-
     /** @var PsSecurityProvider */
-    private static $provider;
+    private static $provider = null;
+
+    /** Признак проинициализированности */
+    private static $inited = false;
+
+    /**
+     * Метод убеждается в том, что провайдер безопасности установлен.
+     * Наша задача - установить провайдер один раз и проверить, чтобы он больше не менялся.
+     */
+    public static function init() {
+        self::$inited = check_condition(!self::$inited, 'Cannot initialize ' . __CLASS__ . ' twice');
+
+        if (self::$provider instanceof PsSecurityProvider) {
+            PsLogger::inst(__CLASS__)->info('Using environment security provider: \'{}\'', get_class(self::$provider));
+            return; //---
+        }
+
+        check_condition(is_null(self::$provider), __CLASS__ . ' is not correctly initialized');
+
+        if (PsContext::isCmd()) {
+            //Если работаем под процессом - установим специальный провайдер безопастности
+            self::$provider = new PsSecurityProviderCmd();
+        } else {
+            //Устанавливаем базовый провайдер безопасности на основе сессии
+            self::$provider = new PsSecurityProviderSdk();
+        }
+
+        PsLogger::inst(__CLASS__)->info('Using custom security provider \'{}\' for context \'{}\'', get_class(self::$provider), PsContext::describe());
+    }
+
+    /**
+     * Метод устанавливает провайдер безопасности
+     */
+    public static function set(PsSecurityProvider $provider) {
+        check_condition(!self::$inited, __CLASS__ . ' is already initialized');
+        check_condition(is_null(self::$provider), __CLASS__ . ' provider is already setted');
+        self::$provider = $provider;
+    }
 
     /**
      * Метод возвращает экземпляр класса, отвечающего за вопросы авторизации.
@@ -24,61 +59,7 @@ final class PsSecurity {
      * @return PsSecurityProvider
      */
     public static final function provider() {
-        if (isset(self::$provider)) {
-            return self::$provider; //----
-        }
-
-        /*
-         * Получим название класса
-         */
-        $class = ConfigIni::authEngine();
-
-        /*
-         * Класс провайдера может быть не задан. В таком случае определим его автоматически.
-         */
-        /*
-          if (!$class && PsUtil::isWordPress()) {
-          if (class_exists(self::WP_CLASS)) {
-          $class = self::WP_CLASS;
-          } else {
-          return PsUtil::raise('Cannot find {} class', self::WP_CLASS);
-          }
-          }
-         */
-
-        /*
-         * До сих пор не нашли класс? Ошибка!
-         */
-        if (!$class) {
-            return PsUtil::raise('Cannot define ps security provider');
-        }
-
-        /*
-         * Поищем класс
-         */
-        $classPath = Autoload::inst()->getClassPath($class);
-        if (!PsCheck::isNotEmptyString($classPath)) {
-            return PsUtil::raise('Не удалось найти класс провайдера безопасности [{}]', $class);
-        }
-
-        /*
-         * Указанный класс должен быть базового
-         */
-        if (!PsUtil::isInstanceOf($class, self::BASE_CLASS)) {
-            return PsUtil::raise('Указанный провайдер безопасности [{}] не является наследником класса [{}]', $class, self::BASE_CLASS);
-        }
-
-        self::$provider = new $class();
-
-        $LOGGER = PsLogger::inst($class);
-        if ($LOGGER->isEnabled()) {
-            $LOGGER->info('Using provider: {}', $class);
-            $LOGGER->info('Is authorized: ? {}', var_export(self::$provider->isAuthorized(), true));
-            $LOGGER->info('Is authorized as admin: ? {}', var_export(self::$provider->isAuthorizedAsAdmin(), true));
-            $LOGGER->info('User ID: {}', self::$provider->getUserId());
-        }
-
-        return self::$provider; //---
+        return self::$provider ? self::$provider : raise_error('Class ' . __CLASS__ . ' is not initialized');
     }
 
     /**

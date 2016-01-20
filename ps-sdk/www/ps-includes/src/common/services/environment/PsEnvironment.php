@@ -26,7 +26,7 @@ class PsEnvironment {
     /**
      * Метод проверяет, нужно ли подключать окружение.
      */
-    private static function isSkipIncludeEnv() {
+    private static function isSkipInclude() {
         return PsContext::isCmd();
     }
 
@@ -45,7 +45,7 @@ class PsEnvironment {
         /*
          * Проверим, нужно ли подключать окружение
          */
-        if (self::isSkipIncludeEnv()) {
+        if (self::isSkipInclude()) {
             return; //---
         }
 

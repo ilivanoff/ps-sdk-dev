@@ -5,7 +5,7 @@
  *
  * @author azaz
  */
-class PsWpSecurityProvider implements PsSecurityProvider {
+class PsSecurityProviderWp implements PsSecurityProvider {
 
     private $userId;
     private $loggedIn;

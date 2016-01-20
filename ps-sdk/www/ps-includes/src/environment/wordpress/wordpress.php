@@ -26,4 +26,7 @@ if (PsUtil::isWordPress()) {
         PsUtil::raise('WordPress core file not found, environment cannot be loaded.');
     }
 }
+
+//Установим специальный провайдер безопасности
+PsSecurity::set(new PsSecurityProviderWp());
 ?>
