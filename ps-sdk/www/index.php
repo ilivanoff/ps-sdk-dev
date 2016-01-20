@@ -12,13 +12,6 @@ require_once 'ps-includes/MainImportAdmin.php';
 //echo DirManager::inst('/../ps-uploads')->makePath();
 //echo ConfigIni::uploadsDirRel();
 
-echo PsEnvironment::env();
-die;
-
-PsSecurity::provider();
-
-die;
-
 class X {
 
     protected function __construct() {
@@ -35,8 +28,10 @@ class Y extends X {
 
 }
 
-new Y();
+$y = new Y();
 
+
+echo PsSecurity::isBasic();
 die;
 
 ExceptionHandler::registerPretty();

@@ -57,6 +57,13 @@ final class PsSecurity {
     }
 
     /**
+     * Метод проверяет, используем ли мы базовый провайдер безопасности
+     */
+    public static function isBasic() {
+        return self::$provider instanceof PsSecurityProviderSdk;
+    }
+
+    /**
      * Метод возвращает экземпляр класса, отвечающего за вопросы авторизации.
      * Для переопределения этого класса, на уровне проектного config.ini
      * должен быть задан другой класс.

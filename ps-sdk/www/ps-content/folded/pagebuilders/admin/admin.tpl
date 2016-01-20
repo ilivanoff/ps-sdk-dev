@@ -34,9 +34,22 @@
             body {
                 background-color: #F0F0F0
             }
+
+            .ps-external-auth {
+                font-weight: bold;
+                margin: 0px auto;
+                padding: 20px 50px;
+                text-align: center;
+            }
         </style>
     {/literal}
-    <div id="carrier" style="width: 200px; margin: 0px auto">
-        {form form_id='AdminLoginForm'}
+    {if $isBasic}
+        <div id="carrier" style="width: 200px; margin: 0px auto">
+            {form form_id='AdminLoginForm'}
+        </div>
+    {else}
+        <div class="ps-external-auth">
+            Необходимо авторизоваться средствами используемой CMS
+        {/if}
     </div>
 {/if}

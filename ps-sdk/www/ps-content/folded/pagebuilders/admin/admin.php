@@ -13,7 +13,8 @@ class PB_admin extends AbstractPageBuilder {
         if ($this->authed) {
             $this->adminPage = AdminPagesManager::getInstance()->getCurrentPage();
         } else {
-            if (FORM_AdminLoginForm::getInstance()->isValid4Process()) {
+            //Показываем форму авторизации админа только если используем базовый провайдер безопасности
+            if (PsSecurity::isBasic() && FORM_AdminLoginForm::getInstance()->isValid4Process()) {
                 if (AdminAuthManager::getInstance()->login()) {
                     PsUtil::redirectToSelf();
                 }
@@ -38,6 +39,8 @@ class PB_admin extends AbstractPageBuilder {
         }
 
         $smartyParams['authed'] = $this->authed;
+        $smartyParams['isBasic'] = PsSecurity::isBasic();
+
         if (!$this->authed) {
             return $smartyParams;
         }
