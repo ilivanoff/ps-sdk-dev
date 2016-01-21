@@ -127,7 +127,7 @@ final class Mapping implements MappingClient {
     }
 
     /**
-     * Возвращает список идентификаторв права для сущности слева
+     * Возвращает список идентификаторов справа для сущности слева
      */
     public function getIdentsRight($lident) {
         return $this->RSRC->getIdentsRight($this->LSRC, $lident);
@@ -137,7 +137,7 @@ final class Mapping implements MappingClient {
      * Приведение к строке
      */
     public function __toString() {
-        return __CLASS__ . "[{$this}]: " . $this->LSRC . ' -> ' . $this->RSRC;
+        return __CLASS__ . "[$this->DESCR]: $this->LSRC  ->  $this->RSRC";
     }
 
 }

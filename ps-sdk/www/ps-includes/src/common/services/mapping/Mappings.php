@@ -9,6 +9,34 @@
 class Mappings {
 
     /**
+     * Маппинг фолдингов к сущностям БД
+     * 
+     * @param str $postType - тип поста
+     * @return MappingClient
+     */
+    public static final function FOLDINGS2DB() {
+        return Mapping::inst(//
+                        MapSrcAllFoldings::inst(__FUNCTION__), //
+                        MapSrcDbEntitys::inst(__FUNCTION__), //
+                        'Маппинг фолдингов к сущностям БД'//
+        );
+    }
+
+    /**
+     * Маппинг фолдингов к сущностям БД
+     * 
+     * @param str $postType - тип поста
+     * @return MappingClient
+     */
+    public static final function FOLDINGS2DB2() {
+        return Mapping::inst(//
+                        MapSrcAllFoldings::inst(__FUNCTION__), //
+                        MapSrcDbEntitys::inst(__FUNCTION__), //
+                        'Маппинг фолдингов к сущностям БД'//
+        );
+    }
+
+    /**
      * Маппинг дополнительных плагинов предпросмотра постов на рубрики
      * 
      * @param str $postType - тип поста
@@ -18,22 +46,10 @@ class Mappings {
         $pp = Handlers::getInstance()->getPostsProcessorByPostType($postType);
         $lunique = $pp->getFolding()->getUnique();
         return Mapping::inst(//
-                        MapSrcFoldingDb::inst(array('unique' => $lunique), __FUNCTION__), //
-                        MapSrcAllPosts::inst(array(), __FUNCTION__), //
+                        MapSrcFoldingDb::inst(__FUNCTION__, array('unique' => $lunique)), //
+                        MapSrcAllPosts::inst(__FUNCTION__), //
                         'Рекомендованные посты для ' . ps_strtolower($pp->postTitle(null, 2))
         );
-    }
-
-    /**
-     * Меод должен вернуть все возможные маппинги.
-     * Нужно для показа в админке
-     */
-    protected final function allMappings() {
-        $mappings = array();
-        foreach (Handlers::getInstance()->getPostsProcessors() as $postType => $pp) {
-            $mappings[] = self::RECOMMENDED_POSTS($postType);
-        }
-        return $mappings;
     }
 
 }

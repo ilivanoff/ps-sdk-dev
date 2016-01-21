@@ -12,12 +12,10 @@ class MappingAction extends AbstractAdminAjaxAction {
         $lident = $params->str('lident');
         $ridents = $params->arr('ridents');
 
-        $CONTROLLER = AdminMappings::inst();
-
         $result = 'OK';
         switch ($action) {
             case 'load_left':
-                $mapping = $CONTROLLER->getMapping($mhash);
+                $mapping = AdminMappings::getMapping($mhash);
                 $result = array();
                 $result['lsrc'] = $mapping->getDescriptionLsrc();
                 $result['rsrc'] = $mapping->getDescriptionRsrc();
@@ -28,7 +26,7 @@ class MappingAction extends AbstractAdminAjaxAction {
                 break;
 
             case 'load_right':
-                $mapping = $CONTROLLER->getMapping($mhash);
+                $mapping = AdminMappings::getMapping($mhash);
                 $ridents = $mapping->getIdentsRight($lident);
                 $selected = $mapping->getMappedEntitysUnsafe($lident);
                 $notSelected = array_diff($ridents, $selected);
@@ -44,11 +42,11 @@ class MappingAction extends AbstractAdminAjaxAction {
                 break;
 
             case 'save':
-                $CONTROLLER->saveMapping($mhash, $lident, $ridents);
+                AdminMappings::saveMapping($mhash, $lident, $ridents);
                 break;
 
             case 'clean':
-                $CONTROLLER->cleanMapping($mhash);
+                AdminMappings::cleanMapping($mhash);
                 break;
 
             default:

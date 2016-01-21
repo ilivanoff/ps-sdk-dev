@@ -6,44 +6,23 @@
  *
  * @author azazello
  */
-class AdminMappings extends Mappings {
+class AdminMappings {
 
-    private $MAPPINGS;
-
-    public function getAllMappings() {
-        if (!is_array($this->MAPPINGS)) {
-            $this->MAPPINGS = array();
-            /** @var Mapping */
-            foreach ($this->allMappings() as $mapping) {
-                $this->MAPPINGS[$mapping->getHash()] = $mapping;
-            }
-        }
-        return $this->MAPPINGS;
+    public static function getAllMappings() {
+        return MappingStorage::listMappings();
     }
 
     /** @return Mapping */
-    public function getMapping($mhash) {
-        return array_get_value($mhash, $this->getAllMappings());
+    public static function getMapping($mhash) {
+        return MappingStorage::getMapping($mhash);
     }
 
-    public function saveMapping($mhash, $lident, array $ridents) {
+    public static function saveMapping($mhash, $lident, array $ridents) {
         AdminMappingBean::inst()->saveMapping($mhash, $lident, $ridents);
     }
 
-    public function cleanMapping($mhash) {
+    public static function cleanMapping($mhash) {
         AdminMappingBean::inst()->cleanMapping($mhash);
-    }
-
-    /**
-     * 
-     * Синглтон
-     * 
-     */
-    private static $admin_inst;
-
-    /** @return AdminMappings */
-    public static function inst() {
-        return self::$admin_inst = isset(self::$admin_inst) ? self::$admin_inst : new AdminMappings();
     }
 
 }

@@ -23,6 +23,9 @@ abstract class MappingSource {
     /** Идентификатор маппинга */
     private $MIDENT;
 
+    /** Идентификатор маппинга */
+    private $TOSTRING;
+
     /** Признак проинициализированности */
     private $_preloaded = false;
 
@@ -31,8 +34,14 @@ abstract class MappingSource {
      */
     private static $items = array();
 
-    /** @return MappingSource */
-    public static final function inst(array $params, $mident) {
+    /**
+     * Класс для создания экземпляра источника данных.
+     * 
+     * @param string $mident - идентификатор маппинга. Должен совпадать для источника и цели.
+     * @param array $params - параметры. Используются для уточнения, что необходимо загрузить (например идентификатор фолдинга).
+     * @return MappingSource
+     */
+    public static final function inst($mident, array $params = array()) {
         //Получим название класса-имплементации
         $class = get_called_class();
 
@@ -124,7 +133,14 @@ abstract class MappingSource {
      * Приведение к строке
      */
     public final function __toString() {
-        return $this->CLASS . array_to_string(array('mident' => $this->MIDENT, 'params' => $this->PARAMS));
+        if (!$this->TOSTRING) {
+            $info['mident'] = $this->MIDENT;
+            if ($this->PARAMS) {
+                $info['params'] = $this->PARAMS;
+            }
+            $this->TOSTRING = $this->CLASS . array_to_string($info);
+        }
+        return $this->TOSTRING;
     }
 
 }

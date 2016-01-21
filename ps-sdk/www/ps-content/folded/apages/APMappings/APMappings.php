@@ -7,7 +7,7 @@ class AP_APMappings extends BaseAdminPage {
     }
 
     public function buildContent() {
-        return $this->getFoldedEntity()->fetchTpl(array('mappings' => AdminMappings::inst()->getAllMappings()));
+        return $this->getFoldedEntity()->fetchTpl(array('mappings' => AdminMappings::getAllMappings()));
     }
 
 }

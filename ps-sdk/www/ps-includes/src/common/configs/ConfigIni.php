@@ -13,6 +13,7 @@ final class ConfigIni extends AbstractIni {
     const GROUP_CONNECTIONS = 'connection-pool';
     const GROUP_FOLDINGS = 'foldings';
     const GROUP_SMARTY = 'smarty';
+    const GROUP_MAPPINGS = 'mappings';
     const GROUP_CACHE = 'cache';
     const GROUP_UPLOADS = 'uploads';
     const GROUP_AJAX_ACTIONS = 'ajax-actions';
@@ -87,6 +88,14 @@ final class ConfigIni extends AbstractIni {
 
     public static function uploadsDirRel() {
         return self::getPropCheckType(self::GROUP_UPLOADS, 'dir', array(PsConst::PHP_TYPE_STRING));
+    }
+
+    /*
+     * MAPPINGS
+     */
+
+    public static function mappingStorage() {
+        return self::getPropCheckType(self::GROUP_MAPPINGS, 'storage', array(PsConst::PHP_TYPE_STRING));
     }
 
     /*
