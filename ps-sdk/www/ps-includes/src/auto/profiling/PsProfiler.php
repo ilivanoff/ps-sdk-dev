@@ -145,7 +145,7 @@ final class PsProfiler implements Destructable {
      */
 
     public function resetAll() {
-        check_condition(!PROFILING_ENABLED, 'Cannot clear profilers when profiling is on.');
+        check_condition(!ConfigIni::isProfilingEnabled(), 'Cannot clear profilers when profiling is on.');
         $this->dirManager->clearDir();
     }
 

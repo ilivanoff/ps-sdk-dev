@@ -6,7 +6,7 @@ class AP_APProfilers extends BaseAdminPage {
     const MODE_PROFILER = 'profiler';
 
     public function title() {
-        return 'Профайлеры ' . (PROFILING_ENABLED ? '(on)' : '(off)');
+        return 'Профайлеры ' . (ConfigIni::isProfilingEnabled() ? '(on)' : '(off)');
     }
 
     public static function url() {
@@ -23,7 +23,7 @@ class AP_APProfilers extends BaseAdminPage {
         $RQ = GetArrayAdapter::inst();
         $AL = PsProfiler::controller();
 
-        $PARAMS['enabled'] = PROFILING_ENABLED;
+        $PARAMS['enabled'] = ConfigIni::isProfilingEnabled();
 
         $mode = null;
 

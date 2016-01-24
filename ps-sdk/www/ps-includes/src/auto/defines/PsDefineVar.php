@@ -34,7 +34,7 @@ final class PsDefineVar extends PsEnum {
 
     /** @return PsDefineVar */
     public static final function PROFILING_ENABLED() {
-        return self::inst(PsDefines::TYPE_GD, PsConst::PHP_TYPE_BOOLEAN);
+        return self::inst(PsDefines::TYPE_G, PsConst::PHP_TYPE_BOOLEAN, ConfigIni::isProfilingEnabled());
     }
 
     /** @return PsDefineVar */
