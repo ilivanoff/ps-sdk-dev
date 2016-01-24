@@ -31,11 +31,6 @@ define('REPLACE_FORMULES_WITH_SPRITES', true);
 define('NORMALIZE_PAGE', false);
 
 /*
- * Включение режима Production
- */
-define('PS_PRODUCTION', false);
-
-/*
  * Адрес SMTP сервера
  */
 define('SMTP_HOST', 'smtp.yandex.ru');

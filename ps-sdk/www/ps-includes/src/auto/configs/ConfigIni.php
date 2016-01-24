@@ -30,6 +30,10 @@ final class ConfigIni extends AbstractIni {
         return self::getProp(self::GROUP_CORE, 'project');
     }
 
+    public static function isProduction() {
+        return 1 == self::getProp(self::GROUP_CORE, 'production');
+    }
+
     /*
      * LOGGING
      */

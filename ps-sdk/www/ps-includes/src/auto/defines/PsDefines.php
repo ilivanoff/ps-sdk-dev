@@ -70,7 +70,7 @@ final class PsDefines extends PsDefinesEngine {
      */
 
     public static function isProduction() {
-        return PS_PRODUCTION;
+        return ConfigIni::isProduction();
     }
 
     public static function isDevmode() {
