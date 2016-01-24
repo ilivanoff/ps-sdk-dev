@@ -9,12 +9,12 @@ final class PsDefineVar extends PsEnum {
 
     /** @return PsDefineVar */
     public static final function REPLACE_FORMULES_WITH_IMG() {
-        return self::inst(PsDefines::TYPE_D, PsConst::PHP_TYPE_BOOLEAN);
+        return self::inst(PsDefines::TYPE_G, PsConst::PHP_TYPE_BOOLEAN, true);
     }
 
     /** @return PsDefineVar */
     public static final function REPLACE_FORMULES_WITH_SPRITES() {
-        return self::inst(PsDefines::TYPE_D, PsConst::PHP_TYPE_BOOLEAN);
+        return self::inst(PsDefines::TYPE_G, PsConst::PHP_TYPE_BOOLEAN, true);
     }
 
     /** @return PsDefineVar */
