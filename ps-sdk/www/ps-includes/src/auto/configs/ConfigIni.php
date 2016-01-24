@@ -8,6 +8,7 @@
 final class ConfigIni extends AbstractIni {
 
     const GROUP_CORE = 'core';
+    const GROUP_LOGGING = 'logging';
     const GROUP_ENV = 'environment';
     const CRON_PROCESS = 'cron-pocess';
     const GROUP_CONNECTIONS = 'connection-pool';
@@ -26,6 +27,14 @@ final class ConfigIni extends AbstractIni {
 
     public static function projectName() {
         return self::getProp(self::GROUP_CORE, 'project');
+    }
+
+    /*
+     * LOGGING
+     */
+
+    public static function isLoggingEnabled() {
+        return 1 == self::getProp(self::GROUP_LOGGING, 'enabled');
     }
 
     /*

@@ -77,7 +77,7 @@ final class PsLogger implements Destructable {
          */
         $this->enabled = PsDefines::isLoggingEnabled();
         if ($this->enabled) {
-            $this->writer = AbstractLogWriter::inst(PsDefines::getLoggingStream(self::OUTPUT_FILE));
+            $this->writer = AbstractLogWriter::inst(PsDefines::getLoggingStream());
             $this->writer->initAndWriteFirstLog();
             PsShotdownSdk::registerDestructable($this, PsShotdownSdk::PsLogger);
         }
@@ -136,7 +136,7 @@ final class PsLogger implements Destructable {
      * Завершение работы. Мы можем записать последнюю строку в общий файл сессии.
      */
     public function onDestruct() {
-        if ($this->isLoggerCanWrite()) {
+        if ($this->enabled) {
             $this->writer->closeAndWriteFinalLog();
         }
     }
@@ -185,7 +185,7 @@ final class PsLogger implements Destructable {
      * Очистка всех логов
      */
     public function clearLogs() {
-        check_condition(!LOGGING_ENABLED, 'Cannot clear logs when logging is on.');
+        check_condition(!ConfigIni::isLoggingEnabled(), 'Cannot clear logs when logging is on.');
         $this->DM()->clearDir();
     }
 

@@ -49,8 +49,8 @@ final class PsDefines extends PsDefinesEngine {
         return PsDefineVar::LOGGING_ENABLED()->get();
     }
 
-    public static function getLoggingStream($default) {
-        return PsDefineVar::LOGGING_STREAM()->get($default);
+    public static function getLoggingStream() {
+        return PsDefineVar::LOGGING_STREAM()->get();
     }
 
     public static function getLoggersList() {

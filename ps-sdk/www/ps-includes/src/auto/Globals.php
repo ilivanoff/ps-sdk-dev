@@ -1,11 +1,6 @@
 <?php
 
 /*
- * Включено ли логирование
- */
-define('LOGGING_ENABLED', true);
-
-/*
  * Включено ли профилирование
  */
 define('PROFILING_ENABLED', true);

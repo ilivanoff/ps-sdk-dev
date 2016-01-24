@@ -7,7 +7,7 @@ class AP_APLogs extends BaseAdminPage {
     const MODE_FILE = 'file';
 
     public function title() {
-        return 'Логи ' . (LOGGING_ENABLED ? '(on)' : '(off)');
+        return 'Логи ' . (ConfigIni::isLoggingEnabled() ? '(on)' : '(off)');
     }
 
     public static function urlFolders() {
@@ -27,7 +27,7 @@ class AP_APLogs extends BaseAdminPage {
         $AL = PsLogger::controller();
 
         $PARAMS['num'] = $AL->getLastSessionId();
-        $PARAMS['enabled'] = LOGGING_ENABLED;
+        $PARAMS['enabled'] = ConfigIni::isLoggingEnabled();
 
         $mode = null;
 

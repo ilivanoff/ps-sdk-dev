@@ -2,6 +2,10 @@
 
 header('Content-Type: text/html; charset=utf-8');
 
+//define('LOGGING_ENABLED', false);
+//$LOGGING_ENABLED = true;
+//$LOGGERS_LIST = array('');
+
 require_once 'ps-includes/MainImportAdmin.php';
 
 //print_r(ConfigIni::smartyPlugins());
@@ -12,8 +16,7 @@ require_once 'ps-includes/MainImportAdmin.php';
 //echo DirManager::inst('/../ps-uploads')->makePath();
 //echo ConfigIni::uploadsDirRel();
 
-print_r(ConfigIni::getIni());
-
+var_dump(ConfigIni::isLoggingEnabled());
 
 die;
 

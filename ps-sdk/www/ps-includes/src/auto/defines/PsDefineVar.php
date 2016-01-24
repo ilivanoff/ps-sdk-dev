@@ -9,56 +9,69 @@ final class PsDefineVar extends PsEnum {
 
     /** @return PsDefineVar */
     public static final function REPLACE_FORMULES_WITH_IMG() {
-        return self::inst(PsDefines::TYPE_D);
+        return self::inst(PsDefines::TYPE_D, PsConst::PHP_TYPE_BOOLEAN);
     }
 
     /** @return PsDefineVar */
     public static final function REPLACE_FORMULES_WITH_SPRITES() {
-        return self::inst(PsDefines::TYPE_D);
+        return self::inst(PsDefines::TYPE_D, PsConst::PHP_TYPE_BOOLEAN);
     }
 
     /** @return PsDefineVar */
     public static final function LOGGING_ENABLED() {
-        return self::inst(PsDefines::TYPE_GD);
+        return self::inst(PsDefines::TYPE_G, PsConst::PHP_TYPE_BOOLEAN, ConfigIni::isLoggingEnabled());
     }
 
     /** @return PsDefineVar */
     public static final function LOGGING_STREAM() {
-        return self::inst(PsDefines::TYPE_G);
+        return self::inst(PsDefines::TYPE_G, PsConst::PHP_TYPE_INTEGER, PsLogger::OUTPUT_FILE);
     }
 
     /** @return PsDefineVar */
     public static final function LOGGERS_LIST() {
-        return self::inst(PsDefines::TYPE_G);
+        return self::inst(PsDefines::TYPE_G, PsConst::PHP_TYPE_ARRAY);
     }
 
     /** @return PsDefineVar */
     public static final function PROFILING_ENABLED() {
-        return self::inst(PsDefines::TYPE_GD);
+        return self::inst(PsDefines::TYPE_GD, PsConst::PHP_TYPE_BOOLEAN);
     }
 
     /** @return PsDefineVar */
     public static final function NORMALIZE_PAGE() {
-        return self::inst(PsDefines::TYPE_D);
+        return self::inst(PsDefines::TYPE_D, PsConst::PHP_TYPE_BOOLEAN);
     }
 
-    private $type;
+    /**
+     * Контекст, в котором можно производить поиск переопределения константы
+     * @var string
+     */
+    private $ctxt;
 
-    protected function init($type = null) {
-        PsDefines::validateVar($this->name(), $type);
-        $this->type = $type;
-    }
+    /**
+     * Тип php переменной, к которой должна относиться переменная. Всегда может быть null.
+     * @var string
+     */
+    private $phpType;
 
-    public function has() {
-        return PsDefines::has($this->name(), $this->type);
+    /**
+     * Значение по умолчанию
+     * @var mixed
+     */
+    private $default;
+
+    protected function init($ctxt = null, $phpType = null, $default = null) {
+        $this->ctxt = $ctxt;
+        $this->phpType = $phpType;
+        $this->default = $default;
     }
 
     public function set($val) {
-        PsDefines::set($this->name(), $val, $this->type);
+        PsDefines::set($this->name(), $val, $this->ctxt, $this->phpType, $this->default);
     }
 
-    public function get($default = null) {
-        return PsDefines::get($this->name(), $this->type, $default);
+    public function get() {
+        return PsDefines::get($this->name(), $this->ctxt, $this->phpType, $this->default);
     }
 
 }

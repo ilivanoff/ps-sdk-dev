@@ -32,58 +32,44 @@
  */
 abstract class PsDefinesEngine {
 
-    const TYPE_G = 1;  //Global
-    const TYPE_D = 2;  //Defines
-    const TYPE_GD = 3; //Global or defines
+    const TYPE_G = 1;  //Global  ($GLOBAL)
+    const TYPE_D = 2;  //Defines (define('xxx', 1))
+    const TYPE_GD = 3; //Global or Defines
 
     /**
-     * Метод валидирует тип переменной
-     * 
-     * @param str $name - название переменной
-     * @param int $type - тип переменной
-     */
-
-    public static function validateVar($name, $type) {
-        check_condition($name, 'Property name is not set.');
-        switch ($type) {
-            case self::TYPE_D:
-            case self::TYPE_GD:
-                check_condition(defined($name), "Constant [$name] is not defined.");
-                break;
-            case self::TYPE_G;
-                break;
-            default:
-                raise_error("Illegal type [$type] for valiable [$name].");
-        }
-    }
-
-    /**
-     * Метод извлекает настройку из заданного контекста.
+     * Метод извлекает настройку из заданного контекста, проверяя её тип.
      * 
      * @param string $name - название настройки
-     * @param int $type - контекст поиска
+     * @param int $ctxt - контекст поиска
+     * @param str $phpType - тип переменной
+     * @param mixed $default - значение по умолчанию
      */
-    private static final function extract($name, $type, $default = null) {
-        self::validateVar($name, $type);
-        switch ($type) {
+
+    private static final function extract($name, $ctxt, $phpType, $default) {
+        $name = PsCheck::notEmptyString($name);
+        $value = null;
+
+        switch ($ctxt) {
             case self::TYPE_G:
-                return array_get_value($name, $GLOBALS, $default);
+                $value = array_get_value($name, $GLOBALS, $default);
+                break; //---
             case self::TYPE_D:
-                return constant($name);
+                $value = defined($name) ? constant($name) : $default;
+                break; //---
             case self::TYPE_GD:
-                $constVal = constant($name);
-                if (!array_key_exists($name, $GLOBALS)) {
-                    return $constVal;
+                if (array_key_exists($name, $GLOBALS)) {
+                    $value = $GLOBALS[$name];
+                } else if (defined($name)) {
+                    $value = constant($name);
+                } else {
+                    $value = $default;
                 }
-                $globlVal = $GLOBALS[$name];
-                if (!is_null($constVal)) {
-                    $globlType = gettype($globlVal);
-                    $constType = gettype($constVal);
-                    check_condition($globlType === $constType, "Constant $name ($constType) cannot be replaced by global prop with value [{$globlVal}] ($globlType).");
-                }
-                return $globlVal;
+                break; //---
+            default:
+                return raise_error("Illegal property search ctxt: [$ctxt].");
         }
-        raise_error("Illegal type [$type] for valiable [$name].");
+
+        return PsCheck::phpVarType($value, array(PsConst::PHP_TYPE_NULL, $phpType));
     }
 
     /**
@@ -97,14 +83,9 @@ abstract class PsDefinesEngine {
      * 
      * @return PsDefines
      */
-    public static final function set($name, $newVal, $type) {
-        $curVal = self::extract($name, $type);
-        if (!is_null($newVal) && !is_null($curVal)) {
-            $curValType = gettype($curVal);
-            $newValType = gettype($newVal);
-            check_condition($curValType === $newValType, "Illegal value [$newVal] ($newValType) for property [$name] ($curValType) - types missmatch.");
-        }
-        self::$DEFINES[$name][] = $newVal;
+    public static final function set($name, $newVal, $ctxt, $phpType, $default) {
+        self::extract($name, $ctxt, $phpType, $default); //Для валидации
+        self::$DEFINES[$name][] = PsCheck::phpVarType($newVal, array(PsConst::PHP_TYPE_NULL, $phpType));
         self::notifySavepoint($name, true);
     }
 
@@ -125,12 +106,8 @@ abstract class PsDefinesEngine {
     /**
      * Метод получения настройки
      */
-    public static final function get($name, $type, $default = null) {
-        return array_key_exists($name, self::$DEFINES) ? end(self::$DEFINES[$name]) : self::extract($name, $type, $default);
-    }
-
-    public static final function has($name, $type) {
-        return !is_null(self::get($name, $type));
+    public static final function get($name, $ctxt, $phpType, $default) {
+        return array_key_exists($name, self::$DEFINES) ? end(self::$DEFINES[$name]) : self::extract($name, $ctxt, $phpType, $default);
     }
 
     /*

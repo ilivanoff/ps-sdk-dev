@@ -102,8 +102,6 @@ abstract class AbstractIni {
 
         if (!array_key_exists($config, self::$INI)) {
 
-            $LOGGER = PsLogger::inst(__CLASS__);
-
             $sdkDi = self::getIniDi(ENTITY_SCOPE_SDK);
             $projDi = self::getIniDi(ENTITY_SCOPE_PROJ);
 
@@ -112,13 +110,19 @@ abstract class AbstractIni {
             self::$INI[$config][ENTITY_SCOPE_PROJ] = to_array($projDi->parseAsIni(true, false));
             self::$INI[$config][ENTITY_SCOPE_ALL] = PsUtil::mergeIniFiles(self::$INI[$config][ENTITY_SCOPE_SDK], self::$INI[$config][ENTITY_SCOPE_PROJ]);
 
-            if ($LOGGER->isEnabled()) {
-                foreach (self::$INI[$config] as $iniScope => $iniProps) {
-                    $LOGGER->info('{} [{}]:', $config, $iniScope);
-                    $LOGGER->info(print_r($iniProps, true));
-                    $LOGGER->info();
-                }
-            }
+            //Экземпляр логгера должен быть создан именно здесь - после того, как был наполнен массив параметров
+            //TODO - нельзя здесь использовать логгер. Можно вывести в FileLogWriter.
+            /*
+              $LOGGER = PsLogger::inst(__CLASS__);
+
+              if ($LOGGER->isEnabled()) {
+              foreach (self::$INI[$config] as $iniScope => $iniProps) {
+              $LOGGER->info('{} [{}]:', $config, $iniScope);
+              $LOGGER->info(print_r($iniProps, true));
+              $LOGGER->info();
+              }
+              }
+             */
         }
 
         check_condition(array_key_exists($scope, self::$INI[$config]), "Unknown entity scope: $scope");
