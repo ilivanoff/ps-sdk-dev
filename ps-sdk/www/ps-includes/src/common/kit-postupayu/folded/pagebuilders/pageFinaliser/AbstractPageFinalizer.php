@@ -31,21 +31,18 @@ abstract class AbstractPageFinalizer {
         $PROFILER = PsProfiler::inst($class);
         $inst = new $class($LOGGER, $PROFILER);
         $PROFILER->start(__FUNCTION__);
-        $SECUNDOMER = Secundomer::startedInst();
 
         $LOGGER->infoBox(">>> CALLED $call. $class");
 
         try {
             $CONTENT = $inst->doFinalize($CONTENT);
-            $PROFILER->stop();
-            $SECUNDOMER->stop();
+            $SECUNDOMER = $PROFILER->stop();
+            $LOGGER->infoBox("<<< CALL $call. $class FINISHED IN " . $SECUNDOMER->getAverage() . ' seconds');
         } catch (Exception $ex) {
             $PROFILER->stop(false);
             $LOGGER->infoBox("Exception occured while calling $class::finalize. Message: " . $ex->getMessage());
             throw $ex;
         }
-
-        $LOGGER->infoBox("<<< CALL $call. $class FINISHED IN " . $SECUNDOMER->getAverage() . ' seconds');
 
         return $CONTENT;
     }

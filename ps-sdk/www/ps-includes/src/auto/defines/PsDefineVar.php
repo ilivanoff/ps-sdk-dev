@@ -39,7 +39,7 @@ final class PsDefineVar extends PsEnum {
 
     /** @return PsDefineVar */
     public static final function NORMALIZE_PAGE() {
-        return self::inst(PsDefines::TYPE_D, PsConst::PHP_TYPE_BOOLEAN);
+        return self::inst(PsDefines::TYPE_G, PsConst::PHP_TYPE_BOOLEAN, ConfigIni::isNormalizePage());
     }
 
     /**

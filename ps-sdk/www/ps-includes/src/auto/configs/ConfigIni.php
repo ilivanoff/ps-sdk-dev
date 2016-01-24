@@ -143,6 +143,10 @@ final class ConfigIni extends AbstractIni {
         return self::getPropCheckType(self::GROUP_WEB_PAGES, 'storage', array(PsConst::PHP_TYPE_STRING));
     }
 
+    public static function isNormalizePage() {
+        return 1 == self::getProp(self::GROUP_WEB_PAGES, 'normalize-page');
+    }
+
     /*
      * EXTERNAL LIBS
      */

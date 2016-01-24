@@ -24,9 +24,4 @@ define('REPLACE_FORMULES_WITH_IMG', true);
  * Заменять ли формулы на спрайты
  */
 define('REPLACE_FORMULES_WITH_SPRITES', true);
-
-/*
- * Нормализация страницы (удаление двойных пробелов)
- */
-define('NORMALIZE_PAGE', false);
 ?>
