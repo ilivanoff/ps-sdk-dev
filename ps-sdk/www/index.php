@@ -16,9 +16,9 @@ require_once 'ps-includes/MainImportAdmin.php';
 //echo DirManager::inst('/../ps-uploads')->makePath();
 //echo ConfigIni::uploadsDirRel();
 
-$NORMALIZE_PAGE = false;
+$NORMALIZE_PAGE = true;
 
-//PsDefines::setNormalizePage(true);
+PsDefines::setNormalizePage(false);
 
 var_dump(PsDefines::isNormalizePage());
 
