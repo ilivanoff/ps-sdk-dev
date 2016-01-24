@@ -16,13 +16,9 @@ require_once 'ps-includes/MainImportAdmin.php';
 //echo DirManager::inst('/../ps-uploads')->makePath();
 //echo ConfigIni::uploadsDirRel();
 
-$NORMALIZE_PAGE = true;
+PsMailSender::fastSend('Hello', 'Body', 'azazello85@mail.ru');
 
-PsDefines::setNormalizePage(false);
-
-var_dump(PsDefines::isNormalizePage());
-
-//PsMailSender::fastSend('Привет!', 'Message body', 'azazello85@mail.ru');
+//ExceptionHandler::dumpError(new Exception('XXXX'), 'Additional info');
 
 die;
 

@@ -16,11 +16,13 @@ final class ConfigIni extends AbstractIni {
     const GROUP_FOLDINGS = 'foldings';
     const GROUP_SMARTY = 'smarty';
     const GROUP_SMTP = 'smtp';
+    const GROUP_EMAILS = 'emails';
     const GROUP_MAPPINGS = 'mappings';
     const GROUP_CACHE = 'cache';
     const GROUP_UPLOADS = 'uploads';
     const GROUP_WEB_PAGES = 'web-pages';
     const GROUP_EXTERNAL_LIBS = 'external-libs';
+    const GROUP_EXCEPTIONS = 'exceptions';
     const GROUP_AJAX_ACTIONS = 'ajax-actions';
 
     /*
@@ -104,6 +106,14 @@ final class ConfigIni extends AbstractIni {
     }
 
     /*
+     * EMAILS
+     */
+
+    public static function emailsMaxDumpCount() {
+        return PsCheck::int(self::getPropCheckType(self::GROUP_EMAILS, 'max-dump-files-count', array(PsConst::PHP_TYPE_STRING)));
+    }
+
+    /*
      * SMARTY
      */
 
@@ -153,6 +163,14 @@ final class ConfigIni extends AbstractIni {
 
     public static function libsIncluder() {
         return self::getPropCheckType(self::GROUP_EXTERNAL_LIBS, 'libs', array(PsConst::PHP_TYPE_STRING));
+    }
+
+    /*
+     * EXCEPTIONS
+     */
+
+    public static function exceptionsMaxDumpCount() {
+        return PsCheck::int(self::getPropCheckType(self::GROUP_EXCEPTIONS, 'max-dump-files-count', array(PsConst::PHP_TYPE_STRING)));
     }
 
     /*

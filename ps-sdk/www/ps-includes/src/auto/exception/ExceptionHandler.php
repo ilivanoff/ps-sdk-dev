@@ -70,6 +70,10 @@ final class ExceptionHandler {
      * @param Exception $exception
      */
     public static function dumpError(Exception $exception, $additionalInfo = '') {
+        if (ConfigIni::exceptionsMaxDumpCount() <= 0) {
+            return; //---
+        }
+
         $additionalInfo = trim("$additionalInfo");
 
         //Поставим защиту от двойного дампинга ошибки
@@ -97,7 +101,7 @@ final class ExceptionHandler {
             $fline = $original->getLine();
 
             $DM = DirManager::autogen('exceptions');
-            if ($DM->getDirContentCnt() >= EXCEPTION_MAX_FILES_COUNT) {
+            if ($DM->getDirContentCnt() >= ConfigIni::exceptionsMaxDumpCount()) {
                 $DM->clearDir();
             }
             $DM->getDirItem(null, PsUtil::fileUniqueTime() . " [$fname $fline]", 'err')->putToFile(implode("\n", $INFO));

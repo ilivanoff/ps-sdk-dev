@@ -106,11 +106,13 @@ final class PsMailSender extends PHPMailer {
      * Метод сохраняет последний удачно отправленный email
      */
     private function dumpEmail() {
-        $DM = DirManager::autogen('emails');
-        if ($DM->getDirContentCnt() >= EMAILS_MAX_FILES_COUNT) {
-            $DM->clearDir();
+        if (ConfigIni::emailsMaxDumpCount() > 0) {
+            $DM = DirManager::autogen('emails');
+            if ($DM->getDirContentCnt() >= ConfigIni::emailsMaxDumpCount()) {
+                $DM->clearDir();
+            }
+            $DM->getDirItem(null, PsUtil::fileUniqueTime(), 'mail')->putToFile($this);
         }
-        $DM->getDirItem(null, PsUtil::fileUniqueTime(), 'mail')->putToFile($this);
     }
 
     /**
