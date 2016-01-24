@@ -1,36 +1,6 @@
 $(function() {
     var $BODY = $('.APTables');
     
-    /* 
-     * Перестановка таблиц местами
-     */
-    $BODY.find('span.down, span.up').disableSelection().click(function() {
-        var $span = $(this);
-        var $div = $span.extractParent('.table');
-        if ($span.is('.up')) {
-            $div.insertBefore($div.prevAll('.table.selected').first());
-        }
-        if ($span.is('.down')) {
-            $div.insertAfter($div.nextAll('.table.selected').first());
-        }
-    });
-    
-    /*
-     * Включение/выключение таблицы
-     */
-    var onSelectTableChecked = function() {
-        $(this).extractParent('.table').toggleClass('selected', $(this).isChecked());
-    };
-    $('input:checkbox.selecttable').click(onSelectTableChecked).change(onSelectTableChecked).change();
-
-    /*
-     * Включение/отключение настройки таблицы
-     */
-    var onTablePropChecked = function() {
-        $(this).extractParent('div').toggleClass('on', $(this).isChecked());
-    };
-    $('.table-settings input:checkbox').click(onTablePropChecked).change(onTablePropChecked).change();
-    
     /*
      * Выбор элементов
      */
@@ -67,7 +37,7 @@ $(function() {
         var callAjax = function(action, data) {
             data.scope = type.removeLastCharIf('.ini');
             data.action = action;
-            AdminAjaxExecutor.execute('TableSettingsEdit', data , function() {
+            AdminAjaxExecutor.executePost('ConfigFilesSave', data , function() {
                 InfoBox.popupSuccess('Настройки успешно сохранены');
                 locationReload();
             }, function(err) {
@@ -86,38 +56,5 @@ $(function() {
             });
             return;//---
         }
-
-        /*
-         * Сохранение .ini файлов на освнове настроек
-         */
-        var tables = {};
-        $TAB.find('div.table:has(input.selecttable:checked)').each(function() {
-            var $div = $(this);
-            //Порядок таблиц
-            var table = $div.data('name');
-            tables[table] = {};
-            tables[table][$('input.selecttable', this).val()] = true;
-            //Свойства таблицы
-            $div.find('.table-settings input:checkbox:checked').each(function() {
-                tables[table][$(this).val()] = true;
-            });
-            //Свойства столбцов
-            $div.find('tbody tr').each(function() {
-                var $tr = $(this);
-                var type = $tr.data('type');
-                if(!type) return; //---
-                var colls = [];
-                $tr.find('input:checkbox:checked').each(function() {
-                    colls.push($(this).val());
-                });
-                if(!colls.length) return; //---
-                tables[table][type] = colls;
-            });
-        });
-        
-        callAjax('saveProps', {
-            tables: tables
-        });
-
     }
 })
