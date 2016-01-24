@@ -23,20 +23,6 @@ class Mappings {
     }
 
     /**
-     * Маппинг фолдингов к сущностям БД
-     * 
-     * @param str $postType - тип поста
-     * @return MappingClient
-     */
-    public static final function FOLDINGS2DB2() {
-        return Mapping::inst(//
-                        MapSrcAllFoldings::inst(__FUNCTION__), //
-                        MapSrcDbEntitys::inst(__FUNCTION__), //
-                        'Маппинг фолдингов к сущностям БД'//
-        );
-    }
-
-    /**
      * Маппинг дополнительных плагинов предпросмотра постов на рубрики
      * 
      * @param str $postType - тип поста

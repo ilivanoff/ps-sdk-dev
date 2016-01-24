@@ -12,9 +12,8 @@ require_once 'ps-includes/MainImportAdmin.php';
 //echo DirManager::inst('/../ps-uploads')->makePath();
 //echo ConfigIni::uploadsDirRel();
 
-foreach (MappingStorage::listMappings() as $a) {
-    echo $a;
-}
+print_r(ConfigIni::getIni());
+
 
 die;
 
