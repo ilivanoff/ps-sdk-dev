@@ -16,6 +16,8 @@ final class ConfigIni extends AbstractIni {
     const GROUP_MAPPINGS = 'mappings';
     const GROUP_CACHE = 'cache';
     const GROUP_UPLOADS = 'uploads';
+    const GROUP_WEB_PAGES = 'web-pages';
+    const GROUP_EXTERNAL_LIBS = 'external-libs';
     const GROUP_AJAX_ACTIONS = 'ajax-actions';
 
     /*
@@ -24,14 +26,6 @@ final class ConfigIni extends AbstractIni {
 
     public static function projectName() {
         return self::getProp(self::GROUP_CORE, 'project');
-    }
-
-    public static function libsIncluder() {
-        return self::getPropCheckType(self::GROUP_CORE, 'libs', array(PsConst::PHP_TYPE_STRING));
-    }
-
-    public static function webPagesStore() {
-        return self::getPropCheckType(self::GROUP_CORE, 'web-pages', array(PsConst::PHP_TYPE_STRING));
     }
 
     /*
@@ -96,6 +90,22 @@ final class ConfigIni extends AbstractIni {
 
     public static function mappingStorage() {
         return self::getPropCheckType(self::GROUP_MAPPINGS, 'storage', array(PsConst::PHP_TYPE_STRING));
+    }
+
+    /*
+     * WEB-PAGES
+     */
+
+    public static function webPagesStore() {
+        return self::getPropCheckType(self::GROUP_WEB_PAGES, 'storage', array(PsConst::PHP_TYPE_STRING));
+    }
+
+    /*
+     * EXTERNAL LIBS
+     */
+
+    public static function libsIncluder() {
+        return self::getPropCheckType(self::GROUP_EXTERNAL_LIBS, 'libs', array(PsConst::PHP_TYPE_STRING));
     }
 
     /*
