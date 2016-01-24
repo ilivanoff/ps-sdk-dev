@@ -17,7 +17,7 @@ class PsSettings {
      * Возвращает минимальный интервал между действиями.
      */
     public static function ACTIVITY_INTERVAL() {
-        return AuthManager::isAuthorizedAsAdmin() ? 0 : ACTIVITY_INTERVAL;
+        return AuthManager::isAuthorizedAsAdmin() ? 0 : ConfigIni::userActivityInterval();
     }
 
 }

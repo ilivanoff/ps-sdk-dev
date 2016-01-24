@@ -15,10 +15,13 @@ require_once 'ps-includes/MainImportAdmin.php';
 //print_r(ConfigIni::ajaxActionsAbs('admin'));
 //echo DirManager::inst('/../ps-uploads')->makePath();
 //echo ConfigIni::uploadsDirRel();
+//PsMailSender::fastSend('Hello', 'Body', 'azazello85@mail.ru');
 
-PsMailSender::fastSend('Hello', 'Body', 'azazello85@mail.ru');
+var_dump(ConfigIni::userActivityInterval());
 
-//ExceptionHandler::dumpError(new Exception('XXXX'), 'Additional info');
+die;
+
+ExceptionHandler::dumpError(new Exception('XXXX'), 'Additional info');
 
 die;
 

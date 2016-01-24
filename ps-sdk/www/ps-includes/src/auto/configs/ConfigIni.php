@@ -24,6 +24,7 @@ final class ConfigIni extends AbstractIni {
     const GROUP_EXTERNAL_LIBS = 'external-libs';
     const GROUP_EXCEPTIONS = 'exceptions';
     const GROUP_AJAX_ACTIONS = 'ajax-actions';
+    const GROUP_USER_INTERACTION = 'user-interaction';
 
     /*
      * CORE
@@ -181,6 +182,14 @@ final class ConfigIni extends AbstractIni {
 
     public static function ajaxActionsAbs($group) {
         return array_key_exists($group, self::$ajax) ? self::$ajax[$group] : self::$ajax[$group] = DirManager::relToAbs(self::getPropCheckType(self::GROUP_AJAX_ACTIONS, $group, array(PsConst::PHP_TYPE_ARRAY)));
+    }
+
+    /*
+     * USER INTERACTION
+     */
+
+    public static function userActivityInterval() {
+        return PsCheck::int(self::getPropCheckType(self::GROUP_USER_INTERACTION, 'activity-interval', array(PsConst::PHP_TYPE_STRING)));
     }
 
     public static function isSdk() {
