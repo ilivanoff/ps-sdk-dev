@@ -1,6 +1,6 @@
 <?php
 
-ExternalPluginsManager::PhpMailer();
+PsLibs::inst()->PhpMailer();
 
 /**
  * Базовый класс для отправки почты
@@ -24,11 +24,11 @@ final class PsMailSender extends PHPMailer {
         $this->SetLanguage('ru');
         $this->IsSMTP();
         $this->SMTPKeepAlive = true;                           //Need SmtpClose in __destruct()
-        $this->SMTPAuth = true;                               // Enable SMTP authentication
-        $this->Host = SMTP_HOST;                              // Specify main and backup server
-        $this->Sender = SMTP_USERNAME;
-        $this->Username = SMTP_USERNAME;
-        $this->Password = SMTP_PASSWORD;
+        $this->SMTPAuth = true;                                // Enable SMTP authentication
+        $this->Host = ConfigIni::smtpHost();                   // Specify main and backup server
+        $this->Sender = ConfigIni::smtpUser();
+        $this->Username = ConfigIni::smtpUser();
+        $this->Password = ConfigIni::smtpPwd();
         //Enable encryption, 'ssl' also accepted
         //$mail->SMTPSecure = 'tls';
         $this->IsHTML(true);

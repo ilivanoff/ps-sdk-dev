@@ -16,7 +16,7 @@ require_once 'ps-includes/MainImportAdmin.php';
 //echo DirManager::inst('/../ps-uploads')->makePath();
 //echo ConfigIni::uploadsDirRel();
 
-var_dump(ConfigIni::isProduction());
+PsMailSender::fastSend('Привет!', 'Message body', 'azazello85@mail.ru');
 
 die;
 

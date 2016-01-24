@@ -15,6 +15,7 @@ final class ConfigIni extends AbstractIni {
     const GROUP_CONNECTIONS = 'connection-pool';
     const GROUP_FOLDINGS = 'foldings';
     const GROUP_SMARTY = 'smarty';
+    const GROUP_SMTP = 'smtp';
     const GROUP_MAPPINGS = 'mappings';
     const GROUP_CACHE = 'cache';
     const GROUP_UPLOADS = 'uploads';
@@ -84,6 +85,22 @@ final class ConfigIni extends AbstractIni {
 
     public static function cronProcesses() {
         return self::getPropCheckType(self::CRON_PROCESS, 'cron', array(PsConst::PHP_TYPE_ARRAY, PsConst::PHP_TYPE_NULL));
+    }
+
+    /*
+     * SMTP
+     */
+
+    public static function smtpHost() {
+        return self::getPropCheckType(self::GROUP_SMTP, 'host', array(PsConst::PHP_TYPE_STRING));
+    }
+
+    public static function smtpUser() {
+        return self::getPropCheckType(self::GROUP_SMTP, 'user', array(PsConst::PHP_TYPE_STRING));
+    }
+
+    public static function smtpPwd() {
+        return self::getPropCheckType(self::GROUP_SMTP, 'pwd', array(PsConst::PHP_TYPE_STRING));
     }
 
     /*

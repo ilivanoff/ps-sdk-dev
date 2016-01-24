@@ -29,19 +29,4 @@ define('REPLACE_FORMULES_WITH_SPRITES', true);
  * Нормализация страницы (удаление двойных пробелов)
  */
 define('NORMALIZE_PAGE', false);
-
-/*
- * Адрес SMTP сервера
- */
-define('SMTP_HOST', 'smtp.yandex.ru');
-
-/*
- * Имя для доступа к SMTP
- */
-define('SMTP_USERNAME', 'postupayu@yandex.ru');
-
-/*
- * Пароль для доступа к SMTP
- */
-define('SMTP_PASSWORD', 'Anastasiya!1997');
 ?>

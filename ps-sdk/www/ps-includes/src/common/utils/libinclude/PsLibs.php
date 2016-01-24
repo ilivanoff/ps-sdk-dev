@@ -121,6 +121,18 @@ class PsLibs {
     }
 
     /**
+     * PhpMailer
+     */
+    public function PhpMailer() {
+        if ($this->isAlreadyIncluded(__FUNCTION__)) {
+            return; //---
+        }
+        if (!class_exists('PHPMailer')) {
+            require_once $this->SDK_LIB_DIR . 'PHPMailer/PHPMailer_5.2.4/class.phpmailer.php';
+        }
+    }
+
+    /**
      * Метод должен быть вызван перед подключением библиотеки для предотвращения повторного подключения
      * Пример использования:
      * 
