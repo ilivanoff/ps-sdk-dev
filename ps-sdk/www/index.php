@@ -16,7 +16,7 @@ require_once 'ps-includes/MainImportAdmin.php';
 //echo DirManager::inst('/../ps-uploads')->makePath();
 //echo ConfigIni::uploadsDirRel();
 
-var_dump(ConfigIni::isLoggingEnabled());
+var_dump(ConfigIni::profilingMaxFileSize());
 
 die;
 

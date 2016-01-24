@@ -62,7 +62,7 @@ final class PsProfiler implements Destructable {
         $pr = null;
 
         //Проверим текущий размер профайлера
-        if ($di->isMaxSize(PROFILING_MAX_FILE_SIZE)) {
+        if ($di->isMaxSize(ConfigIni::profilingMaxFileSize())) {
             $locked = PsLock::lock(__CLASS__ . "::compressProfiler($profilerId)", false);
             if ($locked) {
                 $this->compressProfiler($di);

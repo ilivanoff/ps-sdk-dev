@@ -1,16 +1,6 @@
 <?php
 
 /*
- * Включено ли профилирование
- */
-define('PROFILING_ENABLED', true);
-
-/*
- * Максимальный размер файла аудита (в мегабайтах)
- */
-define('PROFILING_MAX_FILE_SIZE', 1);
-
-/*
  * Максимальное кол-во дампов файлов последних эксепшенов
  */
 define('EXCEPTION_MAX_FILES_COUNT', 10);

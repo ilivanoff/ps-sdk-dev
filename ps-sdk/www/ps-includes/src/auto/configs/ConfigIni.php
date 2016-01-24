@@ -46,6 +46,10 @@ final class ConfigIni extends AbstractIni {
         return 1 == self::getProp(self::GROUP_PROFILING, 'enabled');
     }
 
+    public static function profilingMaxFileSize() {
+        return PsCheck::int(self::getPropCheckType(self::GROUP_PROFILING, 'max-file-size', array(PsConst::PHP_TYPE_STRING)));
+    }
+
     /*
      * ENVIROMENTS
      */
