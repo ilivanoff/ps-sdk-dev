@@ -17,7 +17,8 @@ require_once 'ps-includes/MainImportAdmin.php';
 //echo ConfigIni::uploadsDirRel();
 //PsMailSender::fastSend('Hello', 'Body', 'azazello85@mail.ru');
 //var_dump(DirItem::inst(ConfigIni::globalsFilePath())->getModificationTime());
-var_dump(PsGlobals::inst()->exists());
+
+echo file_get_line_contents(__FILE__, 5);
 
 die;
 

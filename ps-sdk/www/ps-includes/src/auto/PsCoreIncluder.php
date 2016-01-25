@@ -44,9 +44,8 @@ final class PsCoreIncluder {
         $time = microtime(true);
 
         /*
-         * Сразу подключаем  настройки и утилитные функции
+         * Сразу подключаем настройки и утилитные функции
          */
-        include_once 'Globals.php';
         include_once 'Defines.php';
 
         /*
