@@ -24,6 +24,7 @@ final class ConfigIni extends AbstractIni {
     const GROUP_EXTERNAL_LIBS = 'external-libs';
     const GROUP_EXCEPTIONS = 'exceptions';
     const GROUP_AJAX_ACTIONS = 'ajax-actions';
+    const GROUP_INCLUDES = 'includes';
     const GROUP_USER_INTERACTION = 'user-interaction';
 
     /*
@@ -182,6 +183,15 @@ final class ConfigIni extends AbstractIni {
 
     public static function ajaxActionsAbs($group) {
         return array_key_exists($group, self::$ajax) ? self::$ajax[$group] : self::$ajax[$group] = DirManager::relToAbs(self::getPropCheckType(self::GROUP_AJAX_ACTIONS, $group, array(PsConst::PHP_TYPE_ARRAY)));
+    }
+
+    /*
+     * INCLUDES
+     */
+
+    public static function globalsFilePath() {
+        //При этом сам файл может не существовать
+        return next_level_dir(PATH_BASE_DIR, self::getPropCheckType(self::GROUP_INCLUDES, 'globals-file', array(PsConst::PHP_TYPE_STRING)));
     }
 
     /*

@@ -246,7 +246,7 @@ final class Autoload {
         /*
          * Если мы работаем в рамках проекта, то подключим папку classes из PS_DIR_ADDON
          */
-        $this->registerBaseDir(PS_DIR_ADDON . DIR_SEPARATOR . DirManager::DIR_SRC, false);
+        $this->registerBaseDir(PS_DIR_ADDON . DIR_SEPARATOR . DirManager::DIR_SRC . DIR_SEPARATOR . DirManager::DIR_COMMON, false);
     }
 
 }

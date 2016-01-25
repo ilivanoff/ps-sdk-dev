@@ -143,7 +143,7 @@ class DirItem implements Spritable {
         clearstatcache();
 
         $time = @filemtime($this->absPath);
-        if ($time === false) {
+        if ($time === false || !is_int($time) || $time <= 0) {
             return null;
         }
         if ($format) {

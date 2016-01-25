@@ -25,15 +25,15 @@ class PsGlobalProp {
         $type = gettype($this->val);
         //Определим тип
         switch ($type) {
-            case 'boolean':
+            case PsConst::PHP_TYPE_BOOLEAN:
                 $this->type = self::TYPE_BOOLEAN;
                 break;
-            case 'integer':
-            case 'double':
-            case 'float':
+            case PsConst::PHP_TYPE_INTEGER:
+            case PsConst::PHP_TYPE_DOUBLE:
+            case PsConst::PHP_TYPE_FLOAT:
                 $this->type = self::TYPE_NUMERIC;
                 break;
-            case 'string':
+            case PsConst::PHP_TYPE_STRING:
                 $this->type = self::TYPE_STRING;
                 break;
             default:
@@ -88,6 +88,21 @@ class PsGlobalProp {
 
     public function getComment() {
         return $this->comment;
+    }
+
+    public function getType() {
+        return $this->type;
+    }
+
+    public function getTypeDescr() {
+        switch ($this->type) {
+            case self::TYPE_BOOLEAN:
+                return 'Логическое';
+            case self::TYPE_NUMERIC:
+                return 'Численное';
+            case self::TYPE_STRING:
+                return 'Строковое';
+        }
     }
 
     public function isDearty() {

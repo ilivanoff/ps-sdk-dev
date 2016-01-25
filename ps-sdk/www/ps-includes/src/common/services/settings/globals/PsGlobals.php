@@ -2,15 +2,12 @@
 
 /**
  * Класс для работы с глобальными настройками, задаваемыми в файле
- * Globals.php.
+ * Globals.php, путь к которому указывается в config.ini [includes].
  * 
  * Для максимально быстрой работы мы храним глобальные настройки именно в виде
  * констант php.
  */
 final class PsGlobals extends AbstractSingleton {
-
-    /** @var PsLoggerInterface */
-    private $LOGGER;
 
     /** @var DirItem */
     private $DI;
@@ -28,45 +25,53 @@ final class PsGlobals extends AbstractSingleton {
      */
     private function FileMtimeUpdate() {
         $this->FileMtime = $this->DI->getModificationTime();
-        check_condition(is_numeric($this->FileMtime) && ($this->FileMtime > 0), 'Файл глобальных настроек не существует');
     }
 
     /**
-     * Загружает глобальные настройки из файла и кеширует их в массиве GLOBALS.
-     * Данный метод вызывается ТОЛЬКО при создании экземпляра класса.
+     * Метод проверяет, существует ли файл глобальных настроек
      */
-    private function load() {
-        check_condition(!is_array($this->GLOBALS), 'Недопустима повторная загрузка глобальных настроек');
-        $this->GLOBALS = array();
-        $this->FileMtimeUpdate();
+    public function exists() {
+        return !!$this->FileMtime;
+    }
 
-        $comment = array();
-        foreach ($this->DI->getFileLines() as $line) {
-            $line = trim($line);
-            if (!$line || starts_with($line, '/*') || ends_with($line, '*/')) {
-                continue;
-            }
-            if (starts_with($line, '*')) {
-                $line = trim(first_char_remove($line));
-                if ($line) {
-                    $comment[] = $line;
-                }
-                continue;
-            }
-            if (starts_with($line, 'define')) {
-                $name = trim(array_get_value(1, explode("'", $line, 3)));
-                check_condition($name && defined($name), "Ошибка разбора файла глобальных настроек: свойство [$name] не определено.");
-                $this->GLOBALS[$name] = new PsGlobalProp($name, implode(' ', $comment));
-                $comment = array();
-                continue;
-            }
-        }
+    /**
+     * Метод проверяет существование файла файла глобальных настроек
+     */
+    private function assertExists() {
+        check_condition($this->exists(), 'Файл глобальных настроек не существует');
     }
 
     /**
      * Возвращает список глобальных свойств
      */
     public function getProps() {
+        if (!is_array($this->GLOBALS)) {
+            $this->assertExists();
+            $this->GLOBALS = array();
+            $this->FileMtimeUpdate();
+
+            $comment = array();
+            foreach ($this->DI->getFileLines() as $line) {
+                $line = trim($line);
+                if (!$line || starts_with($line, '/*') || ends_with($line, '*/')) {
+                    continue;
+                }
+                if (starts_with($line, '*')) {
+                    $line = trim(first_char_remove($line));
+                    if ($line) {
+                        $comment[] = $line;
+                    }
+                    continue;
+                }
+                if (starts_with($line, 'define')) {
+                    $name = trim(array_get_value(1, explode("'", $line, 3)));
+                    check_condition($name && defined($name), "Ошибка разбора файла глобальных настроек: свойство [$name] не определено.");
+                    $this->GLOBALS[$name] = new PsGlobalProp($name, implode(' ', $comment));
+                    $comment = array();
+                    continue;
+                }
+            }
+        }
         return $this->GLOBALS;
     }
 
@@ -76,7 +81,7 @@ final class PsGlobals extends AbstractSingleton {
     public function getPropsKeyValue() {
         $result = array();
         /* @var $prop PsGlobalProp */
-        foreach ($this->GLOBALS as $name => $prop) {
+        foreach ($this->getProps() as $name => $prop) {
             $result[$name] = $prop->getValue();
         }
         return $result;
@@ -86,8 +91,7 @@ final class PsGlobals extends AbstractSingleton {
      * @return PsGlobalProp
      */
     public function getProp($name) {
-        check_condition(array_key_exists($name, $this->GLOBALS), "Глобальная настройка [$name] не зарегистрирована");
-        return $this->GLOBALS[$name];
+        return check_condition(array_get_value($name, $this->getProps()), "Глобальная настройка [$name] не зарегистрирована");
     }
 
     /**
@@ -95,7 +99,7 @@ final class PsGlobals extends AbstractSingleton {
      */
     private function hasModified() {
         /* @var $prop PsGlobalProp */
-        foreach ($this->GLOBALS as $prop) {
+        foreach ($this->getProps() as $prop) {
             if ($prop->isDearty()) {
                 return true;
             }
@@ -109,7 +113,7 @@ final class PsGlobals extends AbstractSingleton {
     public function getPhpFileContents() {
         $content = "<?php\n\n";
         /* @var $prop PsGlobalProp */
-        foreach ($this->GLOBALS as $prop) {
+        foreach ($this->getProps() as $prop) {
             $content .= $prop->getFileBlock();
             $content .= "\n";
         }
@@ -131,7 +135,7 @@ final class PsGlobals extends AbstractSingleton {
 
         //"Коммитим" настройки
         /* @var $prop PsGlobalProp */
-        foreach ($this->GLOBALS as $prop) {
+        foreach ($this->getProps() as $prop) {
             $prop->commit();
         }
     }
@@ -153,9 +157,17 @@ final class PsGlobals extends AbstractSingleton {
     }
 
     protected function __construct() {
-        $this->LOGGER = PsLogger::inst(__CLASS__);
-        $this->DI = DirItem::inst(array(PATH_BASE_DIR, PS_DIR_INCLUDES, DirManager::DIR_SRC, DirManager::DIR_AUTO), 'Globals.php');
-        $this->load();
+        $this->DI = DirItem::inst(ConfigIni::globalsFilePath(), null, PsConst::EXT_PHP);
+        $this->FileMtimeUpdate();
+    }
+
+    /**
+     * Метод подключает файл глобальных настроек
+     */
+    public static function init() {
+        if (ConfigIni::isProject() && self::inst()->exists()) {
+            require_once self::inst()->DI->getAbsPath();
+        }
     }
 
 }

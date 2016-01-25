@@ -7,7 +7,13 @@ class AP_APGlobals extends BaseAdminPage {
     }
 
     public function buildContent() {
-        $PARAMS['props'] = PsGlobals::inst()->getProps();
+        if (PsGlobals::inst()->exists()) {
+            $PARAMS['exists'] = true;
+            $PARAMS['props'] = PsGlobals::inst()->getProps();
+        } else {
+            $PARAMS['exists'] = false;
+            $PARAMS['path'] = ConfigIni::globalsFilePath();
+        }
         echo $this->getFoldedEntity()->fetchTpl($PARAMS);
     }
 

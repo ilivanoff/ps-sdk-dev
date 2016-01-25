@@ -96,6 +96,9 @@ function ps_admin_on($force = false) {
 //Ну и сразу попытаемся подключить админские ресурсы
 ps_admin_on();
 
+//Подключаем файл глобальных настроек, если он существует и мы работаем в рамках проекта
+PsGlobals::init();
+
 //Получим экземпляр профайлера, чтобы подписаться на PsShotdown, если профилирование включено
 PsProfiler::inst()->add('ScriptInit', Secundomer::inst()->add(1, microtime(true) - SCRIPT_EXECUTION_START));
 ?>
