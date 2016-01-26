@@ -22,7 +22,7 @@ class ToDoFile {
     }
 
     private function __construct() {
-        $this->di = DirItem::inst(__DIR__, __CLASS__, 'tpl')->touchIfNotFile();
+        $this->di = DirItem::inst(__DIR__, __CLASS__, PsConst::EXT_TPL)->touchIfNotFile();
     }
 
     public function getMtime() {
@@ -43,7 +43,7 @@ class ToDoFile {
 
     public function save($content, $mtime) {
         check_condition($this->isCanSave($mtime), $this->di->getNameNoExt() . ' был изменён с момента открытия');
-        $this->di->writeToFile($content, true);
+        $this->di->putToFile($content);
     }
 
 }

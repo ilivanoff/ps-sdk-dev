@@ -27,6 +27,14 @@ final class FoldedStorage extends AbstractSingleton {
 
     /**
      * Карта:
+     * тип_фолдинга => array('сущность' => 'относительный_путь_к_директории_сущности')
+     * 
+     * @var array
+     */
+    private $FOLDING_2_ENTITY_2_ENTRELPATH = null;
+
+    /**
+     * Карта:
      * префикс_ресурсов => тип_фолдинга
      * 
      * @var array
@@ -188,6 +196,24 @@ final class FoldedStorage extends AbstractSingleton {
      */
     public static function getFoldingSourcePrefix($foldedUnique) {
         return self::assertExistsFolding($foldedUnique) ? array_search($foldedUnique, self::inst()->SOURCE_2_FOLDING) : null;
+    }
+
+    /**
+     * Метод возвращает все сущности фолдингов и относительные пути к ним
+     */
+    public static function listEntitiesRel() {
+        if (is_null(self::inst()->FOLDING_2_ENTITY_2_ENTRELPATH)) {
+            self::inst()->FOLDING_2_ENTITY_2_ENTRELPATH = array();
+
+            foreach (self::listEntities() as $unique => $foldings) {
+                foreach ($foldings as $ident => $absPath) {
+                    self::inst()->FOLDING_2_ENTITY_2_ENTRELPATH[$unique][$ident] = DIR_SEPARATOR . cut_string_start($absPath, PATH_BASE_DIR);
+                }
+            }
+
+            self::inst()->LOGGER->info('FOLDING_2_ENTITY_2_ENTRELPATH: {}', print_r(self::inst()->FOLDING_2_ENTITY_2_ENTRELPATH, true));
+        }
+        return self::inst()->FOLDING_2_ENTITY_2_ENTRELPATH;
     }
 
     /**

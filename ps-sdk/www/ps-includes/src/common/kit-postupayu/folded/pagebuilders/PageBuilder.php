@@ -75,13 +75,7 @@ final class PageBuilder extends PageBuilderResources {
         $params['currentSubmitTimeout'] = ActivityWatcher::getWaitTime();
         $params['tzOffset'] = PsTimeZone::inst()->getCurrentDateTimeZone()->getOffset(new DateTime());
         $params['marker'] = AuthManager::getUserSessoinMarker();
-
-        /* @var $folding FoldedResources */
-        foreach (FoldedStorage::listEntities() as $unique => $foldings) {
-            foreach ($foldings as $ident => $relPath) {
-                $params['foldings'][$unique][$ident] = $relPath;
-            }
-        }
+        $params['foldings'] = FoldedStorage::listEntitiesRel();
 
         return $params;
     }
