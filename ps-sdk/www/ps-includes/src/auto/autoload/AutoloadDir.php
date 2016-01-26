@@ -15,7 +15,7 @@ final class AutoloadDir {
     private $LOGGER;
 
     /**
-     * @var DirItem Диретория с классами
+     * @var DirManager Диретория с классами
      */
     private $classesDir;
 
@@ -34,10 +34,10 @@ final class AutoloadDir {
      */
     private $rebuilded = false;
 
-    public function __construct(DirItem $dir) {
+    public function __construct(DirManager $dir) {
         $this->LOGGER = Autoload::getLogger();
         $this->classesDir = $dir;
-        $this->classPathFile = DirManager::autogen('classpath')->getDirItem(null, unique_from_path($dir->getRelPath()));
+        $this->classPathFile = DirManager::autogen('classpath')->getDirItem(null, unique_from_path($dir->relDirPath()));
     }
 
     /**
@@ -80,7 +80,7 @@ final class AutoloadDir {
             $s = Secundomer::startedInst();
 
             $this->pathes = array();
-            PsCoreIncluder::loadClassPath($this->classesDir->getAbsPath(), $this->pathes, false);
+            PsCoreIncluder::loadClassPath($this->classesDir->absDirPath(), $this->pathes, false);
             $this->classPathFile->saveArrayToFile($this->pathes);
             $this->classPathFile->getSibling($this->classPathFile->getName() . '_arr')->putToFile(print_r($this->pathes, true));
 
@@ -121,7 +121,7 @@ final class AutoloadDir {
     }
 
     public function __toString() {
-        return __CLASS__ . ' [' . $this->classesDir->getAbsPath() . ']';
+        return __CLASS__ . ' [' . $this->classesDir->absDirPath() . ']';
     }
 
 }

@@ -84,12 +84,12 @@ final class Autoload {
      */
     public function registerBaseDir($path, $required = true) {
         //Получим DirManager, соответствующий нашей директории
-        $dm = DirItem::inst($path);
+        $dm = DirManager::inst($path);
         //Проверим - может уже подключили?
-        if (array_key_exists($dm->getRelPath(), $this->DIRS)) {
+        if (array_key_exists($dm->relDirPath(), $this->DIRS)) {
             return; //---
         }
-        $dirAbsPath = $dm->getAbsPath();
+        $dirAbsPath = $dm->absDirPath();
         //Проверим, является ли путь - директорией
         if (!$dm->isDir()) {
             check_condition(!$required, "Invalid class path dir given: [$dirAbsPath]");
@@ -98,7 +98,7 @@ final class Autoload {
         //Отлогируем
         $this->LOGGER->infoBox("CLASS PATH DIR [$dirAbsPath] REGISTERED");
         //Сохраним ссылку на директорию
-        $this->DIRS[$dm->getRelPath()] = new AutoloadDir($dm);
+        $this->DIRS[$dm->relDirPath()] = new AutoloadDir($dm);
     }
 
     /**
