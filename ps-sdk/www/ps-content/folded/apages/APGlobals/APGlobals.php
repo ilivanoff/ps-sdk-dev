@@ -12,7 +12,7 @@ class AP_APGlobals extends BaseAdminPage {
             $PARAMS['props'] = PsGlobals::inst()->getProps();
         } else {
             $PARAMS['exists'] = false;
-            $PARAMS['path'] = ConfigIni::globalsFilePath();
+            $PARAMS['path'] = ConfigIni::projectGlobalsFilePath();
         }
         echo $this->getFoldedEntity()->fetchTpl($PARAMS);
     }

@@ -18,7 +18,15 @@ require_once 'ps-includes/MainImportAdmin.php';
 //PsMailSender::fastSend('Hello', 'Body', 'azazello85@mail.ru');
 //var_dump(DirItem::inst(ConfigIni::globalsFilePath())->getModificationTime());
 
-echo file_get_line_contents(__FILE__, 5);
+var_dump(ConfigIni::projectSrcAdminDir());
+br();
+var_dump(ConfigIni::projectSrcCommonDir());
+br();
+var_dump(ConfigIni::projectGlobalsFilePath());
+br();
+
+new YouTubePluginAdmin();
+
 
 die;
 
@@ -58,8 +66,8 @@ echo PluginsManager::inst()->getAutogenDi('advgraph', array('x', 'y', 'z'), null
 die;
 
 echo TestUtils::testProductivity(function() {
-            FoldedStorage::getEntities('lib-s');
-        }, 200);
+    FoldedStorage::getEntities('lib-s');
+}, 200);
 
 br();
 echo FoldedStorage::extractInfoFromClassName('PL_slib', $classPrefix, $entity);
@@ -127,8 +135,8 @@ PSCache::inst()->saveToCache(array('a' => 1), '$key', '$group', 'xxx1');
 die;
 
 echo TestUtils::testProductivity(function() {
-            PSCache::inst()->getFromCache('$key', '$group', null, 'xxx1');
-        });
+    PSCache::inst()->getFromCache('$key', '$group', null, 'xxx1');
+});
 
 print_r(PSCache::inst()->getFromCache($key, $group, array('a'), 'xxx1'));
 

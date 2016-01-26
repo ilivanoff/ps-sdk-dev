@@ -2,7 +2,7 @@
 
 /**
  * Класс для работы с глобальными настройками, задаваемыми в файле
- * Globals.php, путь к которому указывается в config.ini [includes].
+ * Globals.php, путь к которому указывается в config.ini [project-includes].
  * 
  * Для максимально быстрой работы мы храним глобальные настройки именно в виде
  * констант php.
@@ -157,7 +157,7 @@ final class PsGlobals extends AbstractSingleton {
     }
 
     protected function __construct() {
-        $this->DI = DirItem::inst(ConfigIni::globalsFilePath(), null, PsConst::EXT_PHP);
+        $this->DI = DirItem::inst(ConfigIni::projectGlobalsFilePath(), null, PsConst::EXT_PHP);
         $this->FileMtimeUpdate();
     }
 

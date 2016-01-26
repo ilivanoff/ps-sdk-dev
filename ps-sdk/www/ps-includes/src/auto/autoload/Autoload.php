@@ -83,22 +83,22 @@ final class Autoload {
      * @param type $dirName - название директории (одна из констант DIR_ данного класса)
      */
     public function registerBaseDir($path, $required = true) {
-        //Получим DirItem, соответствующий нашей директории
-        $di = DirItem::inst(next_level_dir($path, DIR_SEPARATOR));
+        //Получим DirManager, соответствующий нашей директории
+        $dm = DirItem::inst($path);
         //Проверим - может уже подключили?
-        if (array_key_exists($di->getRelPath(), $this->DIRS)) {
+        if (array_key_exists($dm->getRelPath(), $this->DIRS)) {
             return; //---
         }
-        $dirAbsPath = $di->getAbsPath();
+        $dirAbsPath = $dm->getAbsPath();
         //Проверим, является ли путь - директорией
-        if (!$di->isDir()) {
+        if (!$dm->isDir()) {
             check_condition(!$required, "Invalid class path dir given: [$dirAbsPath]");
             return; //---
         }
         //Отлогируем
         $this->LOGGER->infoBox("CLASS PATH DIR [$dirAbsPath] REGISTERED");
         //Сохраним ссылку на директорию
-        $this->DIRS[$di->getRelPath()] = new AutoloadDir($di);
+        $this->DIRS[$dm->getRelPath()] = new AutoloadDir($dm);
     }
 
     /**
@@ -106,6 +106,11 @@ final class Autoload {
      */
     public function registerAdminBaseDir() {
         $this->registerBaseDir($this->SDK_SRC_DIR . DirManager::DIR_ADMIN);
+
+        //Если мы работаем из проекта - подключаем и его ресурсы
+        if (ConfigIni::isProject()) {
+            $this->registerBaseDir(ConfigIni::projectSrcAdminDir(), false);
+        }
     }
 
     /**
@@ -243,10 +248,13 @@ final class Autoload {
          * Директория src/common должна быть подключена всегда
          */
         $this->registerBaseDir($this->SDK_SRC_DIR . DirManager::DIR_COMMON);
+
         /*
-         * Если мы работаем в рамках проекта, то подключим папку classes из PS_DIR_ADDON
+         * Если проект, то подключим проектные общие ресурсы
          */
-        $this->registerBaseDir(PS_DIR_ADDON . DIR_SEPARATOR . DirManager::DIR_SRC . DIR_SEPARATOR . DirManager::DIR_COMMON, false);
+        if (ConfigIni::isProject()) {
+            $this->registerBaseDir(ConfigIni::projectSrcCommonDir(), false);
+        }
     }
 
 }

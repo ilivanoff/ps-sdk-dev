@@ -24,7 +24,7 @@ final class ConfigIni extends AbstractIni {
     const GROUP_EXTERNAL_LIBS = 'external-libs';
     const GROUP_EXCEPTIONS = 'exceptions';
     const GROUP_AJAX_ACTIONS = 'ajax-actions';
-    const GROUP_INCLUDES = 'includes';
+    const GROUP_PROJECT_INCLUDES = 'project-includes';
     const GROUP_USER_INTERACTION = 'user-interaction';
 
     /*
@@ -189,9 +189,17 @@ final class ConfigIni extends AbstractIni {
      * INCLUDES
      */
 
-    public static function globalsFilePath() {
+    public static function projectGlobalsFilePath() {
         //При этом сам файл может не существовать
-        return next_level_dir(PATH_BASE_DIR, self::getPropCheckType(self::GROUP_INCLUDES, 'globals-file', array(PsConst::PHP_TYPE_STRING)));
+        return next_level_dir(PATH_BASE_DIR, PsCheck::notEmptyString(self::getPropCheckType(self::GROUP_PROJECT_INCLUDES, 'globals-file', array(PsConst::PHP_TYPE_STRING))));
+    }
+
+    public static function projectSrcAdminDir() {
+        return PsCheck::notEmptyString(self::getPropCheckType(self::GROUP_PROJECT_INCLUDES, 'src-admin', array(PsConst::PHP_TYPE_STRING)));
+    }
+
+    public static function projectSrcCommonDir() {
+        return PsCheck::notEmptyString(self::getPropCheckType(self::GROUP_PROJECT_INCLUDES, 'src-common', array(PsConst::PHP_TYPE_STRING)));
     }
 
     /*
