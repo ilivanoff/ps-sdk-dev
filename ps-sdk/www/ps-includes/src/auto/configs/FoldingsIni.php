@@ -8,6 +8,19 @@
 final class FoldingsIni extends AbstractIni {
 
     const GROUP_FOLDINGS = 'foldings';
+    const GROUP_SETTINGS = 'settings';
+
+    /*
+     * SETTINGS
+     */
+
+    public static function foldingsStore() {
+        return self::getPropCheckType(self::GROUP_SETTINGS, 'storage', array(PsConst::PHP_TYPE_STRING));
+    }
+
+    /*
+     * FOLDINGS
+     */
 
     private static $rel;
 

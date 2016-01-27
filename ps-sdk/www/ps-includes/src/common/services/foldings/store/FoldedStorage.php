@@ -55,6 +55,13 @@ final class FoldedStorage extends AbstractSingleton {
     }
 
     /**
+     * Метод предзагружает фолдинги
+     */
+    public static function init() {
+        self::inst();
+    }
+
+    /**
      * В конструкторе пробежимся по всем хранилищам и соберём все фолдинги
      */
     protected function __construct() {
@@ -169,6 +176,14 @@ final class FoldedStorage extends AbstractSingleton {
      */
     public static function getEntities($foldedUnique) {
         return self::assertExistsFolding($foldedUnique) ? self::inst()->FOLDING_2_ENTITY_2_ENTABSPATH[$foldedUnique] : null;
+    }
+
+    /**
+     * Метод возвращает кол-во сущностей для указанного типа фолдинга
+     * @param string $foldedUnique - код фолдинга [lib-p]
+     */
+    public static function getEntitiesCount($foldedUnique) {
+        return self::assertExistsFolding($foldedUnique) ? count(self::inst()->FOLDING_2_ENTITY_2_ENTABSPATH[$foldedUnique]) : null;
     }
 
     /**
