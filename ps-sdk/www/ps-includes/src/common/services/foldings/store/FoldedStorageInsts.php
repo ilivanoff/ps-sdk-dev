@@ -19,7 +19,72 @@ class FoldedStorageInsts {
     private $PROFILER;
 
     /** @var arr Список доступных фолдингов */
-    private $foldings = array();
+    private $FOLDINGS = array();
+
+    /**
+     * Список всех фолдингов
+     */
+    public static function listFoldings() {
+        return self::inst()->FOLDINGS;
+    }
+
+    /**
+     * Проверка существования фолдинга
+     * @param string $foldedUnique - код фолдинга [lib-p]
+     */
+    public static function existsFolding($foldedUnique) {
+        return array_key_exists($foldedUnique, self::inst()->FOLDINGS);
+    }
+
+    /**
+     * Метод возвращает уникальные коды фолдингов: [pl, lib-p, ...]
+     */
+    public static function listFoldingUniques() {
+        return array_keys(self::listFoldings());
+    }
+
+    /**
+     * Метод получает фолдинг по его уникальному идентификатору [ps, lib-p ...]
+     * 
+     * @param string $unique - уникальный код фолдинга
+     * @param bool $assert - проверять ли наличие фолдинга или возвращать null
+     * @return FoldedResources
+     */
+    public static function byUnique($unique, $assert = true) {
+        $folding = array_get_value($unique, self::inst()->FOLDINGS);
+        check_condition(!$assert || $folding, "Экземпляр фолдинга [$unique] не зарегистрирован.");
+        return $folding;
+    }
+
+    /**
+     * Метод получает фолдинг по типу и подтипу фолдинга [ps, lib + p ...]
+     * 
+     * @param string $type - тип фолдинга
+     * @param string $subtype - подтип фолдинга
+     * @param bool $assert - проверять ли наличие фолдинга или возвращать null
+     * @return FoldedResources
+     */
+    public static function byTypeStype($type, $subtype = null, $assert = true) {
+        return self::byUnique(FoldedResources::unique($type, $subtype), $assert);
+    }
+
+    /**
+     * Функция возвращает префикс для классов данного фолдинга, например IP_
+     *
+     * @param string $classPrefix - префикс классов
+     * @param bool $assert - признак существования
+     */
+    public static function byClassPrefix($classPrefix, $assert = true) {
+        return self::byUnique(FoldedStorage::getFoldingByClassPrefix($classPrefix, $assert), $assert);
+    }
+
+    /**
+     * Проверка существования префикса класса
+     * @param string $classPrefix - префикс класса фолдингов [PLIB_]
+     */
+    public static function existsClassPrefix($classPrefix) {
+        return FoldedStorage::existsClassPrefix($classPrefix) && self::existsFolding(FoldedStorage::getFoldingByClassPrefix($classPrefix));
+    }
 
     /**
      * Регистрация страниц SDK
@@ -34,6 +99,7 @@ class FoldedStorageInsts {
         $this->register(EmailManager::inst());
         $this->register(PSForm::inst());
         $this->register(DialogManager::inst());
+        $this->register(PageBuilder::inst());
         //Библиотеки
         $this->register(PoetsManager::inst());
         $this->register(ScientistsManager::inst());
@@ -55,13 +121,13 @@ class FoldedStorageInsts {
      */
     protected final function register(FoldedResources $inst) {
         $unique = $inst->getUnique();
-        if (array_key_exists($unique, $this->foldings)) {
-            PsUtil::raise('Folding \'{}\' is already registered. Cannot register \'{}\' with same unique.', $this->foldings[$unique], $inst);
+        if (array_key_exists($unique, $this->FOLDINGS)) {
+            PsUtil::raise('Folding \'{}\' is already registered. Cannot register \'{}\' with same unique.', $this->FOLDINGS[$unique], $inst);
         } else {
-            $this->foldings[$unique] = $inst;
+            $this->FOLDINGS[$unique] = $inst;
 
             if ($this->LOGGER->isEnabled()) {
-                $this->LOGGER->info('+{}. {}, count: {}.', pad_left(count($this->foldings), 3, ' '), $inst, FoldedStorage::getEntitiesCount($unique));
+                $this->LOGGER->info('+{}. {}, count: {}.', pad_left(count($this->FOLDINGS), 3, ' '), $inst, FoldedStorage::getEntitiesCount($unique));
             }
         }
     }
@@ -76,7 +142,7 @@ class FoldedStorageInsts {
      * 
      * @return FoldedStorageInsts
      */
-    public static final function inst() {
+    protected static final function inst() {
         if (isset(self::$inst)) {
             return self::$inst; //----
         }
@@ -129,16 +195,20 @@ class FoldedStorageInsts {
         $this->PROFILER = PsProfiler::inst(__CLASS__);
         $this->PROFILER->start('Loading folding insts');
 
-        //Регистрируем фолдинги
+        //Регистрируем фолдинги SDK
         $this->LOGGER->info();
         $this->LOGGER->info('FOLDINGS SDK:');
         $this->registerSdkFoldings();
 
+        //Если используем не SDK провайдер, вызываем регистратор
         if (!$basic) {
             $this->LOGGER->info();
             $this->LOGGER->info('FOLDINGS PROJECT:');
             $this->registerProjectFoldings();
         }
+
+        //Отсортируем фолдинги по идентификаторам
+        ksort($this->FOLDINGS);
 
         //Останавливаем профайлер
         $sec = $this->PROFILER->stop();

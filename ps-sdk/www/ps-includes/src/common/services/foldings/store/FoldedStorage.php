@@ -18,6 +18,13 @@ final class FoldedStorage extends AbstractSingleton {
     private $PROFILER;
 
     /**
+     * Уникальные идентификаторы фолдингов
+     * 
+     * @var array
+     */
+    private $FOLDINGS = array();
+
+    /**
      * Карта:
      * тип_фолдинга => array('сущность' => 'абсолютный_путь_к_директории_сущности')
      * 
@@ -110,9 +117,17 @@ final class FoldedStorage extends AbstractSingleton {
             $this->CLASSPREFIX_2_FOLDING[strtoupper($fsubtype . $ftype) . '_'] = $foldedUnique;
         }
 
+        //Отсортируем по уникальным кодам фолдингов
+        ksort($this->FOLDING_2_ENTITY_2_ENTABSPATH);
+        ksort($this->FOLDING_2_ENTITY_2_ENTRELPATH);
+
+        //Установим идентификаторы фолдингов
+        $this->FOLDINGS = array_keys($this->FOLDING_2_ENTITY_2_ENTRELPATH);
+
         $sec = $this->PROFILER->stop();
 
         if ($this->LOGGER->isEnabled()) {
+            $this->LOGGER->info('FOLDINGS: {}', print_r($this->FOLDINGS, true));
             $this->LOGGER->info('FOLDING_2_ENTITY_2_ENTABSPATH: {}', print_r($this->FOLDING_2_ENTITY_2_ENTABSPATH, true));
             $this->LOGGER->info('FOLDING_2_ENTITY_2_ENTRELPATH: {}', print_r($this->FOLDING_2_ENTITY_2_ENTRELPATH, true));
             $this->LOGGER->info('CLASSPREFIX_2_FOLDING: {}', print_r($this->CLASSPREFIX_2_FOLDING, true));
@@ -122,9 +137,16 @@ final class FoldedStorage extends AbstractSingleton {
     }
 
     /**
-     * Метод возвращает все сущности фолдингов
+     * Метод возвращает уникальные коды фолдингов: [pl, lib-p, ...]
      */
-    public static function listEntities() {
+    public static function listFoldingUniques() {
+        return self::inst()->FOLDINGS;
+    }
+
+    /**
+     * Метод возвращает все сущности фолдингов и абсолютные пути к ним
+     */
+    public static function listEntitiesAbs() {
         return self::inst()->FOLDING_2_ENTITY_2_ENTABSPATH;
     }
 
@@ -149,6 +171,22 @@ final class FoldedStorage extends AbstractSingleton {
      */
     public static function assertExistsFolding($foldedUnique) {
         return check_condition(self::existsFolding($foldedUnique), "Фолдинг с идентификатором [$foldedUnique] не существует");
+    }
+
+    /**
+     * Проверка существования префикса класса
+     * @param string $classPrefix - префикс класса фолдингов [PLIB_]
+     */
+    public static function existsClassPrefix($classPrefix) {
+        return array_key_exists($classPrefix, self::inst()->CLASSPREFIX_2_FOLDING);
+    }
+
+    /**
+     * Метод утверждает, что префикс классов существует
+     * @param string $classPrefix - префикс класса фолдингов [PLIB_]
+     */
+    public static function assertExistsClassPrefix($classPrefix) {
+        return check_condition(self::existsClassPrefix($classPrefix), "Фолдинг с префиксом классов [$classPrefix] не существует");
     }
 
     /**
@@ -214,6 +252,15 @@ final class FoldedStorage extends AbstractSingleton {
      */
     public static function getFoldingClassPrefix($foldedUnique) {
         return self::assertExistsFolding($foldedUnique) ? array_search($foldedUnique, self::inst()->CLASSPREFIX_2_FOLDING) : null;
+    }
+
+    /**
+     * Получение фолдинга по префиксу класса: PLIB_ => lib-p
+     * @param string $classPrefix - префикс класса [PLIB_]
+     * @param bool $assert - признак проверки существования
+     */
+    public static function getFoldingByClassPrefix($classPrefix, $assert = true) {
+        return self::existsClassPrefix($classPrefix) ? self::inst()->CLASSPREFIX_2_FOLDING[$classPrefix] : ($assert ? self::assertExistsClassPrefix($classPrefix) : null);
     }
 
     /**

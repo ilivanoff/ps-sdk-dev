@@ -55,7 +55,7 @@ class UserPointsManager extends FoldedResources implements PointsGiverFolding {
     public function checkAllUserPoints(PsUser $user) {
         $given = false;
         /* @var $folding FoldedResources */
-        foreach (Handlers::getInstance()->getFoldings() as $folding) {
+        foreach (FoldedStorageInsts::listFoldings() as $folding) {
             if ($folding instanceof PointsGiverFolding) {
                 /* @var $inst FoldedClass */
                 foreach ($folding->getEntityClassInsts() as $inst) {

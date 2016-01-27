@@ -40,10 +40,6 @@ final class Handlers {
             if ($folding instanceof LibResources) {
                 $this->libs[] = $folding;
             }
-            //Фолдинги обработчиков постов
-            if ($folding instanceof PostFoldedResources) {
-                $this->postProcessorFoldings[] = $folding;
-            }
             //Фолдинги для баблов
             if ($folding instanceof BubbledFolding) {
                 $this->bubbles[] = $folding;
@@ -83,20 +79,12 @@ final class Handlers {
      * Фолдинги
      */
 
-    public function getFoldings() {
-        return $this->foldings;
-    }
-
     public function getBubbles() {
         return $this->bubbles;
     }
 
     public function getPanelProviders() {
         return $this->panels;
-    }
-
-    public function getFoldingsIndexed() {
-        return $this->folding2unique;
     }
 
     /** @return FoldedResources */

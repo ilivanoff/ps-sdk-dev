@@ -99,7 +99,7 @@ class AP_APFoldingEdit extends BaseAdminPage {
         $PARAMS['error'] = null;
         $PARAMS['entity'] = $entity;
         $PARAMS['folding'] = $folding;
-        $PARAMS['foldings'] = Handlers::getInstance()->getFoldings();
+        $PARAMS['foldings'] = FoldedStorageInsts::listFoldings();
 
 
         $ftype = $folding ? $folding->getFoldingType() : '';

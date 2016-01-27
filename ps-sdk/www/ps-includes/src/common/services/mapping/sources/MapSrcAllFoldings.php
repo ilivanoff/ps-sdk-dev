@@ -11,10 +11,8 @@ class MapSrcAllFoldings extends MappingSource {
         
     }
 
-    private $UNIQUES;
-
     protected function preload($mident, array $params) {
-        $this->UNIQUES = array_keys(Handlers::getInstance()->getFoldingsIndexed());
+        
     }
 
     protected function loadDescription($mident, array $params) {
@@ -22,11 +20,11 @@ class MapSrcAllFoldings extends MappingSource {
     }
 
     protected function loadIdentsLeft($mident, array $params) {
-        return $this->UNIQUES;
+        return FoldedStorageInsts::listFoldingUniques();
     }
 
     protected function loadIdentsRight($mident, array $params, \MappingSource $srcLeft, $lident) {
-        return $this->UNIQUES;
+        return FoldedStorageInsts::listFoldingUniques();
     }
 
 }
