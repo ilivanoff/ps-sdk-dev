@@ -21,7 +21,7 @@ class LibResourcesCommon {
         $items = array();
 
         foreach ($matches as $unique) {
-            $entity = Handlers::getInstance()->getFoldedEntityByUnique($unique, false);
+            $entity = FoldedStorageInsts::getFoldedEntityByUnique($unique, false);
             if ($entity && ($entity->getFolding()->isItByType(LibResources::LIB_FOLDING_TYPE))) {
                 $items[$entity->getUnique()] = $entity->getFolding()->getBubble($entity->getIdent());
             }

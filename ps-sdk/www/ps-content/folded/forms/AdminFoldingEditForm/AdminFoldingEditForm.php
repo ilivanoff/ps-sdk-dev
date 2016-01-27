@@ -22,7 +22,7 @@ class FORM_AdminFoldingEditForm extends BaseAjaxForm {
         $fsubtype = $adapter->str('fsubtype');
         $ident = $adapter->str('fident');
 
-        $folding = Handlers::getInstance()->getFolding($ftype, $fsubtype);
+        $folding = FoldedStorageInsts::byTypeStype($ftype, $fsubtype);
         $fEntity = $folding->getFoldedEntity($ident, true);
 
         $result = 'OK';

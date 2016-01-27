@@ -11,7 +11,7 @@ class MapSrcFoldingDb extends MappingSource {
     private $folding;
 
     protected function init($mident, array $params) {
-        $this->folding = Handlers::getInstance()->getFoldingByUnique($params['unique']);
+        $this->folding = FoldedStorageInsts::byUnique($params['unique']);
         $this->folding->assertWorkWithTable();
     }
 

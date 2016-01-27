@@ -74,7 +74,7 @@ class UserPointsManager extends FoldedResources implements PointsGiverFolding {
      * Метод пытается выдать очки пользователю на основе запроса к ajax {@link GivePointsCommon}
      */
     public function givePointsByRequest(PsUser $user, ArrayAdapter $request) {
-        $fentity = Handlers::getInstance()->getFoldedEntityByUnique($request->str('fentity'));
+        $fentity = FoldedStorageInsts::getFoldedEntityByUnique($request->str('fentity'));
         $class = $fentity->getClassInst();
         PsUtil::assertInstanceOf($class, 'PointsGiverRequest');
         $request->remove('fentity');

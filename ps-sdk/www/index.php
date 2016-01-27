@@ -18,7 +18,7 @@ require_once 'ps-includes/MainImportAdmin.php';
 //PsMailSender::fastSend('Hello', 'Body', 'azazello85@mail.ru');
 //var_dump(DirItem::inst(ConfigIni::globalsFilePath())->getModificationTime());
 
-echo FoldedStorageInsts::existsClassPrefix('PLIB_');
+echo PL_advgraph::getIdent();
 
 die;
 

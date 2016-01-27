@@ -87,6 +87,52 @@ class FoldedStorageInsts {
     }
 
     /**
+     * Метод получает сущность фолдинга по её идентификатору: [lib-p-pushkin]
+     * 
+     * @param string $unique - уникальный код сущности фолдинга
+     * @param bool $assert - проверить существование сущности
+     * @return FoldedEntity
+     */
+    public static function getFoldedEntityByUnique($unique, $assert = true) {
+        $parts = explode('-', trim($unique));
+        $count = count($parts);
+        if ($count < 2) {
+            check_condition(!$assert, "Некорректный идентификатор сущности фолдинга: [$unique].");
+            return null; //---
+        }
+
+        $type = $parts[0];
+        $hasSubType = FoldedStorage::isFoldingHasSubtype($type, false);
+        if ($hasSubType === null) {
+            //Фолдинга с таким типом вообще не существует
+            check_condition(!$assert, "Сущность фолдинга [$unique] не существует.");
+            return null; //---
+        }
+
+        if ($hasSubType && ($count == 2)) {
+            check_condition(!$assert, "Некорректный идентификатор сущности фолдинга: [$unique].");
+            return null; //---
+        }
+
+        $subtype = $hasSubType ? $parts[1] : null;
+        $folding = self::byTypeStype($type, $subtype, $assert);
+
+        if (!$folding) {
+            return null; //---
+        }
+
+        array_shift($parts);
+        if ($hasSubType) {
+            array_shift($parts);
+        }
+
+        //TODO '-' вынести на константы
+        $ident = implode('-', $parts);
+
+        return $folding->getFoldedEntity($ident, $assert);
+    }
+
+    /**
      * Регистрация страниц SDK
      */
     private function registerSdkFoldings() {

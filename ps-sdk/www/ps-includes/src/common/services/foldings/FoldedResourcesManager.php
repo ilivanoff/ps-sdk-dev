@@ -17,7 +17,7 @@ final class FoldedResourcesManager extends AbstractSingleton implements Destruct
      * @return FoldedEntity Сущность, соответствующая заданному коду
      */
     public function getFoldedEntityByDbCode($code) {
-        return $this->CACHE->has($code) ? $this->CACHE->get($code) : $this->CACHE->set($code, Handlers::getInstance()->getFoldedEntityByUnique(FoldingBean::inst()->getUniqueByCode($code)));
+        return $this->CACHE->has($code) ? $this->CACHE->get($code) : $this->CACHE->set($code, FoldedStorageInsts::getFoldedEntityByUnique(FoldingBean::inst()->getUniqueByCode($code)));
     }
 
     /**

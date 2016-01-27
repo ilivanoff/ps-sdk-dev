@@ -9,7 +9,7 @@ class FoldingAction extends AbstractAdminAjaxAction {
     protected function executeImpl(ArrayAdapter $params) {
         $action = $params->str('action');
         $unique = $params->str('unique');
-        $folding = Handlers::getInstance()->getFoldingByUnique($unique);
+        $folding = FoldedStorageInsts::byUnique($unique);
 
         $res = 'OK';
 

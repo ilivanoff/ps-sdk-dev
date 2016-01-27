@@ -81,7 +81,7 @@ abstract class FoldedClass {
 
     /** @return FoldedClass */
     protected static function inst() {
-        return Handlers::getInstance()->getFoldingByClassPrefix(FoldedResources::extractPrefixFromClass(get_called_class()))->
+        return FoldedStorageInsts::byClassPrefix(FoldedResources::extractPrefixFromClass(get_called_class()))->
                         getEntityClassInst(self::getIdent());
     }
 

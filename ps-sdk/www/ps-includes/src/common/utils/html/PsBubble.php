@@ -108,7 +108,7 @@ class PsBubble {
      * И баблы, показываемые на странице, и баблы, загружаемые через ajax - все отображаются в этой обёртке.
      */
     public static function extractFoldedEntityBubbleDiv($unique) {
-        $entity = Handlers::getInstance()->getFoldedEntityByUnique($unique, false);
+        $entity = FoldedStorageInsts::getFoldedEntityByUnique($unique, false);
         if (!$entity || !($entity->getFolding() instanceof BubbledFolding)) {
             return null;
         }

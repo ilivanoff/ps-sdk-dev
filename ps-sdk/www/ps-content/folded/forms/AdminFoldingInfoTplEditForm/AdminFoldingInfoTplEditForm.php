@@ -14,7 +14,7 @@ class FORM_AdminFoldingInfoTplEditForm extends BaseAjaxForm {
     }
 
     protected function processImpl(PostArrayAdapter $adapter, $button) {
-        $entity = Handlers::getInstance()->getFoldedEntityByUnique($adapter->str('fentity'));
+        $entity = FoldedStorageInsts::getFoldedEntityByUnique($adapter->str('fentity'));
         $tpl = $entity->getFolding()->getInfoTpl($entity->getIdent(), $adapter->str('ftpl'));
         $content = $adapter->str('tpl');
         $tpl->getDirItem()->writeLineToFile($content, true);

@@ -16,7 +16,7 @@ class FORM_AdminFoldingUploadForm extends BaseAjaxForm {
     protected function processImpl(PostArrayAdapter $adapter, $button) {
         $clear = $adapter->bool(FORM_PARAM_YES_NO);
 
-        $folding = Handlers::getInstance()->getFoldingByUnique($adapter->str('folding'));
+        $folding = FoldedStorageInsts::byUnique($adapter->str('folding'));
 
         $uploadedZip = SimpleUploader::inst()->saveUploadedFile();
         try {

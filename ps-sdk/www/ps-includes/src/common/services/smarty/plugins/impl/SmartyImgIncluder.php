@@ -108,12 +108,12 @@ class SmartyImgIncluder extends AbstractSmartyPlugin {
             $ident = $post->getIdent();
             $folding = Handlers::getInstance()->getPostsProcessorByPostType($post->getPostType())->getFolding();
         } else if ($foldingType) {
-            $hasSubtype = Handlers::getInstance()->isFoldingHasSubtype($foldingType);
+            $hasSubtype = FoldedStorage::isFoldingHasSubtype($foldingType);
             if ($hasSubtype && !$foldingSubType) {
                 //У фолдинга есть подтип, но в параметрах он не передан - определим фолдинг по контексту
                 $folding = $FCW->getFoldedEntityEnsureType($foldingType)->getFolding();
             } else {
-                $folding = Handlers::getInstance()->getFolding($foldingType, $foldingSubType);
+                $folding = FoldedStorageInsts::byTypeStype($foldingType, $foldingSubType);
             }
         } else if ($foldingSubType) {
             //Если передан только тип, то считаем, что имеется ввиду фолдинг поста

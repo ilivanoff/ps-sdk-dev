@@ -11,7 +11,7 @@ class ExportFoldingZip extends AbstractAdminAjaxAction {
         $fsubtype = $params->str('fsubtype');
         $fident = $params->str('fident');
 
-        $zip = Handlers::getInstance()->getFolding($ftype, $fsubtype)->export2zip($fident);
+        $zip = FoldedStorageInsts::byTypeStype($ftype, $fsubtype)->export2zip($fident);
         if (!$zip->isFile()) {
             return 'Не удалось создать архив';
         }

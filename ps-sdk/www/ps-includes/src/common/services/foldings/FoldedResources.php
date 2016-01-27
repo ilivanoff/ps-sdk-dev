@@ -416,8 +416,8 @@ abstract class FoldedResources extends AbstractSingleton {
      * 
      * @return FoldedEntity
      */
-    public function getFoldedEntity($ident, $ensureHasAccess = false) {
-        return $this->hasAccess($ident) ? FoldedEntity::inst($this, $ident) : null;
+    public function getFoldedEntity($ident, $assert = false) {
+        return $this->hasAccess($ident) ? FoldedEntity::inst($this, $ident) : ($assert ? PsUtil::raise("Сущность фолдинга [{}] не существует.", $this->getUnique($ident)) : null);
     }
 
     /**

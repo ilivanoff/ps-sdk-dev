@@ -22,7 +22,7 @@ class FORM_AdminFoldingCreateForm extends BaseAjaxForm {
         $funique = $adapter->str('folding');
         $fident = check_condition($adapter->str(self::PARAM_NEW_FOLDING_IDENT), 'Пустой идентификатор фолдинга');
 
-        $folding = Handlers::getInstance()->getFoldingByUnique($funique);
+        $folding = FoldedStorageInsts::byUnique($funique);
         $folding->assertNotExistsEntity($fident);
 
         switch ($button) {

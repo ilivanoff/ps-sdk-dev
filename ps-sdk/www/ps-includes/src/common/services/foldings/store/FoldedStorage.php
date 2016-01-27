@@ -272,6 +272,27 @@ final class FoldedStorage extends AbstractSingleton {
     }
 
     /**
+     * Метод проверяет, имеет ли фолдинг с данным типом - подтип.
+     * Например, все фолдинги библиотек объединены в фолдинг с типом lib и разными подтипами [s, p, ...].
+     * 
+     * @param string $type - тип фолдинга
+     * @param bool $assertExists - ругаться ли, если фолдинг не найден
+     * @return true, false, null если фолдинг не найден
+     */
+    public static function isFoldingHasSubtype($type, $assertExists = true) {
+        foreach (self::listFoldingUniques() as $unique) {
+            if ($unique == $type) {
+                return false; //---
+            }
+            if (starts_with($unique, $type . '-')) {
+                return true; //---
+            }
+        }
+        check_condition(!$assertExists, "Не удалось найти folding с типом [$type]");
+        return null;
+    }
+
+    /**
      * Метод патыется получить путь к сущности фолдинга по названию класса.
      * Все классы для сущностей фолдинга начинаются на префикс с подчёркиванием,
      * например PL_, на этом и основан способ подключени класса.

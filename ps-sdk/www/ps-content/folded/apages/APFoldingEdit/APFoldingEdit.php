@@ -90,9 +90,9 @@ class AP_APFoldingEdit extends BaseAdminPage {
         $RQ = RequestArrayAdapter::inst();
 
         /** @var FoldedEntity */
-        $entity = Handlers::getInstance()->getFoldedEntityByUnique($RQ->str('entity'), false);
+        $entity = FoldedStorageInsts::getFoldedEntityByUnique($RQ->str('entity'), false);
         /** @var FoldedResources */
-        $folding = $entity ? $entity->getFolding() : Handlers::getInstance()->getFoldingByUnique($RQ->str('folding'), false);
+        $folding = $entity ? $entity->getFolding() : FoldedStorageInsts::byUnique($RQ->str('folding'), false);
 
         $mode = $RQ->str('mode', self::MODE_FOLDINGS_LIST);
         $PARAMS['mode'] = $mode;

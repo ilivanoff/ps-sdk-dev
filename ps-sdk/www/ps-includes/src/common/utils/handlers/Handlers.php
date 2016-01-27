@@ -10,7 +10,6 @@ final class Handlers {
     private $folding2unique = array();
     private $folding2smartyPrefix = array();
     private $folding2classPrefix = array();
-    private $postProcessorFoldings = array();
     private $pageFinaliseFoldings = array();
 
     private function __construct() {
@@ -66,16 +65,6 @@ final class Handlers {
     }
 
     /*
-     * Обход всех классов
-     */
-
-    private function walk(array $what, $callback) {
-        foreach ($what as $ob) {
-            call_user_func($callback, $ob);
-        }
-    }
-
-    /*
      * Фолдинги
      */
 
@@ -100,72 +89,10 @@ final class Handlers {
     }
 
     /** @return FoldedResources */
-    public function getFoldingByClassPrefix($prefix, $assert = true) {
-        $folding = array_get_value($prefix, $this->folding2classPrefix);
-        check_condition(!$assert || !!$folding, "Фолдинг с префиксом классов [$prefix] не существует.");
-        return $folding;
-    }
-
-    /** @return FoldedEntity */
-    public function getFoldedEntityByUnique($unique, $assert = true) {
-        $parts = explode('-', trim($unique));
-        $count = count($parts);
-        if ($count < 2) {
-            check_condition(!$assert, "Некорректный идентификатор сущности фолдинга: [$unique].");
-            return null;
-        }
-
-        $type = $parts[0];
-        $hasSubType = $this->isFoldingHasSubtype($type, false);
-        if ($hasSubType === null) {
-            //Фолдинга с таким типом вообще не существует
-            check_condition(!$assert, "Сущность фолдинга [$unique] не существует.");
-            return null;
-        }
-
-        if ($hasSubType && ($count == 2)) {
-            check_condition(!$assert, "Некорректный идентификатор сущности фолдинга: [$unique].");
-            return null;
-        }
-
-        $subtype = $hasSubType ? $parts[1] : null;
-        $folding = $this->getFolding($type, $subtype, $assert);
-
-        if (!$folding) {
-            return null;
-        }
-
-        array_shift($parts);
-        if ($hasSubType) {
-            array_shift($parts);
-        }
-
-        //TODO '-' вынести на константы
-        $ident = implode('-', $parts);
-
-        return $folding->getFoldedEntity($ident, $assert);
-    }
-
-    /** @return FoldedResources */
     public function getFoldingBySmartyPrefix($smartyPrefix, $assert = true) {
         $folding = array_get_value($smartyPrefix, $this->folding2smartyPrefix);
         check_condition(!$assert || $folding, "Не удалось определить фолдинг для smaty-функции с префиксом [$smartyPrefix]");
         return $folding;
-    }
-
-    /**
-     * Метод проверяет, имеет ли фолдинг с данным типом - подтип.
-     * Например, все фолдинги для постов объединены в один фолдинг с типом post и разными подтипами [is, bp, tr].
-     */
-    public function isFoldingHasSubtype($type, $errIfNotFound = true) {
-        /** @var FoldedResources */
-        foreach ($this->foldings as $folding) {
-            if ($folding->isItByType($type)) {
-                return $folding->hasSubType();
-            }
-        }
-        check_condition($errIfNotFound, "Не удалось найти folding с типом [$type]");
-        return null;
     }
 
     /*
@@ -196,6 +123,16 @@ final class Handlers {
     /** @return PostsProcessor */
     public function getPostsProcessorByPostType($postType, $isEnsure = true) {
         return $this->getHandlerImpl($this->postsProcessors, $postType, $isEnsure);
+    }
+
+    public function getTimeLineFolding() {
+        $insts = array();
+        foreach (FoldedStorageInsts::listFoldings() as $folding) {
+            if ($folding instanceof TimeLineFolding) {
+                $insts[] = $folding;
+            }
+        }
+        return $insts;
     }
 
     private static $inst;
