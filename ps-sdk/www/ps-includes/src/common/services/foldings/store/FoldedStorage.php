@@ -219,6 +219,22 @@ final class FoldedStorage extends AbstractSingleton {
     }
 
     /**
+     * Проверка существования префикса класса
+     * @param string $sourcePrefix - префикс ресурсов фолдинга [plib, pp]
+     */
+    public static function existsSourcePrefix($sourcePrefix) {
+        return array_key_exists($sourcePrefix, self::inst()->SOURCE_2_FOLDING);
+    }
+
+    /**
+     * Метод утверждает, что префикс ресурсов существует
+     * @param string $sourcePrefix - префикс ресурсов фолдинга [plib, pp]
+     */
+    public static function assertExistsSourcePrefix($sourcePrefix) {
+        return check_condition(self::existsSourcePrefix($sourcePrefix), "Фолдинг с префиксом ресурсов [$sourcePrefix] не существует");
+    }
+
+    /**
      * Проверка существования сущности фолдинга
      * 
      * @param string $foldedUnique - код фолдинга [lib-p]
@@ -298,6 +314,15 @@ final class FoldedStorage extends AbstractSingleton {
      */
     public static function getFoldingSourcePrefix($foldedUnique) {
         return self::assertExistsFolding($foldedUnique) ? array_search($foldedUnique, self::inst()->SOURCE_2_FOLDING) : null;
+    }
+
+    /**
+     * Получение фолдинга по префиксу ресурса: plib => lib-p
+     * @param string $sourcePrefix - префикс ресурса [plib]
+     * @param bool $assert - признак проверки существования
+     */
+    public static function getFoldingBySourcePrefix($sourcePrefix, $assert = true) {
+        return self::existsSourcePrefix($sourcePrefix) ? self::inst()->SOURCE_2_FOLDING[$sourcePrefix] : ($assert ? self::assertExistsSourcePrefix($sourcePrefix) : null);
     }
 
     /**

@@ -21,7 +21,7 @@ ExceptionHandler::registerPretty();
 //var_dump(DirItem::inst(ConfigIni::globalsFilePath())->getModificationTime());
 
 
-print_r(FoldedStorage::listFoldedTypes());
+echo FoldedStorageInsts::bySourcePrefix('plib');
 
 //echo PL_advgraph::getIdent();
 

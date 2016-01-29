@@ -6,7 +6,7 @@ class SmartyPanelsInclider extends AbstractSmartyPlugin {
 
     protected function do_modifier($tagName, $panelName) {
         $smartyPrefix = cut_string_end($tagName, self::MODIFIER_SUFFIX);
-        echo Handlers::getInstance()->getFoldingBySmartyPrefix($smartyPrefix)->includePanel($panelName);
+        echo FoldedStorageInsts::bySourcePrefix($smartyPrefix)->includePanel($panelName);
     }
 
     /**

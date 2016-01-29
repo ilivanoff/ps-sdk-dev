@@ -8,7 +8,7 @@ class SmartyBubblesIncluder extends AbstractSmartyPlugin {
         //Текст
         $text = $text == '.' ? null : $text;
         //Имплементация доджна вернуть ссылку для показа bubble
-        return Handlers::getInstance()->getFoldingBySmartyPrefix($fname)->getBubbleHref($ident, $text, $params);
+        return FoldedStorageInsts::bySourcePrefix($fname)->getBubbleHref($ident, $text, $params);
     }
 
     /**

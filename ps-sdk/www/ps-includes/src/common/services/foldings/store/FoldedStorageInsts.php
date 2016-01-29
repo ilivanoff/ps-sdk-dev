@@ -51,7 +51,7 @@ class FoldedStorageInsts {
      * @return FoldedResources
      */
     public static function byUnique($unique, $assert = true) {
-        $folding = array_get_value($unique, self::inst()->FOLDINGS);
+        $folding = $unique ? array_get_value($unique, self::inst()->FOLDINGS) : null;
         check_condition(!$assert || $folding, "Экземпляр фолдинга [$unique] не зарегистрирован.");
         return $folding;
     }
@@ -84,6 +84,16 @@ class FoldedStorageInsts {
      */
     public static function existsClassPrefix($classPrefix) {
         return FoldedStorage::existsClassPrefix($classPrefix) && self::existsFolding(FoldedStorage::getFoldingByClassPrefix($classPrefix));
+    }
+
+    /**
+     * Функция возвращает экземпляр фолдинга по префиксу его ресурсов, например ip, plib
+     *
+     * @param string $sourcePrefix - префикс ресурсов
+     * @param bool $assert - признак существования
+     */
+    public static function bySourcePrefix($sourcePrefix, $assert = true) {
+        return self::byUnique(FoldedStorage::getFoldingBySourcePrefix($sourcePrefix, $assert), $assert);
     }
 
     /**

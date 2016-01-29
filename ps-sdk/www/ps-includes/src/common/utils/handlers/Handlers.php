@@ -2,7 +2,6 @@
 
 final class Handlers {
 
-    private $postsProcessors = array();
     private $foldings = array();
     private $libs = array();
     private $bubbles = array();
@@ -76,25 +75,6 @@ final class Handlers {
         return $this->panels;
     }
 
-    /** @return FoldedResources */
-    public function getFoldingByUnique($unique, $assert = true) {
-        $folding = array_get_value($unique, $this->folding2unique);
-        check_condition(!$assert || $folding, "Фолдинг [$unique] не существует.");
-        return $folding;
-    }
-
-    /** @return FoldedResources */
-    public function getFolding($type, $subtype = null, $assert = true) {
-        return $this->getFoldingByUnique(FoldedResources::unique($type, $subtype), $assert);
-    }
-
-    /** @return FoldedResources */
-    public function getFoldingBySmartyPrefix($smartyPrefix, $assert = true) {
-        $folding = array_get_value($smartyPrefix, $this->folding2smartyPrefix);
-        check_condition(!$assert || $folding, "Не удалось определить фолдинг для smaty-функции с префиксом [$smartyPrefix]");
-        return $folding;
-    }
-
     /*
      * Библиотеки
      */
@@ -105,24 +85,13 @@ final class Handlers {
 
     /** @return LibResources */
     public function getLibManager($libType, $assert = true) {
-        return $this->getFolding(LibResources::LIB_FOLDING_TYPE, $libType, $assert);
-    }
-
-    /**
-     * Получение обработчика
-     */
-    private function getHandlerImpl(array $handlers, $postType, $isEnsure) {
-        if (array_key_exists($postType, $handlers)) {
-            return $handlers[$postType];
-        } else {
-            check_condition(!$isEnsure, "Неизвестный тип поста: [$postType]");
-        }
-        return null;
+        return FoldedStorageInsts::byTypeStype(LibResources::LIB_FOLDING_TYPE, $libType, $assert);
     }
 
     /** @return PostsProcessor */
     public function getPostsProcessorByPostType($postType, $isEnsure = true) {
-        return $this->getHandlerImpl($this->postsProcessors, $postType, $isEnsure);
+        //TODO
+        return array();
     }
 
     public function getTimeLineFolding() {
