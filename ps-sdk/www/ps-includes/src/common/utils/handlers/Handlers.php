@@ -6,10 +6,6 @@ final class Handlers {
     private $libs = array();
     private $bubbles = array();
     private $panels = array();
-    private $folding2unique = array();
-    private $folding2smartyPrefix = array();
-    private $folding2classPrefix = array();
-    private $pageFinaliseFoldings = array();
 
     private function __construct() {
         PsProfiler::inst(__CLASS__)->start(__FUNCTION__);
@@ -45,18 +41,6 @@ final class Handlers {
             //Фолдинги, предоставляющие панели
             if ($folding instanceof PanelFolding) {
                 $this->panels[] = $folding;
-            }
-            //Фолдинги, финализирующие контент страницы
-            if ($folding instanceof PageFinalizerFolding) {
-                $this->pageFinaliseFoldings[] = $folding;
-            }
-            //Индексированный список фолдингов
-            $this->folding2unique[$folding->getUnique()] = $folding;
-            //Префиксы smarty к фолдингам
-            $this->folding2smartyPrefix[$folding->getSmartyPrefix()] = $folding;
-            //Префиксы классов к фолдингам
-            if ($folding->getClassPrefix()) {
-                $this->folding2classPrefix[$folding->getClassPrefix()] = $folding;
             }
         }
 
