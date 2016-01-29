@@ -50,6 +50,14 @@ final class FoldedStorage extends AbstractSingleton {
 
     /**
      * Карта:
+     * тип фолдинга => массив подтипов фолдинга
+     * 
+     * @var array
+     */
+    private $TYPE_2_STYPE = array();
+
+    /**
+     * Карта:
      * префикс_классов => тип_фолдинга
      * 
      * @var array
@@ -115,11 +123,31 @@ final class FoldedStorage extends AbstractSingleton {
              * SLIB_ => lib-s
              */
             $this->CLASSPREFIX_2_FOLDING[strtoupper($fsubtype . $ftype) . '_'] = $foldedUnique;
+
+            /*
+             * Построим карту отношения типа фолдинга к массиву подтипов фолдингов
+             * lib => array('s', 'p')
+             * pl = > null
+             */
+            if (array_key_exists($ftype, $this->TYPE_2_STYPE)) {
+                //Если мы второй раз попали в этот блок для типа фолдинга, то он должен иметь подтип [lib=>array('s')].
+                check_condition(is_array($this->TYPE_2_STYPE[$ftype]), "Уже зарегистрирован фолдинг с типом [$ftype] без подтипов");
+                $this->TYPE_2_STYPE[$ftype][] = check_condition($fsubtype, "Уже зарегистрирован фолдинг с типом [$ftype] и с подтипами");
+            } else {
+                if ($fsubtype) {
+                    //Новый тип фолдинга с подтипом.
+                    $this->TYPE_2_STYPE[$ftype] = array($fsubtype);
+                } else {
+                    //Новый тип фолдинга без подтипа.
+                    $this->TYPE_2_STYPE[$ftype] = null;
+                }
+            }
         }
 
         //Отсортируем по уникальным кодам фолдингов
         ksort($this->FOLDING_2_ENTITY_2_ENTABSPATH);
         ksort($this->FOLDING_2_ENTITY_2_ENTRELPATH);
+        ksort($this->TYPE_2_STYPE);
 
         //Установим идентификаторы фолдингов
         $this->FOLDINGS = array_keys($this->FOLDING_2_ENTITY_2_ENTRELPATH);
@@ -130,6 +158,7 @@ final class FoldedStorage extends AbstractSingleton {
             $this->LOGGER->info('FOLDINGS: {}', print_r($this->FOLDINGS, true));
             $this->LOGGER->info('FOLDING_2_ENTITY_2_ENTABSPATH: {}', print_r($this->FOLDING_2_ENTITY_2_ENTABSPATH, true));
             $this->LOGGER->info('FOLDING_2_ENTITY_2_ENTRELPATH: {}', print_r($this->FOLDING_2_ENTITY_2_ENTRELPATH, true));
+            $this->LOGGER->info('TYPE_2_STYPE: {}', print_r($this->TYPE_2_STYPE, true));
             $this->LOGGER->info('CLASSPREFIX_2_FOLDING: {}', print_r($this->CLASSPREFIX_2_FOLDING, true));
             $this->LOGGER->info('SOURCE_2_FOLDING: {}', print_r($this->SOURCE_2_FOLDING, true));
             $this->LOGGER->info('BUILDING_TIME: {} sec', $sec->getTotalTime());
@@ -280,16 +309,19 @@ final class FoldedStorage extends AbstractSingleton {
      * @return true, false, null если фолдинг не найден
      */
     public static function isFoldingHasSubtype($type, $assertExists = true) {
-        foreach (self::listFoldingUniques() as $unique) {
-            if ($unique == $type) {
-                return false; //---
-            }
-            if (starts_with($unique, $type . '-')) {
-                return true; //---
-            }
+        if (array_key_exists($type, self::inst()->TYPE_2_STYPE)) {
+            return is_array(self::inst()->TYPE_2_STYPE[$type]);
+        } else {
+            check_condition(!$assertExists, "Не удалось найти folding с типом [$type]");
+            return null; //---
         }
-        check_condition(!$assertExists, "Не удалось найти folding с типом [$type]");
-        return null;
+    }
+
+    /**
+     * Метод возвращает список типоф волдингов: [pp, pb, lib, pl, ...]
+     */
+    public static function listFoldedTypes() {
+        return array_keys(self::inst()->TYPE_2_STYPE);
     }
 
     /**

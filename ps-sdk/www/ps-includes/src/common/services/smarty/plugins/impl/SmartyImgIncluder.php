@@ -210,10 +210,8 @@ class SmartyImgIncluder extends AbstractSmartyPlugin {
 
     protected function getPlugins() {
         $result = array();
-        //TODO - переделать на FoldedStorage::listFoldedTypes
-        /* @var $folding FoldedResources */
-        foreach (FoldedStorageInsts::listFoldings() as $folding) {
-            $this->registerPluginImpl($result, $folding->getFoldingType());
+        foreach (FoldedStorage::listFoldedTypes() as $foldingType) {
+            $this->registerPluginImpl($result, $foldingType);
         }
         $this->registerPluginImpl($result, '');
         return $result;

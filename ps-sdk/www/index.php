@@ -8,6 +8,8 @@ header('Content-Type: text/html; charset=utf-8');
 
 require_once 'ps-includes/MainImportAdmin.php';
 
+ExceptionHandler::registerPretty();
+
 //print_r(ConfigIni::smartyPlugins());
 //print_r(ConfigIni::smartyTemplates());
 //print_r(FoldingsIni::foldingsRel());
@@ -18,7 +20,10 @@ require_once 'ps-includes/MainImportAdmin.php';
 //PsMailSender::fastSend('Hello', 'Body', 'azazello85@mail.ru');
 //var_dump(DirItem::inst(ConfigIni::globalsFilePath())->getModificationTime());
 
-echo PL_advgraph::getIdent();
+
+print_r(FoldedStorage::listFoldedTypes());
+
+//echo PL_advgraph::getIdent();
 
 die;
 
