@@ -292,9 +292,16 @@ class DirItem implements Spritable {
         return $this;
     }
 
+    /**
+     * Метод копирует файл в заданное положение
+     * 
+     * @param string $destPath - путь назначения
+     * @return DirItem
+     */
     public function copyTo($destPath) {
         $destPath = $destPath instanceof DirItem ? $destPath->getAbsPath() : $destPath;
         @copy($this->absPath, $destPath);
+        return $this;
     }
 
     public function removeIfMaxSize() {
