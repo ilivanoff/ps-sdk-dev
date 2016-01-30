@@ -51,6 +51,7 @@ class PSSmartyPlugin {
      * Регистрация SDK плагинов
      */
     private function registerSdkSmartyPlugins() {
+        //$this->register(new SmartyBlocks());
         $this->register(new SmartyFunctions());
         //$this->register(new SmartyModifiers());
         $this->register(new SmartyBubblesIncluder());
