@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * {'panelName'|trpostpanel}
+ */
 class SmartyPanelsInclider extends AbstractSmartyPlugin {
 
     const MODIFIER_SUFFIX = 'panel';
@@ -9,17 +12,11 @@ class SmartyPanelsInclider extends AbstractSmartyPlugin {
         echo FoldedStorageInsts::bySourcePrefix($smartyPrefix)->includePanel($panelName);
     }
 
-    /**
-     * Основной метод
-     */
-    protected function getPlugins() {
-        $result = array();
+    protected function registerPluginsImpl() {
         /* @var $manager FoldedResources */
         foreach (Handlers::getInstance()->getPanelProviders() as $manager) {
-            $prefix = $manager->getSmartyPrefix();
-            $result[$prefix . self::MODIFIER_SUFFIX] = Smarty::PLUGIN_MODIFIER; //Модификатор
+            $this->registerModifier($manager->getSmartyPrefix() . self::MODIFIER_SUFFIX);
         }
-        return $result;
     }
 
 }

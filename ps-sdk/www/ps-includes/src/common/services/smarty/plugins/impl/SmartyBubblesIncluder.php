@@ -20,17 +20,11 @@ class SmartyBubblesIncluder extends AbstractSmartyPlugin {
         }
     }
 
-    private function registerPluginImpl(array &$result, $prefix) {
-        $result[$prefix] = Smarty::PLUGIN_BLOCK; //Элемент библиотеки
-    }
-
-    protected function getPlugins() {
-        $result = array();
+    protected function registerPluginsImpl() {
         /* @var $manager FoldedResources */
         foreach (Handlers::getInstance()->getBubbles() as $manager) {
-            $this->registerPluginImpl($result, $manager->getSmartyPrefix());
+            $this->registerBlock($manager->getSmartyPrefix());
         }
-        return $result;
     }
 
 }

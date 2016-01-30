@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * {plimg ident='atom' name="el.png"}
+ */
 class SmartyImgIncluder extends AbstractSmartyPlugin {
 
     private function insert($FNAME, ArrayAdapter $params, $content) {
@@ -200,21 +203,24 @@ class SmartyImgIncluder extends AbstractSmartyPlugin {
         $this->insert($tagName, ArrayAdapter::inst($params), null);
     }
 
-    private function registerPluginImpl(array &$result, $type) {
+    private function registerPluginImpl($type) {
+        $result = array();
         $result[$type . 'img'] = Smarty::PLUGIN_FUNCTION;  //Обычная картинка (может быть блочной, если есть текст или id)
         $result[$type . 'imgb'] = Smarty::PLUGIN_FUNCTION; //Блочная картинка 
         $result[$type . 'imgn'] = Smarty::PLUGIN_FUNCTION; //Блочная картинка без нумерации
         $result[$type . 'imgc'] = Smarty::PLUGIN_BLOCK; //Картинка на содержимым
         $result[$type . 'imgp'] = Smarty::PLUGIN_BLOCK; //Всплывающая картинка (popup img)
+
+        foreach ($result as $tagName => $pluginType) {
+            $this->register($tagName, $pluginType);
+        }
     }
 
-    protected function getPlugins() {
-        $result = array();
+    protected function registerPluginsImpl() {
         foreach (FoldedStorage::listFoldedTypes() as $foldingType) {
-            $this->registerPluginImpl($result, $foldingType);
+            $this->registerPluginImpl($foldingType);
         }
-        $this->registerPluginImpl($result, '');
-        return $result;
+        $this->registerPluginImpl('');
     }
 
 }

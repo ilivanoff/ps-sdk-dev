@@ -123,6 +123,10 @@ final class ConfigIni extends AbstractIni {
         return self::getPropCheckType(self::GROUP_SMARTY, 'filter', array(PsConst::PHP_TYPE_STRING));
     }
 
+    public static function smartyPlugin() {
+        return self::getPropCheckType(self::GROUP_SMARTY, 'plugin', array(PsConst::PHP_TYPE_STRING));
+    }
+
     public static function smartyPlugins() {
         return DirManager::relToAbs(self::getPropCheckType(self::GROUP_SMARTY, 'plugins', array(PsConst::PHP_TYPE_ARRAY, PsConst::PHP_TYPE_NULL)));
     }

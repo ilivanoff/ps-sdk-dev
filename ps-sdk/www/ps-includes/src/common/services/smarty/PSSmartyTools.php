@@ -36,6 +36,7 @@ class PSSmartyTools {
 
     public static function checkFunctionType($type) {
         check_condition(in_array($type, self::$TYPES), "Illegal smarty function type [$type].");
+        return $type; //---
     }
 
 }

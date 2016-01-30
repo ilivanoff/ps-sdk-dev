@@ -50,16 +50,10 @@ final class PSSmarty extends AbstractSingleton {
          */
         PSSmartyFilter::inst()->bind($this->smarty);
 
-        //return; //---
-
         /*
-         * TODO - доработать
-         * Зарегистрируем наши функции
+         * ПОДКЛЮЧАЕМ ПЛАГИНЫ
          */
-        /* @var $plugin AbstractSmartyPlugin */
-        foreach (Classes::getDirClasses(__DIR__, 'plugins/impl', 'AbstractSmartyPlugin') as $plugin) {
-            $plugin->registerPlugins($this->smarty);
-        }
+        PSSmartyPlugin::inst()->bind($this->smarty);
     }
 
     /** @return Smarty */

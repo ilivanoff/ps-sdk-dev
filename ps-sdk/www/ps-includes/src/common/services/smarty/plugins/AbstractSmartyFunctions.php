@@ -8,14 +8,11 @@
  */
 abstract class AbstractSmartyFunctions extends AbstractSmartyPlugin {
 
-    protected function getPlugins() {
-        $type = strtolower(cut_string_end(cut_string_start($this->CLASS, 'Smarty'), 's'));
-
-        $result = array();
-        foreach (PsUtil::getClassMethods($this->CLASS, true, true, null, true) as $method) {
-            $result[$method] = $type;
+    protected function registerPluginsImpl() {
+        $pluginType = strtolower(cut_string_end(cut_string_start(get_called_class(), 'Smarty'), 's'));
+        foreach (PsUtil::getClassMethods(get_called_class(), true, true, null, true) as $tagName) {
+            $this->register($tagName, $pluginType);
         }
-        return $result;
     }
 
 }
