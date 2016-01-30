@@ -19,3 +19,5 @@
 /ps-sdk/www/ps-includes/processes/cron/*.log
 /ps-sdk/www/ps-content/images/icons/Thumbs.db
 /ps-sdk/www/ps-includes/processes/toolspng/process.log
+/ps-sdk/www/ps-includes/processes/toolspng/output
+/ps-sdk/www/ps-includes/processes/toolspng/source
