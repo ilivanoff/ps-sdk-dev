@@ -5,7 +5,11 @@
     <li>Test manager</li>
     <li>Отсортировать и почистить Defines</li>
     <li>DirManager почистить</li>
+    <li>Handlers выкинуть</li>
     <li>Img mosaic</li>
+    <li>Smarty шаблоны подключать по пути</li>
+    <li>Подключение ресурсов на страницу в WP</li>
+    <li>Переписать работу с плагинами</li>
     <li>
         <h5>
             Плагины

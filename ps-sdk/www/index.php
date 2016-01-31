@@ -21,6 +21,10 @@ ExceptionHandler::registerPretty();
 //var_dump(DirItem::inst(ConfigIni::globalsFilePath())->getModificationTime());
 
 
+print_r(TestManagerCaller::getMethodsList());
+
+die;
+
 PSSmarty::smarty();
 
 echo (new SmartyFunctions())->psctrl(array());
