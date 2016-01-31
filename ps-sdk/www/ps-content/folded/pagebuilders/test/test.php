@@ -27,10 +27,8 @@ class PB_test extends AbstractPageBuilder {
         } while ($SM->templateExists("test/page$cnt.tpl"));
 
         $content = $this->getContentImpl($requestParams, $SM);
-        $galls = DirManager::mmedia()->getDirContent('gallery', DirItemFilter::DIRS);
 
         $smartyParams['cnt'] = $cnt;
-        $smartyParams['galls'] = $galls;
         $smartyParams['content'] = $content;
 
         return $smartyParams;

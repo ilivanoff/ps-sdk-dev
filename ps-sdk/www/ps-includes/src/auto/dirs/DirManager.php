@@ -59,11 +59,6 @@ class DirManager {
         return self::instShifted('stuff/', $notCkeckDirs, $dirs);
     }
 
-    //mmedia
-    public static function mmedia($notCkeckDirs = null, $dirs = null) {
-        return self::instShifted('mmedia/', $notCkeckDirs, $dirs);
-    }
-
     //smarty
     public static function smarty($notCkeckDirs = null, $dirs = null) {
         return self::instShifted('stuff/smarty/', $notCkeckDirs, $dirs);

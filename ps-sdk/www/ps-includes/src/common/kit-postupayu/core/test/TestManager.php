@@ -27,7 +27,7 @@ final class TestManager extends AbstractSingleton {
     /** @return DirItem */
     private function getAvatarImg() {
         if (!isset($this->avatars)) {
-            $this->avatars = array_values(DirManager::mmedia('avatars/test')->getDirContent(null, DirItemFilter::IMAGES));
+            $this->avatars = array_values(DirManager::images('avatars')->getDirContent(null, DirItemFilter::IMAGES));
             check_condition($this->avatars, 'No avatar images');
         }
         return $this->avatars[rand(0, count($this->avatars) - 1)];

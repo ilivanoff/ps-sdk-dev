@@ -3,6 +3,9 @@
     <li>Ограничение кол-ва логов</li>
     <li>Ротация логов/эксепшенов</li>
     <li>Test manager</li>
+    <li>Отсортировать и почистить Defines</li>
+    <li>DirManager почистить</li>
+    <li>Img mosaic</li>
     <li>
         <h5>
             Плагины
