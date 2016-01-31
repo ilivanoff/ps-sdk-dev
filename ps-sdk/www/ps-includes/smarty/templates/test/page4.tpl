@@ -6,7 +6,7 @@
     В этот момент тело имело скорость v, направленную под углом &alpha; к горизонту:
 </p>
 
-{postimgb type='tr' ident='kinemtochki3' name='VH.png'}
+{*postimgb type='tr' ident='kinemtochki3' name='VH.png'*}
 
 <p>
     Найдите время достижения этой точки траектории.
@@ -18,7 +18,7 @@
     Начало координат поместим в точке бросания. Координатные оси направим так, как показано на рисунке:
 </p>
 
-{postimgb type='tr' ident='kinemtochki3' name='VH2.png'}
+{*postimgb type='tr' ident='kinemtochki3' name='VH2.png'*}
 
 <p>
     Запишем выражения для проекции скорости v\sub{y} и координаты y:
@@ -133,7 +133,7 @@ t_{1,2}=\frac{1}{g}\Bigl(\sqrt{v^2\sin^2\alpha+2gH}\pm v\sin\alpha\Bigr)
 {/task}
 
 
-{postimgb type='tr' ident='kinemtochki3' name='hh0.png'}
+{*postimgb type='tr' ident='kinemtochki3' name='hh0.png'*}
 
 \[
 y=h_0+v_0\sin\alpha t - \frac{gt^2}{2}
@@ -254,7 +254,7 @@ t_{1,2}
 
 \[t=\sqrt{\frac{2H}{g}}\]
 
-{postimgb type='tr' ident='kinemtochki3' name='VH3.png'}
+{*postimgb type='tr' ident='kinemtochki3' name='VH3.png'*}
 
 \[
 x = x_0 + v_0t+\frac{at^2}{a}

@@ -146,7 +146,11 @@ final class PsImg {
             return false;
         }
 
-        return array_get_value('mime', $imgSize) === self::getMime($imgSize[2]);
+        try {
+            return array_get_value('mime', $imgSize) === self::getMime($imgSize[2]);
+        } catch (Exception $ex) {
+            return false; //---
+        }
     }
 
     /**
