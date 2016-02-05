@@ -5,11 +5,6 @@
  */
 class PageContext extends AbstractSingleton {
 
-    //Метод возвращает признак - является ли контекст выполнения запросом ajax
-    public function isAjax() {
-        return (defined('PS_AJAX_CONTEXT') && !!PS_AJAX_CONTEXT) || ServerArrayAdapter::IS_AJAX();
-    }
-
     /** @return WebPage */
     public function getPage() {
         return WebPages::getCurPage();
