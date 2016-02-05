@@ -10,8 +10,8 @@ $LOGGING_STREAM = 2;
 //Ограничим список логгеров
 $LOGGERS_LIST[] = 'PROCESS';
 $LOGGERS_LIST[] = 'PsLogger';
-$LOGGERS_LIST[] = 'PsSecurity';
-
+//$LOGGERS_LIST[] = 'PsSecurity';
+//
 //Запускаем профилирование
 $PROFILING_ENABLED = true;
 
@@ -89,6 +89,9 @@ function saveResult2Html($tplName, $params = null, $__DIR__ = __DIR__, $htmlName
 
 //Убедимся, что мы не подключены к БД. Все процессы должны сами коннектиться.
 PsConnectionPool::assertDisconnectied();
+
+//Отлогируем аргументы
+dolog('$argv: {}', array_to_string($argv));
 
 /**
  * После того, как мы определили все глобальные функции, вызовем функцию 

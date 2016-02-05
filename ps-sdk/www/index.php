@@ -21,7 +21,7 @@ ExceptionHandler::registerPretty();
 //var_dump(DirItem::inst(ConfigIni::globalsFilePath())->getModificationTime());
 
 
-print_r(TestManagerCaller::getMethodsList());
+print_r(PsMathRebusSolver::solve('драма+драма=театр'));
 
 die;
 

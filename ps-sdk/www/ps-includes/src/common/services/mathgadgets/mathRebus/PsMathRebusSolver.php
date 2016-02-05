@@ -57,7 +57,7 @@ class PsMathRebusSolver {
     }
 
     private function doSolve($rebus) {
-        $this->LOGGER->info("Обрабатываем ребус: [$rebus], пропускать первые символы={$this->SKIP_FIRST_CHARS}");
+        $this->LOGGER->info("Обрабатываем ребус: [$rebus], пропускать первые символы ? {$this->SKIP_FIRST_CHARS}");
 
         $this->COMBINATIONS = array();
 

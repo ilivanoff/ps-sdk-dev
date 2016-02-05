@@ -34,13 +34,26 @@ final class PsMathRebus extends AbstractSingleton {
     }
 
     public function getAnswersDI() {
-        return DirItem::inst(__DIR__, 'answers.txt');
+        return DirItem::inst(__DIR__, 'answers', PsConst::EXT_TXT);
     }
 
-    private function processAnswersFile() {
+    /**
+     * Метод разбирает файл с ребусами, который выглядит как:
+     * 
+     * ребус 1
+     * ответ 1.1
+     * ответ 1.2
+     * 
+     * ребус 2
+     * ответ 2.1
+     * ответ 2.2
+     * 
+     * @return type
+     */
+    private function parseAnswersFile(DirItem $di) {
         $result = array();
 
-        $lines = explode("\n", trim($this->getAnswersDI()->getFileContents(false)));
+        $lines = explode("\n", trim($di->getFileContents(false)));
 
         $current = null;
         foreach ($lines as $line) {
@@ -60,7 +73,11 @@ final class PsMathRebus extends AbstractSingleton {
             }
         }
 
-        $this->LOGGER->info(print_r($result, true));
+        if ($this->LOGGER->isEnabled()) {
+            $this->LOGGER->info('Rebuses of {}:', $di->getRelPath());
+            $this->LOGGER->info(print_r($result, true));
+            $this->LOGGER->info();
+        }
 
         return $result;
     }
@@ -72,7 +89,7 @@ final class PsMathRebus extends AbstractSingleton {
 
     protected function __construct() {
         $this->LOGGER = PsLogger::inst(__CLASS__);
-        $this->ANSWERS = $this->processAnswersFile();
+        $this->ANSWERS = $this->parseAnswersFile($this->getAnswersDI());
     }
 
 }
