@@ -183,6 +183,7 @@ define('PAGE_PASS_REMIND', 100);
 define('BASE_PAGE_FEEDBACK', 6);
 define('PAGE_POPUP', 7);
 define('PAGE_TEST', 8);
+define('PAGE_ENV', 9);
 define('PAGE_ADMIN', 10);
 
 /**

@@ -21,7 +21,7 @@ ExceptionHandler::registerPretty();
 //var_dump(DirItem::inst(ConfigIni::globalsFilePath())->getModificationTime());
 
 
-echo ServerArrayAdapter::PHP_SELF();
+echo PsEnvironment::isIncluded();
 
 //print_r(PsMathRebusSolver::solve('драма+драма=театр'));
 
@@ -88,8 +88,8 @@ echo PluginsManager::inst()->getAutogenDi('advgraph', array('x', 'y', 'z'), null
 die;
 
 echo TestUtils::testProductivity(function() {
-    FoldedStorage::getEntities('lib-s');
-}, 200);
+            FoldedStorage::getEntities('lib-s');
+        }, 200);
 
 br();
 echo FoldedStorage::extractInfoFromClassName('PL_slib', $classPrefix, $entity);
@@ -157,8 +157,8 @@ PSCache::inst()->saveToCache(array('a' => 1), '$key', '$group', 'xxx1');
 die;
 
 echo TestUtils::testProductivity(function() {
-    PSCache::inst()->getFromCache('$key', '$group', null, 'xxx1');
-});
+            PSCache::inst()->getFromCache('$key', '$group', null, 'xxx1');
+        });
 
 print_r(PSCache::inst()->getFromCache($key, $group, array('a'), 'xxx1'));
 

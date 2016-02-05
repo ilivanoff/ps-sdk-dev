@@ -38,6 +38,10 @@ class PageContext extends AbstractSingleton {
         return $this->getPage()->isType(PB_test::getIdent());
     }
 
+    public function isEnvPage() {
+        return $this->getPage()->isIt(PAGE_ENV);
+    }
+
     public function getRequestUrl() {
         return PsUrl::current();
     }

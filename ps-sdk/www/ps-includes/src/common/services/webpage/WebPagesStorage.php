@@ -29,6 +29,7 @@ class WebPagesStorage {
      */
     private function registerSdkPages() {
         $this->register('index.php', 'Главная страница', BASE_PAGE_INDEX);
+        $this->register('ps-env.php', 'Страница рабочего окружения', PAGE_ENV);
         $this->register('ps-admin.php', 'Консоль администратора', PAGE_ADMIN, PB_admin::getIdent());
         $this->register('ps-test.php', 'Тестовая страница', PAGE_TEST, PB_test::getIdent(), AuthManager::AUTH_TYPE_NO_MATTER, null, false);
         $this->register('ps-popup.php', 'Всплывающее окно', PAGE_POPUP, PB_popup::getIdent());
@@ -161,6 +162,12 @@ class WebPagesStorage {
      */
     private final function init() {
         $this->curpage = $this->searchPage(ServerArrayAdapter::PHP_SELF());
+
+        //Если страница не определена, то, возможно, это страница рабочего окружения (другой CMS).
+        if (!$this->curpage && PsEnvironment::isIncluded()) {
+            $this->curpage = $this->getPage(PAGE_ENV);
+        }
+
         $this->LOGGER->info('CURRENT: {}', $this->curpage);
     }
 

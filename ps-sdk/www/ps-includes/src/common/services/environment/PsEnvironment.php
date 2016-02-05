@@ -7,7 +7,18 @@
  */
 class PsEnvironment {
 
+    /**
+     * Признак того, что рабочее окружение инициализировалось (был вызван метод #init())
+     */
     private static $inited = false;
+
+    /**
+     * Признак того, что рабочее окружение было подключено:
+     * 1. был вызван метод #init()
+     * 2. в config.ini задано рабочее окружение
+     * 3. рабочее окружение подключено
+     */
+    private static $included = false;
 
     /**
      * Метод возвращает идентификатор работчего окружения
@@ -80,6 +91,9 @@ class PsEnvironment {
             $LOGGER->info('Inc file: {}', $envIncFile);
         }
 
+        //Проинициализировано окружение
+        self::$inited = true;
+
         //Регистрируем директорию с классами, специфичными только для данного окружения
         Autoload::inst()->registerBaseDir($envSrcDir, false);
 
@@ -109,6 +123,14 @@ class PsEnvironment {
      */
     private static function initImpl($LOGGER, $_INC_FILE_) {
         require_once $_INC_FILE_;
+    }
+
+    /**
+     * Метод возвращает признак - была ли подключена рабочая среда.
+     * Удостоверяемся, что этот метод был вызван после инициализации рабочего пространства.
+     */
+    public static function isIncluded() {
+        return check_condition(self::$inited, __CLASS__ . ' is not inited yet, cannot call ' . __METHOD__) && self::$included;
     }
 
 }
