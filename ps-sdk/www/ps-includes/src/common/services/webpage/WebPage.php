@@ -97,6 +97,9 @@ final class WebPage {
      * Основной метод, выполняющий построение страницы
      */
     public final function buildPage() {
+        //Может ли данная страница вообще быть построена
+        check_condition($this->builderIdent, "$this не может быть построена");
+
         //Проверим, установлена ли эта страница, как текущая
         check_condition(WebPages::isCurPage($this), "$this не установлена, как текущая, и не может быть построена");
 

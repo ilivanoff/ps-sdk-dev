@@ -18,7 +18,7 @@ class WebPagesStorage {
      * Регистрация страниц SDK
      */
     private function registerSdkPages() {
-        $this->register('index.php', 'Главная страница', BASE_PAGE_INDEX, PB_admin::getIdent());
+        $this->register('index.php', 'Главная страница', BASE_PAGE_INDEX);
         $this->register('ps-admin.php', 'Консоль администратора', PAGE_ADMIN, PB_admin::getIdent());
         $this->register('ps-test.php', 'Тестовая страница', PAGE_TEST, PB_test::getIdent(), AuthManager::AUTH_TYPE_NO_MATTER, null, false);
         $this->register('ps-popup.php', 'Всплывающее окно', PAGE_POPUP, PB_popup::getIdent());
@@ -48,7 +48,7 @@ class WebPagesStorage {
     $path, //'xxx.php'
             $name, // 'Консоль администратора'
             $code, // PAGE_ADMIN
-            $builderIdent, //
+            $builderIdent = null, //Идентификатор построителя страниц
             $authType = AuthManager::AUTH_TYPE_NO_MATTER, //
             $pageCodeNoAccess = null, //
             $allovedInProduction = true//
