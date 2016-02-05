@@ -9,6 +9,7 @@ class PsWpBridge extends AbstractSingleton {
 
     public function init() {
         PsLogger::inst(__CLASS__)->info(__FUNCTION__);
+        PsWpPlugin::addActions();
         add_shortcode('psplugin', array($this, 'psplugin'));
     }
 

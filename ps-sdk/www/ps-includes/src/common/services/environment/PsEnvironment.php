@@ -92,7 +92,7 @@ class PsEnvironment {
         }
 
         //Проинициализировано окружение
-        self::$inited = true;
+        self::$included = true;
 
         //Регистрируем директорию с классами, специфичными только для данного окружения
         Autoload::inst()->registerBaseDir($envSrcDir, false);
