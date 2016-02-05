@@ -10,7 +10,7 @@
             {text}
             {section start='1' loop=$cnt name='bar'}
                 {$idx=$smarty.section.bar.index}
-                <a href="test.php?num={$idx}">Тестовая страница {$idx}</a>
+                {page_href code=$smarty.const.PAGE_TEST p_num=$idx}Тестовая страница {$idx}{/page_href}
             {/section}
             {/text}
 
@@ -18,18 +18,18 @@
             <br/>
             <h4>Специальные страницы</h4>
             {text}
-            <a href="test.php?pagetype=patterns">Шаблоны</a>
-            <a href="test.php?pagetype=testmethods">Тестовые методы</a>
-            <a href="test.php?pagetype=smarty">Функции Smarty</a>
+            {page_href code=$smarty.const.PAGE_TEST p_pagetype='patterns'}Шаблоны{/page_href}
+            {page_href code=$smarty.const.PAGE_TEST p_pagetype='testmethods'}Тестовые методы{/page_href}
+            {page_href code=$smarty.const.PAGE_TEST p_pagetype='smarty'}Функции Smarty{/page_href}
             {/text}
 
 
             <br/>
             <h4>Картинки</h4>
             {text}
-            <a href="test.php?pagetype=doubleimg">Дублирующиеся картинки</a>
-            <a href="test.php?pagetype=imgbysize">Картинки по весу</a>
-            <a href="test.php?pagetype=formules">Формулы</a>
+            {page_href code=$smarty.const.PAGE_TEST p_pagetype='doubleimg'}Дублирующиеся картинки{/page_href}
+            {page_href code=$smarty.const.PAGE_TEST p_pagetype='imgbysize'}Картинки по весу{/page_href}
+            {page_href code=$smarty.const.PAGE_TEST p_pagetype='formules'}Формулы{/page_href}
             {/text}
 
         </div>

@@ -17,7 +17,7 @@ body {
 #header {
     border-top: 2px solid #339;
     padding-bottom: 15px;
-    /*background:url(/resources/images/images4use/BG/Opera-Background-Lite.jpg) left center no-repeat;*/
+    /*background:url(/ps-content/images/images4use/BG/Opera-Background-Lite.jpg) left center no-repeat;*/
 }
 
 #header a {
@@ -121,7 +121,7 @@ ul.navigation li {
     float:left;
     margin:0 0 0 0px;
     padding:3px 0 3px 19px;
-    background: url(/resources/images/icons/double_arrows.png) 6px center no-repeat;
+    background: url(/ps-content/images/icons/double_arrows.png) 6px center no-repeat;
     position:relative;
     z-index: 10;
 }
@@ -132,7 +132,7 @@ ul.navigation li.nobg {
 }
 
 ul.navigation ul.anchor li, ul.navigation li.anchor{
-    background-image: url(/resources/images/icons/anchor.png);
+    background-image: url(/ps-content/images/icons/anchor.png);
 }
 
 ul.navigation li.complex{
@@ -163,7 +163,7 @@ ul.navigation li li span.nav{
 }
 
 ul.navigation li li.selected{
-    background-image: url(/resources/images/icons/double_arrows_nc.png);
+    background-image: url(/ps-content/images/icons/double_arrows_nc.png);
     background-color: transparent !important;
 }
 
@@ -208,7 +208,7 @@ ul.navigation div.popupCarrier {
     top: -1px;
     padding-left:14px;
     height:13px;
-    background:url(/resources/images/icons/triple3.png) left bottom no-repeat;
+    background:url(/ps-content/images/icons/triple3.png) left bottom no-repeat;
 }
 
 ul.navigation li:hover div.popup, ul.navigation div.popup:hover{
@@ -222,7 +222,7 @@ ul.navigation ul.l1 li:hover ul.l2, ul.navigation ul.l2 li:hover ul.l3, ul.navig
 /* ГЛАВНАЯ ПАНЕЛЬ */
 #mainPanel {
     padding: 16px 0;
-    background:url(/resources/images/background-right.gif) right top repeat-y;
+    background:url(/ps-content/images/background-right.gif) right top repeat-y;
 }
 
 #leftPanel {
@@ -258,11 +258,11 @@ ul.navigation ul.l1 li:hover ul.l2, ul.navigation ul.l2 li:hover ul.l3, ul.navig
 #rightPanel p.exit a {
     color: #11584A;
     padding: 5px 22px 0 0;
-    background: url('/resources/images/icons/exit.png') right bottom no-repeat;
+    background: url('/ps-content/images/icons/exit.png') right bottom no-repeat;
 }
 
 #rightPanel p.exit a.processing {
-    background-image: url(/resources/images/icons/loading/loading16.gif);
+    background-image: url(/ps-content/images/icons/loading/loading16.gif);
     cursor: default;
     color: gray;
 }
@@ -329,7 +329,7 @@ ul.navigation ul.l1 li:hover ul.l2, ul.navigation ul.l2 li:hover ul.l3, ul.navig
 
 #rightPanel h3.cart {
     padding-left:28px;
-    background: url(/resources/images/icons/cart.png) left top no-repeat;
+    background: url(/ps-content/images/icons/cart.png) left top no-repeat;
 }
 
 /*
@@ -342,13 +342,13 @@ ul.navigation ul.l1 li:hover ul.l2, ul.navigation ul.l2 li:hover ul.l3, ul.navig
 
 #rightPanel ul.ps-rubrics li.l1{
     padding-left: 20px;
-    background: url(/resources/images/icons/folder.png) left center no-repeat;
+    background: url(/ps-content/images/icons/folder.png) left center no-repeat;
 }
 
 #rightPanel ul.ps-rubrics li.l2{
     margin-left: 20px;
     padding-left: 15px;
-    background: url(/resources/images/icons/list_chield.png) left center no-repeat;
+    background: url(/ps-content/images/icons/list_chield.png) left center no-repeat;
     /*font-size: 11px;*/
 }
 
@@ -409,7 +409,7 @@ ul.sitemap li a.uAreHere {
     font-weight: bold;
     margin-right: 5px;
     padding-left: 30px;
-    background: url(/resources/images/icons/arrow.png) left center no-repeat;
+    background: url(/ps-content/images/icons/arrow.png) left center no-repeat;
     color: black;
 }
 
@@ -427,12 +427,12 @@ ul.sitemap li.current a {
 
 ul.sitemap a.expandable {
     padding-right: 15px;
-    background: url('/resources/images/icons/arrb.png') right center no-repeat;
+    background: url('/ps-content/images/icons/arrb.png') right center no-repeat;
 }
 
 ul.sitemap a.expandable:hover,
 ul.sitemap a.expandable.expanded{
-    background-image: url('/resources/images/icons/arrr.png');
+    background-image: url('/ps-content/images/icons/arrr.png');
 }
 
 .ps-anons-holder {
@@ -455,11 +455,11 @@ ul.sitemap a.expandable.expanded{
 
 .ps-anons-holder ul li {
     padding-left: 13px;
-    background: url(/resources/images/icons/anchor.png) left center no-repeat;
+    background: url(/ps-content/images/icons/anchor.png) left center no-repeat;
 }
 
 .ps-anons-holder.loading ul li {
-    background-image: url(/resources/images/icons/anchor_gray.png);
+    background-image: url(/ps-content/images/icons/anchor_gray.png);
 }
 
 .ps-anons-holder.loading ul li a {
@@ -555,7 +555,7 @@ div.howTo .head {
     color: black;
     text-decoration: none;
     padding-right: 10px;
-    background: url(/resources/images/icons/new_window.png) right top no-repeat;
+    background: url(/ps-content/images/icons/new_window.png) right top no-repeat;
 }
 
 .tool .text {
@@ -817,7 +817,7 @@ div.howTo .head {
 */
 .question {
     margin: 10px 0;
-    background: url(/resources/images/icons/bullet.png) 0px 3px no-repeat;
+    background: url(/ps-content/images/icons/bullet.png) 0px 3px no-repeat;
 }
 
 .question .head {
