@@ -48,6 +48,9 @@ class PB_admin extends AbstractPageBuilder {
         //Запустим неограниченный по времени режим - мало ли, что мы там будем делать:)
         PsUtil::startUnlimitedMode();
 
+        //Отменим нормализацию страницы
+        PsDefines::setNormalizePage(false);
+
         //Получаем содержимое админской страницы
         $content = ContentHelper::getContent($this->adminPage);
         //Добавляем к ней ресурсы

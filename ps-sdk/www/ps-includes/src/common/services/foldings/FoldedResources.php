@@ -700,7 +700,7 @@ abstract class FoldedResources extends AbstractSingleton {
     /**
      * Фетчинг шаблона и добавление к нему ресурсов
      */
-    public function fetchTplWithResources($ident, $smParams = null, $returnType = self::FETCH_RETURN_CONTENT) {
+    public function fetchTplWithResources($ident, array $smParams = null, $returnType = self::FETCH_RETURN_CONTENT) {
         return $this->fetchTplImpl($ident, $smParams, $returnType, true);
     }
 
@@ -713,7 +713,7 @@ abstract class FoldedResources extends AbstractSingleton {
     private $FETCH_RETURNS = array();
     private static $FETCH_REQUEST_CNT = 0;
 
-    public function fetchTplImpl($ident, $smParams = null, $returnType = self::FETCH_RETURN_CONTENT, $addResources = false, $cacheId = null) {
+    public function fetchTplImpl($ident, array $smParams = null, $returnType = self::FETCH_RETURN_CONTENT, $addResources = false, $cacheId = null) {
         $logMsg = null;
 
         if ($this->LOGGER->isEnabled()) {
@@ -843,8 +843,9 @@ abstract class FoldedResources extends AbstractSingleton {
                 $CTXT->dropContext();
             }
 
-            throw $e;
+            throw $e; //---
         }
+
         $CONTENT = $PARAMS_FULL[FoldedTplFetchPrams::PARAM_CONTENT];
 
         $PARAMS = $PARAMS_FULL;
