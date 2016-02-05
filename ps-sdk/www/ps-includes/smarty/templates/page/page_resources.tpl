@@ -140,9 +140,6 @@
 
     <script type="text/javascript" src="/ps-content/js/client.js"></script>
 
-    {*Ресурсы только для уроков*}
-    <script type="text/javascript" src="/ps-content/js/client.trainings.js"></script>
-
     {admin}
     {*Ресурсы пользователя, авторизованного под администратором*}
     <script type="text/javascript" src="/ps-content/js/client.admin.js"></script>

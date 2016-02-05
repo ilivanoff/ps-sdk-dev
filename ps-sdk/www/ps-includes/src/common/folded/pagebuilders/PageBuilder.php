@@ -65,9 +65,8 @@ final class PageBuilder extends PageBuilderResources {
         );
     }
 
-    private function jsCommon(PageContext $ctxt) {
-        $params['url'] = $ctxt->getRequestUrl();
-        $params['isPopup'] = $ctxt->isPopupPage();
+    private function jsCommon() {
+        $params['url'] = PsUrl::current();
         $params['userId'] = AuthManager::getUserIdOrNull();
         $params['isAuthorized'] = AuthManager::isAuthorized();
         $params['isDOA'] = PsSettings::DEVMODE_OR_ADMIN();
@@ -80,10 +79,10 @@ final class PageBuilder extends PageBuilderResources {
         return $params;
     }
 
-    private function buildJsDefs(PageParams $params, PageContext $ctxt) {
+    private function buildJsDefs(PageParams $params) {
         $JS_CLASS_CONSTS = PsUtil::getClassConsts('PsConstJs');
         $JS_CONSTS = $this->jsConsts();
-        $JS_COMMON = $this->jsCommon($ctxt);
+        $JS_COMMON = $this->jsCommon();
         $JS_PAGE = $params->getJsParams();
 
         $defs = json_encode(array_merge($JS_CONSTS, $JS_COMMON, $JS_PAGE));
@@ -104,9 +103,8 @@ final class PageBuilder extends PageBuilderResources {
 
     private function buildResources(PageParams $params, PageContext $ctxt) {
         $SMARTY_PARAMS['CTXT'] = $ctxt;
-        $SMARTY_PARAMS['PATH_BASE'] = $ctxt->getPage()->getPathBase();
         $SMARTY_PARAMS['COMMON_CSS_MEDIA'] = 'print';
-        $SMARTY_PARAMS['JS_DEFS'] = $this->addAsIsValue($this->buildJsDefs($params, $ctxt));
+        $SMARTY_PARAMS['JS_DEFS'] = $this->addAsIsValue($this->buildJsDefs($params));
 
         //Если в данный момент открыта попап страница с видом поста в варианте "для печати", то
         //common.print.css подключается как обычный ресурс, чтобы мы могли видеть страницу такой, 

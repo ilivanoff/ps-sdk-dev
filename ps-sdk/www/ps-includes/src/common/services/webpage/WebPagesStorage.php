@@ -8,11 +8,21 @@
  */
 class WebPagesStorage {
 
+    /**
+     * @var PsLoggerInterface 
+     */
+    private $LOGGER;
+
+    /**
+     * @var PsProfilerInterface 
+     */
+    private $PROFILER;
+
     /** @var WebPage Текущая страница */
     private $curpage;
 
     /** @var arr Список доступных web страниц */
-    private $pages = array();
+    private $PAGES = array();
 
     /**
      * Регистрация страниц SDK
@@ -61,7 +71,12 @@ class WebPagesStorage {
         $name = PsCheck::notEmptyString($name);
         $code = PsCheck::int($code);
 
-        $this->pages[$code] = new WebPage($path, $name, $code, $authType, $pageCodeNoAccess, $builderIdent);
+        if (array_key_exists($code, $this->PAGES)) {
+            PsUtil::raise('\'{}\' is already registered. Cannot register WebPage with same code \'{}\'.', $this->PAGES[$code], $code);
+        } else {
+            $this->PAGES[$code] = new WebPage($path, $name, $code, $authType, $pageCodeNoAccess, $builderIdent);
+            $this->LOGGER->info('+{}. {}', pad_left(count($this->PAGES), 2, ' '), $this->PAGES[$code]);
+        }
     }
 
     /**
@@ -84,8 +99,8 @@ class WebPagesStorage {
 
         //По коду
         if (is_inumeric($search)) {
-            if (array_key_exists($search, $this->pages)) {
-                return $this->pages[$search]; //---
+            if (array_key_exists($search, $this->PAGES)) {
+                return $this->PAGES[$search]; //---
             }
             check_condition(!$ensure, "Страница с кодом [$search] не зарегистрирована");
             return null; //---
@@ -94,7 +109,7 @@ class WebPagesStorage {
         //Загрузка по идентификатору
         if (is_string($search)) {
             /* @var $page WebPage */
-            foreach ($this->pages as $page) {
+            foreach ($this->PAGES as $page) {
                 if ($page->getPath() == $search) {
                     return $page; //---
                 }
@@ -146,6 +161,7 @@ class WebPagesStorage {
      */
     private final function init() {
         $this->curpage = $this->searchPage(ServerArrayAdapter::PHP_SELF());
+        $this->LOGGER->info('CURRENT: {}', $this->curpage);
     }
 
     /** @var WebPagesStorage */
@@ -197,9 +213,40 @@ class WebPagesStorage {
      * В конструкторе зарегистрируем все страницы
      */
     protected final function __construct() {
+        $class = get_called_class();
+        $basic = __CLASS__ == $class;
+
+        //Логгер
+        $this->LOGGER = PsLogger::inst(__CLASS__);
+        $this->LOGGER->info('USING {} STORAGE: {}', $basic ? 'SDK' : 'CUSTOM', $class);
+
+        //Стартуем профайлер
+        $this->PROFILER = PsProfiler::inst(__CLASS__);
+        $this->PROFILER->start('Registering Web pages');
+
+        //Регистрируем страницы SDK
+        $this->LOGGER->info();
+        $this->LOGGER->info('PAGES SDK:');
         $this->registerSdkPages();
-        $this->registerProjectPages();
+
+        //Если используем не SDK провайдер, вызываем регистратор
+        if (!$basic) {
+            $this->LOGGER->info();
+            $this->LOGGER->info('PAGES PROJECT:');
+            $this->registerProjectPages();
+        }
+
+        //Проведём инициализацию
+        $this->LOGGER->info();
+        $this->LOGGER->info('INITIALIZING...');
         $this->init();
+
+        //Останавливаем профайлер
+        $sec = $this->PROFILER->stop();
+
+        //Логируем
+        $this->LOGGER->info();
+        $this->LOGGER->info('REGISTERING TIME: {} sec', $sec->getTotalTime());
     }
 
 }
