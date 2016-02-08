@@ -225,11 +225,6 @@ p.signature span {
     float: right;
 }
 
-/*Контейнер, который содержит не загруженную картинку*/
-.box-img-x-error {
-    background: url('/ps-content/images/noimage.png') center center no-repeat;
-}
-
 
 /*
     --== ТАБЛИЦЫ ==--
