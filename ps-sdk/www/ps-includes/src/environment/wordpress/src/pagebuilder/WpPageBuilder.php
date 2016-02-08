@@ -22,7 +22,7 @@ final class WpPageBuilder extends EnvPageBuilder {
 
         $this->LOGGER->infoBox('PAGE_RESOURCES', $resources);
 
-        echo $resources;
+        echo PsHtml::div(array(), $resources);
     }
 
 }

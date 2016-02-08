@@ -1,3 +1,8 @@
+body .ui-dialog {
+    font-family: Verdana, Geneva, Arial, helvetica, sans-serif;
+    font-size: 12px;
+}
+
 /*
     --==УПРАВЛЯЮЩИЕ КЛАССЫ==--
 */

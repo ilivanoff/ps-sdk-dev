@@ -1,5 +1,6 @@
 {*Ресурсы для wordpress*}
 <link rel="stylesheet" href="/ps-content/css/core.css" type="text/css" media="all" />
+<!--<link rel="stylesheet" href="/ps-content/css/common.css" type="text/css" media="all" />-->
 <link rel="stylesheet" href="/ps-content/css/common.widgets.css" type="text/css" media="all" />
 
 {*hint Css [https://github.com/chinchang/hint.css]*}
@@ -7,6 +8,11 @@
 <link rel="stylesheet" href="/ps-content/css/hint/hint.min.css" />
 
 <script type="text/javascript" src="/ps-content/js-lib/jquery-1.8.2.js"></script>
+<script type="text/javascript">
+    if (!$ && !!jQuery) {
+        $ = jQuery;
+    }
+</script>
 <script type="text/javascript" src="/ps-content/js-lib/jquery.livequery.js"></script>
 
 <script type="text/javascript" src="/ps-content/js-lib/jquery.form.js"></script>
@@ -34,12 +40,6 @@
 {*http://jsdraw2dx.jsfiction.com/*}
 <script type="text/javascript" src="/ps-content/js-lib/jsDraw2D/jsDraw2D.js"></script>
 
-{*IMAGES GALLERY*}
-{*
-<script type="text/javascript" src="/ps-content/js-lib/aino-galleria/src/galleria.js"></script>
-<script type="text/javascript">Galleria.loadTheme('/ps-content/js-lib/aino-galleria/src/themes/classic_white/galleria.classic.js');</script>
-*}
-
 {*CODEMIRROR*}
 <link rel="stylesheet" href="/ps-content/js-lib/codemirror-2.36/lib/codemirror.css" type="text/css" />
 <script type="text/javascript" src="/ps-content/js-lib/codemirror-2.36/lib/codemirror.js"></script>
@@ -58,13 +58,6 @@
 <script type="text/javascript" src="/ps-content/js-lib/Timepicker/jquery-ui-timepicker-addon.js"></script>
 {*<script type="text/javascript" src="/ps-content/js-lib/Timepicker/jquery-ui-sliderAccess.js"></script>*}
 <script type="text/javascript" src="/ps-content/js-lib/Timepicker/jquery-ui-timepicker-ps-ru.js"></script>
-<!--
-{if isset($UPLOADIFY_ENABE) && $UPLOADIFY_ENABE}
-    <link rel="stylesheet" href="/ps-content/js-lib/uploadify/uploadify.css" type="text/css" media="all" />
-    {*<script type="text/javascript" src="/ps-content/js-lib/uploadify/swfobject.js"></script>*}
-    <script type="text/javascript" src="/ps-content/js-lib/uploadify/jquery.uploadify.min.js"></script>
-{/if}
--->
 {if isset($UPLOADIFY_ENABE) && $UPLOADIFY_ENABE}
     <link rel="stylesheet" href="/ps-content/js-lib/uploadify/Uploadify-3.2.1/uploadify.css" type="text/css" media="all" />
     {*<script type="text/javascript" src="/ps-content/js-lib/uploadify/swfobject.js"></script>*}
