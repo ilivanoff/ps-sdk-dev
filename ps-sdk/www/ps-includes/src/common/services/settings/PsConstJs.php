@@ -7,10 +7,10 @@
  * @author azazello
  */
 final class PsConstJs {
+
     /**
      * Группа параметров javascript - панели для фолдингов
      */
-
     const PAGE_JS_GROUP_PANELS = 'panels';
 
     /**
@@ -35,21 +35,21 @@ final class PsConstJs {
     /*
      * Лупа - увеличение картинки
      */
-    const IMG_PREVIEW = '/resources/images/icons/preview.png';
+    const IMG_PREVIEW = '/ps-content/images/icons/preview.png';
     /*
      * Длинная картинка-прогресс
      */
-    const IMG_LOADING_LONG = '/resources/images/icons/page_loading.gif';
+    const IMG_LOADING_LONG = '/ps-content/images/icons/page_loading.gif';
 
     /*
      * Длинная картинка-прогресс
      */
-    const IMG_LOADING_PROGRESS = '/resources/images/icons/loading/loading.gif';
+    const IMG_LOADING_PROGRESS = '/ps-content/images/icons/loading/loading.gif';
 
     /*
      * Значёк формулы
      */
-    const IMG_FORMULA = '/resources/images/icons/controls/formula.png';
+    const IMG_FORMULA = '/ps-content/images/icons/controls/formula.png';
 
     /*
      * Путь к скрипту, который строит и отдаёт капчу

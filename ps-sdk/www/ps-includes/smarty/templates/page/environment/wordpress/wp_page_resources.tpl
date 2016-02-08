@@ -1,16 +1,10 @@
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
-<link rel="shortcut icon" href="favicon.ico" />
-
+{*Ресурсы для wordpress*}
 <link rel="stylesheet" href="/ps-content/css/common.css" type="text/css" media="all" />
 <link rel="stylesheet" href="/ps-content/css/common.widgets.css" type="text/css" media="all" />
-<link rel="stylesheet" href="/ps-content/css/common.print.css" type="text/css" media="{$COMMON_CSS_MEDIA}" />
 
 {*hint Css [https://github.com/chinchang/hint.css]*}
 
 <link rel="stylesheet" href="/ps-content/css/hint/hint.min.css" />
-
-{*linkup_sprite name='ico'*}
 
 <script type="text/javascript" src="/ps-content/js-lib/jquery-1.8.2.js"></script>
 <script type="text/javascript" src="/ps-content/js-lib/jquery.livequery.js"></script>
@@ -41,8 +35,10 @@
 <script type="text/javascript" src="/ps-content/js-lib/jsDraw2D/jsDraw2D.js"></script>
 
 {*IMAGES GALLERY*}
+{*
 <script type="text/javascript" src="/ps-content/js-lib/aino-galleria/src/galleria.js"></script>
 <script type="text/javascript">Galleria.loadTheme('/ps-content/js-lib/aino-galleria/src/themes/classic_white/galleria.classic.js');</script>
+*}
 
 {*CODEMIRROR*}
 <link rel="stylesheet" href="/ps-content/js-lib/codemirror-2.36/lib/codemirror.css" type="text/css" />
@@ -91,7 +87,7 @@
 {/if}
 
 {if !isset($MATHJAX_DISABLE) || !$MATHJAX_DISABLE}
-    <script type="text/javascript" src="/ps-content/js-lib/MathJax/MathJax.js"></script>
+    {linkup_js dir='/ps-content/js-lib' name="MathJax/MathJax.js"}
 {/if}
 
 
@@ -121,76 +117,3 @@
 <script type="text/javascript" src="/ps-content/js/common.dev.or.admin.js"></script>
 <link rel="stylesheet" href="/ps-content/css/common.dev.or.admin.css" type="text/css" media="all" />
 {/devmodeOrAdmin}
-
-
-{*
-=========================
-Ресурсы обычной страницы.
-=========================
-*}
-
-{if $CTXT->isBasicPage()}
-    <link rel="stylesheet" href="/ps-content/css/client.css" type="text/css" media="all" />
-    <link rel="stylesheet" href="/ps-content/css/client.print.css" type="text/css" media="print" />
-
-    {*linkup_sprite name='header'*}
-
-    <script type="text/javascript" src="/ps-content/js-lib/ContentFlow/contentflow.js" load="white"></script>
-
-    <script type="text/javascript" src="/ps-content/js/client.js"></script>
-
-    {admin}
-    {*Ресурсы пользователя, авторизованного под администратором*}
-    <script type="text/javascript" src="/ps-content/js/client.admin.js"></script>
-    <link rel="stylesheet" href="/ps-content/css/client.admin.css" type="text/css" media="all" />
-    {/admin}
-
-    {*notauthed}
-    {linkup_js dir='ps/common' name="not.authed"}
-    {/notauthed*}
-
-    {if $CTXT->isPostPage()}
-        {*Базовый функционал для работы с постами*}
-        <script type="text/javascript" src="/ps-content/js/client.basepost.js"></script>
-    {/if}
-{/if}
-
-
-{*
-=======================
-Ресурсы popup страницы.
-=======================
-*}
-
-{if $CTXT->isPopupPage()}
-    <link rel="stylesheet" href="/ps-content/css/popup.css" type="text/css" media="all" />
-{/if}
-
-{*
-=======================
-Ресурсы admin page.
-=======================
-*}
-
-{admin}
-{if $CTXT->isAdminPage()}
-    <link rel="stylesheet" href="/ps-content/css/xxx.css" type="text/css" />
-    <script type="text/javascript" src="/ps-content/js/xxx.js"></script>
-{/if}
-{/admin}
-
-
-{*
-=======================
-Ресурсы test page.
-=======================
-*}
-
-{if $CTXT->isTestPage()}
-    <link rel="stylesheet" href="/ps-content/css/client.css" type="text/css" media="all" />
-    <link rel="stylesheet" href="/ps-content/css/client.print.css" type="text/css" media="print" />
-    <link rel="stylesheet" href="/ps-content/css/test.css" type="text/css" media="all" />
-
-    <script type="text/javascript" src="/ps-content/js/xxx.js"></script>
-    <script type="text/javascript" src="/ps-content/js/test.js"></script>
-{/if}

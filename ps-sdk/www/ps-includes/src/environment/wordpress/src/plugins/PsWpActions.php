@@ -12,8 +12,14 @@ class PsWpActions {
      * https://codex.wordpress.org/Plugin_API/Action_Reference/wp_head
      */
     public final function wp_head() {
-        $output = "<style> .wp_head_example_xxx { background-color : #f1f1f1; } </style>";
-        echo $output;
+        WpPageBuilder::start();
+    }
+
+    /**
+     * https://codex.wordpress.org/Function_Reference/wp_footer
+     */
+    public final function wp_footer() {
+        WpPageBuilder::stop();
     }
 
 }

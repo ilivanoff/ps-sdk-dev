@@ -79,7 +79,7 @@ final class PageBuilder extends PageBuilderResources {
         return $params;
     }
 
-    private function buildJsDefs(PageParams $params) {
+    public function buildJsDefs(PageParams $params) {
         $JS_CLASS_CONSTS = PsUtil::getClassConsts('PsConstJs');
         $JS_CONSTS = $this->jsConsts();
         $JS_COMMON = $this->jsCommon();
