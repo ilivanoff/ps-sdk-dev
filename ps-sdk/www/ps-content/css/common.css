@@ -14,7 +14,7 @@ hr {
     Базовые классы
 */
 
-body .ui-dialog {
+body {
     font-family: Verdana, Geneva, Arial, helvetica, sans-serif;
     font-size: 12px;
 }
