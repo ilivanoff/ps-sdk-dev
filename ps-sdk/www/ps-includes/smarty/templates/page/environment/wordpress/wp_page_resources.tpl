@@ -1,5 +1,5 @@
 {*Ресурсы для wordpress*}
-<link rel="stylesheet" href="/ps-content/css/common.css" type="text/css" media="all" />
+<link rel="stylesheet" href="/ps-content/css/core.css" type="text/css" media="all" />
 <link rel="stylesheet" href="/ps-content/css/common.widgets.css" type="text/css" media="all" />
 
 {*hint Css [https://github.com/chinchang/hint.css]*}

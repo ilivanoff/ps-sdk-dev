@@ -1,50 +1,4 @@
 /*
-    --==ОЧИСТКА==--
-*/
-* {
-    margin: 0px;
-    padding: 0px;
-    border: none;
-}
-
-hr {
-    border-bottom: 1px solid #808080;
-}
-/*
-    Базовые классы
-*/
-
-body {
-    font-family: Verdana, Geneva, Arial, helvetica, sans-serif;
-    font-size: 12px;
-}
-
-/*
-    --==ПОДВАЛ==--
-*/
-
-#footer {
-    height: 50px;
-    text-align: center;
-    color: #84898f;
-    border-top: 1px solid #F3F3F3;
-    font-size: 10px;
-}
-
-#footer p {
-    text-indent: 0;
-}
-
-#footer a {
-    color: #84898f;
-}
-
-#footer a:hover {
-    color: #06C;
-    text-decoration: none;
-}
-
-/*
     --==УПРАВЛЯЮЩИЕ КЛАССЫ==--
 */
 .first {
@@ -770,11 +724,12 @@ ol {
     line-height: 1.5em;
 }
 
+/*
 li {
     margin: 7px 0;
     padding: 0px;
 }
-
+*/
 
 li.level1 {
     font-weight: bold;
@@ -861,13 +816,14 @@ div.book .content .notice {
 }
 
 /* H1 */
+/*
 h1 {
     font-size: 22px;
     font-weight: normal;
     padding: 0px;
     margin: 10px 0px;
 }
-
+*/
 /* Закруглённый вариант */
 h1.rounded {
     padding: 2px 10px;
@@ -887,6 +843,7 @@ h1.colored {
 }
 
 /* H2 */
+/*
 h2 {
     font-family: Georgia, "Times New Roman", Times, serif;
     font-weight: normal;
@@ -895,6 +852,7 @@ h2 {
     padding: 0px;
     margin: 10px 0px;
 }
+*/
 
 h2.colored {
     color: #225A73;
@@ -905,12 +863,14 @@ h2.colored {
 }
 
 /* H3 */
+/*
 h3 {
     font-size: 18px;
     font-weight: normal;
     padding: 0px;
     margin: 10px 0px;
 }
+*/
 
 h3.tab_items {
     margin-bottom: 20px;
@@ -937,13 +897,14 @@ h3.section {
 }
 
 /* H4 */
+/*
 h4 {
     font-size: 13px;
     font-weight: bold;
     padding: 0px;
     margin: 10px 0px;
 }
-
+*/
 h4 span, h4 span a {
     color: #B32C2C;
 }
@@ -958,13 +919,14 @@ h4.section {
 }
 
 /* H5 */
+/*
 h5 {
     font-size: 12px;
     font-weight: bold;
     padding: 0px;
     margin: 10px 0px;
 }
-
+*/
 h5.colored {
     color: #1560BD;
 }
@@ -2066,312 +2028,6 @@ ol.anons a:hover {
 }
 
 /*
-    --== ДИСКУССИЯ ==--
-*/
-
-/* Форма комментирования */
-.discussion-form {
-    display: none;
-    text-align: left;
-}
-
-.discussion-form .comment {
-    border-style: solid;
-}
-
-.discussion-form textarea {
-
-}
-
-.discussion-form input.theme {
-    width: 50%;
-}
-
-.discussion-form textarea {
-    margin: 0px;
-}
-
-/* Кнопки над формой комментирования */
-.discussion-form .form-tools input {
-    vertical-align: middle;
-    margin-left: 0px;
-    border: none;
-}
-
-
-/* Кнопки управления деревом комментариев */
-.discussion-ctrl {
-    margin: 10px 0px;
-}
-
-/* Окно редактирования текста сообщения */
-#DiscussionEditDialog {
-    width: 800px;
-    height: 600px;
-}
-
-/* Дерево комментариев */
-ul.discussion {
-}
-
-ul.discussion li {
-    margin: 12px 0px;
-}
-
-ul.discussion li ul {
-    margin-left: 50px;
-}
-
-/*
-    Комментарий
-*/
-ul.discussion li div.comment {
-    margin-left: 50px;
-}
-
-div.comment {
-    word-wrap: break-word; /*Авторазрыв длинных строк*/
-    /*padding: 5px;*/
-    border: 1px dotted #dfdfdf;
-    background-color: #fafafa;
-    position: relative;
-    /*border-radius: 7px 7px 7px 7px;*/
-    text-align: left;
-}
-
-div.comment p {
-    margin-bottom: 0px;
-    text-indent: 0px;
-    text-align: left;
-}
-
-/* Блок с комментарием пользователя */
-div.comment .comment-content {
-    margin: 8px 10px;
-}
-
-div.comment .comment-content>div {
-    margin: 8px 0px;
-}
-
-/*Тема*/
-div.comment .comment-content h4 {
-    margin-bottom: 15px;
-}
-
-/* Метаданные комментария - автор, дата */
-div.comment .meta {
-    font-size: 11px;
-}
-
-div.comment .meta .date {
-    color: #aaa;
-    cursor: default;
-    font-size: 10px;
-    margin-left: 5px;
-}
-
-div.comment .meta .author {
-    color: #888;
-    font-weight: bold;
-}
-
-div.comment .meta .controls a {
-    color: #aaa;
-    margin-left: 8px;
-}
-
-div.comment .meta .controls a:hover {
-    color: blue;
-    text-decoration: none;
-}
-
-/*Голосование*/
-div.comment .meta .controls .vote {
-    /*noselect*/
-    -moz-user-select: none;
-    -khtml-user-select: none;
-    user-select: none;
-}
-
-div.comment .meta .controls .vote a:hover {
-    color: #aaa;
-    cursor: default;
-}
-
-div.comment .meta .controls .vote a.clickable:hover {
-    cursor: pointer;
-}
-
-div.comment .meta .controls .vote a.like.active,
-div.comment .meta .controls .vote a.like.clickable:hover {
-    color: green;
-    text-shadow: 0 0 0.1em green;
-}
-
-div.comment .meta .controls .vote a.dislike.active,
-div.comment .meta .controls .vote a.dislike.clickable:hover {
-    color: #B32C2C;
-    text-shadow: 0 0 2px #B32C2C;
-}
-
-div.comment .meta .controls .vote a.active {
-}
-
-div.comment .meta .controls .vote a.votes {
-    display: inline-block;
-    min-width: 12px;
-    text-align: center;
-    font-weight: bold;
-}
-
-div.comment .meta .controls .vote a.votes.progress {
-    color: transparent !important;
-    background: url(/ps-content/images/icons/loading/loading12.gif) center center no-repeat;
-}
-
-
-/*Отметка о прочтении*/
-div.comment .known {
-    top: -8px;
-    right: -8px;
-    position: absolute;
-    text-decoration: none;
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    background-repeat: no-repeat;
-    background-position: center center;
-}
-
-div.comment a.known {
-    background-image: url(/ps-content/images/icons/star.png);
-}
-
-div.comment span.known {
-    background-image: url(/ps-content/images/icons/loading/loading16.gif);
-}
-
-
-/* Совместные классы комментария и родительского комментария*/
-div.comment .comment-text,
-div.comment .parent-text,
-div.comment .comment-theme{
-    line-height: 1.6em;
-}
-
-/* Текст родительского комментария (показывается над самим комментарием) */
-div.comment .parent-text {
-    padding: 3px;
-    background-color: #f2f2f2;
-}
-
-/* Тема сообщения */
-div.comment .comment-theme {
-    font-weight: bold;
-}
-
-/* Текст комментария */
-div.comment .comment-text {
-}
-
-/* Сообщение "Комментарий удалён" */
-div.comment span.deleted {
-    color: gray;
-    font-style: italic;
-}
-
-/* Нижнее меню управления (удалить/ответить и т.д.)*/
-div.comment div.pscontrols {
-    background-color:#fafafa;
-    position: absolute;
-    right: 5px;
-    bottom: 5px;
-    display: none;
-    text-align: right;
-    margin: 0px !important;
-}
-
-div.comment:hover .pscontrols {
-    display: block;
-}
-
-div.comment.new .pscontrols {
-    display: none !important;
-}
-
-
-/*Дозагрузка комментариев*/
-ul.discussion li.load {
-    padding: 5px 0px;
-    text-align: center;
-}
-
-ul.discussion li.no_comments {
-    text-align: center;
-    color: gray;
-}
-
-/*Упрощённый вид постов*/
-ul.simple_view img.avatar.small, 
-ul.simple_view div.comment div.meta .date {
-    display: none;
-}
-
-ul.simple_view div.comment {
-    margin-left: 0 !important;
-}
-
-ul.simple_view div.comment div.comment-content{
-    margin: 4px 4px 4px 6px;
-}
-
-/*Выделение родительского комментария*/
-.highlight div.comment.parent {
-    background-color: #E9F0F4;
-    border: 1px solid #C6D4E0;
-}
-
-/*Выделение комментария пользователя*/
-div.user_comment .meta a.author {
-    color: #4169E1;
-}
-
-/*Неподтверждённые сообщения*/
-.comment.not_confirmed {
-    border: 1px solid red;
-}
-
-/*Новый добавленный комментарий должен немного помигать*/
-.comment.new {
-    -webkit-transition: background 0.4s ease-in-out;
-    -moz-transition:    background 0.4s ease-in-out;
-    -ms-transition:     background 0.4s ease-in-out;
-    transition:         background 0.4s ease-in-out;
-}
-
-.comment.new.start-blink {
-    background-color: #eee;
-}
-
-/*
-    --== ОБРАТНАЯ СВЯЗЬ ==--
-*/
-#feedback img.message {
-    float: left;
-}
-
-.new_message {
-    float: right;
-    color: green;
-    font-size: 11px;
-    text-decoration: blink;
-}
-
-
-
-
-/*
     --== ЗАДАЧА ==--
 */
 
@@ -2461,116 +2117,6 @@ ul.answers li.correct {
 
 ul.answers li input{
     margin: 0px 2px;
-}
-
-
-/*
-    --== КАРТОЧКА ПОЛЬЗОВАТЕЛЯ ==--
-*/
-
-.user_info {
-    padding: 4px 9px 9px 4px;
-    padding: 5px;
-    border: 4px double #CCC;
-    /*    -moz-border-radius: 7px 7px 7px 7px;*/
-    font-family: Georgia;
-    z-index: 5;
-    background-color: white;
-    /*    border: 5px solid #D6E6F2;*/
-    border-radius: 5px 5px 5px 5px;
-    position: relative;
-    cursor: default;
-}
-
-.user_info .content_carrier {
-    margin-left: 140px;
-}
-
-.discussion .user_info {
-    position: absolute;
-    top: -9px;
-    left: -9px;
-}
-
-.discussion .user_info .content_carrier {
-    padding-right: 15px;
-}
-
-.discussion img.avatar.user.small {
-    cursor: pointer;
-}
-
-.user_info div.loading{
-    color: gray;
-    text-align: center;
-    margin-left: 50px;
-    padding-top: 7px;
-}
-
-.user_info div.loading img {
-    display: block;
-    margin: 5px auto;
-}
-
-.user_info .user_name {
-    font-weight: bold;
-    font-size: 15px;
-    white-space: nowrap;
-}
-
-.user_info .user_name .current {
-    color: gray;
-    margin-left: 5px;
-    font-size: 11px;
-    font-weight: normal;
-    text-decoration: none;
-}
-
-.user_info .regdate{
-    color:gray;
-}
-
-.user_info .content .block{
-    margin-top: 10px;
-}
-
-.user_info .content .about{
-    color:darkGreen;
-    font-weight: bold;
-}
-
-.user_info .content .contacts{
-    color:darkRed;
-    font-weight: bold;
-}
-
-.user_info .message{
-    color: gray;
-    font-style: italic;
-    border-top: 1px dashed;
-    padding-top: 3px;
-    margin-top: 15px;
-}
-
-
-/* 
-    --== АВАТАРЫ/ОБЛОЖКИ ==--
-*/
-img.avatar {
-    float:left;
-}
-
-img.cover {
-    /*border: 1px solid #ddd;*/
-    float: left;
-    margin: 0 15px 15px 0;
-    padding: 0px;
-}
-
-/* Картинка для раздела - анкета, HowTo и т.д. */
-img.partition {
-    float: left;
-    margin: 10px;
 }
 
 
