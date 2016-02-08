@@ -7,12 +7,7 @@
 
 <link rel="stylesheet" href="/ps-content/css/hint/hint.min.css" />
 
-<script type="text/javascript" src="/ps-content/js-lib/jquery-1.8.2.js"></script>
-<script type="text/javascript">
-    if (!$ && !!jQuery) {
-        $ = jQuery;
-    }
-</script>
+{*<script type="text/javascript" src="/ps-content/js-lib/jquery-1.8.2.js"></script>*}
 <script type="text/javascript" src="/ps-content/js-lib/jquery.livequery.js"></script>
 
 <script type="text/javascript" src="/ps-content/js-lib/jquery.form.js"></script>
@@ -31,8 +26,13 @@
 <script type="text/javascript" src="/ps-content/js-lib/date.format.js"></script>
 
 {*jQuery UI*}
+{*
 <link rel="stylesheet" href="/ps-content/js-lib/jquery-ui-1.9.1.custom/css/smoothness/jquery-ui-1.9.1.custom.min.css" type="text/css" media="all"/>
 <script type="text/javascript" src="/ps-content/js-lib/jquery-ui-1.9.1.custom/js/jquery-ui-1.9.1.custom.min.js"></script>
+*}
+<link rel="stylesheet" href="/ps-content/js-lib/jquery-ui/jquery-ui-1.11.4.custom/jquery-ui.css" type="text/css" media="all"/>
+<script type="text/javascript" src="/ps-content/js-lib/jquery-ui/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
+
 
 <link rel="stylesheet" href="/ps-content/js-lib/color-picker/colorPicker.css" type="text/css" media="all" />
 <script type="text/javascript" src="/ps-content/js-lib/color-picker/jquery.colorPicker.min.js"></script>

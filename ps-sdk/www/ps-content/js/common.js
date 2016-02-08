@@ -8,6 +8,11 @@ var PsEvents = {
 //Включаем логгер в зависимости от настроек
 PsLogger.logConsole = defs.isLogging;
 
+//Проверим, подключён ли jQuery
+if (PsCore.hasJquery && !$) {
+    $ = jQuery;
+}
+
 /* 
  * Менеджер, отображающий все глобальные ошибки
  * 
@@ -45,7 +50,7 @@ var PsGlobalExceptionHandler = {
         
         if(!self.box) {
             self.loading = true;
-            $(function() {
+            jQuery(function() {
                 self.box = $('<div>').attr('id', 'errorWindow').
                 append($('<a>').addClass('close').html('X').click(function() {
                     self.box.remove();
@@ -692,11 +697,11 @@ var PsTimeHelper = {
     }
 }
 
-$.fn.valEnsureIsNumber = function(def) {
+jQuery.fn.valEnsureIsNumber = function(def) {
     return strToInt($(this).val(), def);
 }
 
-$.fn.attrsMap = function() {
+jQuery.fn.attrsMap = function() {
     var attributes = {}; 
     if(this.length) {
         $.each(this[0].attributes, function( index, attr ) {
@@ -706,11 +711,11 @@ $.fn.attrsMap = function() {
     return attributes;
 }
 
-$.fn.htmlEnsureIsNumber = function(def) {
+jQuery.fn.htmlEnsureIsNumber = function(def) {
     return strToInt($(this).text(), def);
 }
 
-$.fn.ensureIdIsSet = function(prefix) {
+jQuery.fn.ensureIdIsSet = function(prefix) {
     $(this).each(function() {
         var $el = $(this);
         if(!$el.attr('id')) {
@@ -1230,8 +1235,8 @@ jQuery.fn.psUploadify = function(options) {
             alert('The file ' + file.name + ' was uploaded with error: ' + err);
         },
         'onUploadComplete' : function(event, data, c, d) {
-            //InfoBox.popupSuccess('Файл успешно загружен');
-            //InfoBox.popupSuccess('Загрузка файла завершена');
+        //InfoBox.popupSuccess('Файл успешно загружен');
+        //InfoBox.popupSuccess('Загрузка файла завершена');
         },
         onUploadSuccess : function(file, data, response) {
             processAjaxResponse(data, function(ok) {
@@ -1633,7 +1638,7 @@ var PsJquery = {
          * привязка jQuery.on(...) может не сработать, если на момент привязки не будет 
          * существовать родительский элемент, например body.
          */
-        $(function() {
+        jQuery(function() {
             if (PsIs.string(options.item)) {
                 $(options.parent).on(evtMap, options.item);
             }
@@ -2119,7 +2124,7 @@ var PsHotKeysManager = {
         
         if (hasPrev) return;//---
         
-        $(function() {
+        jQuery(function() {
             /*
              * Регистрацию горачей клавиши проведём после того, как окно будет готово.
              * Можно зарегистрироваться и сразу, но сделаем это позже, чтобы внешнему коду 
