@@ -27,5 +27,26 @@ class PsWpPlugin {
         }
     }
 
+    /**
+     * Метод добавляет шорткоды
+     * TODO - вынести на конфиги
+     */
+    public static function addShortcodes() {
+        $wpShortcodes = new PsWpShortCodes();
+
+        $methods = PsUtil::getClassMethods($wpShortcodes, true, false, true, false);
+
+        $LOGGER = PsLogger::inst(__CLASS__);
+
+        $LOGGER->info();
+        $LOGGER->info(__METHOD__);
+
+        foreach ($methods as $action) {
+            $LOGGER->info(' + {}', $action);
+            add_shortcode($action, array($wpShortcodes, $action));
+        }
+    }
+
 }
+
 ?>

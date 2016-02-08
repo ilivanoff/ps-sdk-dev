@@ -8,11 +8,6 @@ var PsEvents = {
 //Включаем логгер в зависимости от настроек
 PsLogger.logConsole = defs.isLogging;
 
-//Проверим, подключён ли jQuery
-if (PsCore.hasJquery && !$) {
-    $ = jQuery;
-}
-
 /* 
  * Менеджер, отображающий все глобальные ошибки
  * 

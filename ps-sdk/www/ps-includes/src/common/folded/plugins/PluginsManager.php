@@ -56,6 +56,19 @@ final class PluginsManager extends PluginResources {
     }
 
     /**
+     * Метод строит плагин как wordpress shortcode - сразу отображая содержимое.
+     * В отличае от шаблона смарти метод вызывается единожды:
+     * [psplugin name='$ident' param1='value1']$content[/psplugin]
+     */
+    public function buildAsShortcode($ident, $content, ArrayAdapter $params) {
+        $plugin = $this->getPlugin($ident);
+        PluginFetchingContext::getInstance()->setContext($plugin->getIdent());
+        $return = $this->buildImpl($plugin, $content ? $content : '', $params);
+        PluginFetchingContext::getInstance()->dropContext();
+        return $return;
+    }
+
+    /**
      * Основной метод, выполняющий всю работу.
      * К этому моменту мы уже определили плагин и установили контекст.
      * Остаётся только построить сам плагин.

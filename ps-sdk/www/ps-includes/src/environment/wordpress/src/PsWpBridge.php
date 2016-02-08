@@ -10,7 +10,7 @@ class PsWpBridge extends AbstractSingleton {
     public function init() {
         PsLogger::inst(__CLASS__)->info(__FUNCTION__);
         PsWpPlugin::addActions();
-        add_shortcode('psplugin', array($this, 'psplugin'));
+        PsWpPlugin::addShortcodes();
     }
 
     public function pluginActivation() {
@@ -19,11 +19,6 @@ class PsWpBridge extends AbstractSingleton {
 
     public function pluginDeactivation() {
         PsLogger::inst(__CLASS__)->info(__FUNCTION__);
-    }
-
-    public function psplugin() {
-        $src = TexImager::inst()->getImgDi('\sin(\alpha+\beta)')->getRelPath();
-        return "Ps plugin included. <img src='$src'/>";
     }
 
     /** @return PsWpBridge */

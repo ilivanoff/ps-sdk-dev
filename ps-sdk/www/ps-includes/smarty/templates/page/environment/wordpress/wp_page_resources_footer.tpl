@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="/ps-content/css/hint/hint.min.css" />
 
 {*<script type="text/javascript" src="/ps-content/js-lib/jquery-1.8.2.js"></script>*}
+
 <script type="text/javascript" src="/ps-content/js-lib/jquery.livequery.js"></script>
 
 <script type="text/javascript" src="/ps-content/js-lib/jquery.form.js"></script>
@@ -71,9 +72,9 @@
 
 {if isset($TIMELINE_ENABE) && $TIMELINE_ENABE}
     <script type="text/javascript">
-        Timeline_ajax_url = "/ps-content/js-lib/timeline_2.3.0/timeline_ajax/simile-ajax-api.js";
-        Timeline_urlPrefix = "/ps-content/js-lib/timeline_2.3.0/timeline_js/";
-        Timeline_parameters = "bundle=true&defaultLocale=ru&forceLocale=ru";
+    Timeline_ajax_url = "/ps-content/js-lib/timeline_2.3.0/timeline_ajax/simile-ajax-api.js";
+    Timeline_urlPrefix = "/ps-content/js-lib/timeline_2.3.0/timeline_js/";
+    Timeline_parameters = "bundle=true&defaultLocale=ru&forceLocale=ru";
     </script>
     <script type="text/javascript" src="/ps-content/js-lib/timeline_2.3.0/timeline_js/timeline-api.js"></script>
     <link rel="stylesheet" href="/ps-content/css/timeline-bundle.css" type="text/css" media="all" />
