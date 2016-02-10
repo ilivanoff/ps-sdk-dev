@@ -21,8 +21,22 @@ ExceptionHandler::registerPretty();
 //var_dump(DirItem::inst(ConfigIni::globalsFilePath())->getModificationTime());
 
 
-echo PsEnvironment::isIncluded();
+$client_id = '3485070'; // ID приложения
+$client_secret = 'lYjfUZwZmlJJlFIqQFAj'; // Защищённый ключ
+$redirect_uri = 'http://localhost/vk-auth'; // Адрес сайта
 
+$url = 'http://oauth.vk.com/authorize';
+
+$params = array(
+    'client_id' => $client_id,
+    'redirect_uri' => $redirect_uri,
+    'response_type' => 'code'
+);
+
+
+echo urlencode(http_build_query($params));
+
+//echo PsEnvironment::isIncluded();
 //print_r(PsMathRebusSolver::solve('драма+драма=театр'));
 
 die;
@@ -88,8 +102,8 @@ echo PluginsManager::inst()->getAutogenDi('advgraph', array('x', 'y', 'z'), null
 die;
 
 echo TestUtils::testProductivity(function() {
-            FoldedStorage::getEntities('lib-s');
-        }, 200);
+    FoldedStorage::getEntities('lib-s');
+}, 200);
 
 br();
 echo FoldedStorage::extractInfoFromClassName('PL_slib', $classPrefix, $entity);
@@ -157,8 +171,8 @@ PSCache::inst()->saveToCache(array('a' => 1), '$key', '$group', 'xxx1');
 die;
 
 echo TestUtils::testProductivity(function() {
-            PSCache::inst()->getFromCache('$key', '$group', null, 'xxx1');
-        });
+    PSCache::inst()->getFromCache('$key', '$group', null, 'xxx1');
+});
 
 print_r(PSCache::inst()->getFromCache($key, $group, array('a'), 'xxx1'));
 

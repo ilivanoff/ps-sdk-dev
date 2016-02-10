@@ -77,13 +77,6 @@ final class PsConstJs {
     const POST_HEAD_CONTROLS = 'ps-post-head-controls';
 
     /**
-     * Различные классы для работы галерей
-     */
-    const GALLERY_BOX = 'ps-gallery-box';       //Сам блок с картинками (открыть/закрыть)
-    const GALLERY_LIST = 'ps-gallery-list';     //Картинки, которые с помощью js будут преобразованы с галерею
-    const GALLERY_IMAGES = 'ps-gallery-images'; //Картинки галереи в виде списка
-
-    /**
      * Префикс для кодов аватаров пользователя
      */
     const AVATAR_ID_PREFIX = 'av-';

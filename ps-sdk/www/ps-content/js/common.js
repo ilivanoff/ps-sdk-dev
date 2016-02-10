@@ -1224,7 +1224,7 @@ jQuery.fn.psUploadify = function(options) {
         'fileTypeExts'   : '*.gif;*.jpg;*.jpeg;*.png',
         ctxt: null, //Контекст выполнения onSuccess
         onSuccess: function(ok, file) {
-            alert('The file ' + file.name + ' was successfully uploaded with a response: ' + ok);
+            alert('The file ' + file.name + ' was successfully uploaded with a response: ' + PsObjects.toString(ok));
         },
         onError: function(err, file) {
             alert('The file ' + file.name + ' was uploaded with error: ' + err);

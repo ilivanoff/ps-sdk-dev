@@ -1,3 +1,3 @@
 @echo off
 call sql.bat
-php demo.php 3
+php demo.php 4
