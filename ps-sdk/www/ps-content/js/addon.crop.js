@@ -1,8 +1,25 @@
 $(function () {
     
     var CropUploadLogger = PsLogger.inst('CropUpload').setTrace();
+    
+    var CropCore = {
+        ContainerWidth: $('.container').width(),
+        
+        //Метод вычисляет высоту холдера для картинки
+        calcHolderHeight: function(img) {
+            var ratio = this.ContainerWidth / img.info.width;
+            if (ratio>1) return img.info.height;//---
+            return img.info.height * ratio;
+        },
+        
+        showError: function(error, img) {
+            alert(error);
+
+        }
+    }
+    
     /*
-     * Менеджер для работы страницы загрузки картинки
+     * Менеджер кнопки загрузки файла
      */
     var CropUpload = {
         //Кнопка загрузки файла
@@ -19,77 +36,149 @@ $(function () {
             }
             
             //TODO - проверять, поддерживается ли FileApi
-            this.$fileSelect.change(PsUtil.safeCall(CropUpload.onFileSelected, CropUpload));
+            FileAPI.event.on(this.$fileSelect[0], 'change', PsUtil.safeCall(CropUpload.onFileSelected, CropUpload));
         },
         
         //Метод вызывается при выборе файла в поле выбора
-        onFileSelected: function() {
+        onFileSelected: function(evt) {
+            var files = FileAPI.getFiles(evt); // Retrieve file list
+
             //Выбраны ли файлы?
-            if (!this.$fileSelect[0].files.length) {
+            if (!files.length) {
                 CropUploadLogger.logWarn('Файл не выбран');
                 return;//---
             }
             
             var readId = ++this.fileSelectCounter;
-            var file = this.$fileSelect[0].files[0];
+            var file = files[0];
             
             CropUploadLogger.logInfo(" >> {}. Выбран файл: '{}' [{}]. Размер: {}.", readId, file.name, file.type, file.size);
 
-            var error = this.validateSelectedFile(file);
-            
-            if (error) {
-                CropUploadLogger.logWarn(" << {}. Файл '{}' не может быть загружен: {}.", readId, file.name, error);
-                alert(error);
-            } else {
-                CropUploadLogger.logTrace('Начинаем чтение файла...');
-                var fileReader = new FileReader();
-                fileReader.addEventListener('load', function (evt) {
-                    this.removeEventListener('load', this, true);
+            FileAPI.getInfo(file, function(err, info) {
+                var error = err ? err : CropUpload.validateSelectedFile(file, info);
+                if (error) {
+                    CropUploadLogger.logWarn(" << {}. Файл '{}' не может быть загружен: {}.", readId, file.name, error);
+                    CropCore.showError(error, img);
+                } else {
                     var img = {
                         id: readId, //Код загрузки
                         file: file, //Загруженный файл
-                        data: evt.target.result  //Данные из файла
+                        info: info, //Информация об изображении
+                        html: null  //Объект HTML
                     };
-                    CropUpload.onFileReaded(img);
-                }, false);
-                fileReader.readAsDataURL(file);
-            }
+                    CropUpload.onImgReady(img);
+                }
+            });
         },
         
         //Метод проверяет выбранный файл - его тип и размер
-        validateSelectedFile: function(file) {
+        validateSelectedFile: function(file, info) {
             if(!file.size) {
                 return 'Пустой файл';
             }
             if(!file.type.startsWith('image/')) {
                 return 'Тип файлов ['+file.type+'] не поддерживается';
             }
+            if (info.width<=0 || info.height<=0) {
+                return 'Некорректный размер картинки: ['+info.width+'x'+info.height;
+            }
             return null;//---
         },
         
         //Метод вызывается, когда файл картинки был успешно прочитан
-        onFileReaded: function(img) {
-            if (img.id == this.fileSelectCounter) {
-                CropUploadLogger.logInfo(" << {}. Файл '{}' успешно прочитан, длина data url: {}", img.id, img.file.name, img.data.length);
-                //CropUploadLogger.logTrace('Содержимое: {}', dataUrl);
-                this.processReadedFile(img);
-            } else {
-                CropUploadLogger.logWarn(" << {}. Файл '{}' успешно прочитан, но в данный момент загружается другой файл.", img.id, img.file.name);
-            }
+        onImgReady: function(img) {
+            CropUploadLogger.logInfo(" << {}. Картинка '{}' принята: {}x{}", img.id, img.file.name, img.info.width, img.info.height);
+            CropEditor.load(img);
+        }
+    }
+    
+    
+    /*
+     * Менеджер редактора видимой области картинки
+     */
+    var CropEditor = {
+        //Холдер
+        $croppHolder: $('.crop-holder'),
+        //Редактор
+        $cropper: null,
+        //Метод загружает картинку в редактор
+        load: function(img) {
+            
+            FileAPI.Image(img.file)
+            .resize(CropCore.ContainerWidth, 600, 'width')
+            //.filter('Lomo')
+            .get(function (err, canvas){
+                if (err) {
+                    CropUploadLogger.logWarn('Ошибка обработки картинки: {}', err);
+                    CropCore.showError(err, img);
+                } else {
+                    img.html = canvas;
+                    CropEditor.makeCrop(img);
+                }
+            });
         },
         
-        //Метод вызывается после того, как файл был успешно прочитан - для добавления изображения и перестроения редактора
-        processReadedFile: function(img) {
-            CropUploadLogger.logTrace('Определяем размер картинки.');
-            var ImageObj = new Image();
-            ImageObj.onload = function() {
-                if (img.id == CropUpload.fileSelectCounter) {
-                    img.w = ImageObj.width;
-                    img.h = ImageObj.height;
-                    CropUploadLogger.logInfo("Размер картинки '{}': {}x{}", img.file.name, img.w, img.h);
+        //Метод создаёт редактор для картинки
+        makeCrop: function(img) {
+            //Сначала закроем
+            this.close();
+            
+            $('.crop-upload').clickClbck(function() {
+                // Uploading Files - TODO
+                FileAPI.upload({
+                    url: './ctrl.php',
+                    files: {
+                        images: []
+                    },
+                    progress: function (evt){ /* ... */ },
+                    complete: function (err, xhr){ /* ... */ }
+                });
+            });
+            
+            this.$croppHolder.empty().css('height', CropCore.calcHolderHeight(img)).append(img.html);
+            
+            //this.$cropper = $('<img>').attr('src', img.html.toDataURL()).appendTo();
+            $(img.html).cropper({
+                aspectRatio: 1,
+                preview: '.crop-preview, .crop-preview-small',
+                responsive: false,
+                background: true,
+                autoCropArea: 1,
+                movable: false,
+                zoomable: false,
+                viewMode: 1,
+                crop: function (data) {
+        
+                //$('.container').append($('<img>').attr('src', $cropper.cropper('getCroppedCanvas').toDataURL()));
+        
+                },
+                built: function () {
+                    //$cropper.cropper('disable');
+            
+                    return;//---
+                    PsUtil.scheduleDeferred(function () {
+                
+                        $('.container').append($('<img>').attr('src', $cropper.cropper('getCroppedCanvas').toDataURL()));
+                
+                        AjaxExecutor.executePost('CropUpload', {
+                            data: $cropper.cropper('getCroppedCanvas').toDataURL()
+                        },
+                        function (ok) {
+                            alert('OK: ' + ok);
+                        })
+            
+                    }, null, 1000);
                 }
-            };
-            ImageObj.src = img.data;
+            });
+            
+        },
+        
+        //Метод закрывает редактор
+        close: function() {
+            if (this.$cropper) {
+                this.$cropper.cropper('destroy');
+                this.$cropper = null;
+            }
         }
     }
     

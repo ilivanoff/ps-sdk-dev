@@ -86,7 +86,7 @@ h1.head {
 }
 
 .container {
-    width: 1000px;
+    width: 640px;
     margin: 10px auto;
 }
 
@@ -126,4 +126,39 @@ h1.head {
 .crop-text {
     padding: 20px;
     margin: 10px;
+}
+
+
+.upload-btn {
+    width: 130px;
+    height: 25px;
+    overflow: hidden;
+    position: relative;
+    border: 3px solid #06c;
+    border-radius: 5px;
+    background: #0cf;
+
+}
+.upload-btn:hover {
+    background: #09f;
+}
+.upload-btn__txt {
+    z-index: 1;
+    position: relative;
+    color: #fff;
+    font-size: 18px;
+    font-family: "Helvetica Neue";
+    line-height: 24px;
+    text-align: center;
+    text-shadow: 0 1px 1px #000;
+}
+.upload-btn input {
+    top: -10px;
+    right: -40px;
+    z-index: 2;
+    position: absolute;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    font-size: 50px;
 }

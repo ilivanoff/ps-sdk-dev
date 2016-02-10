@@ -199,22 +199,6 @@ print_r(PSCache::inst()->getFromCache($key, $group));
 
 die;
 
-class X {
-
-    function test(array $a = null) {
-        print_r($a);
-        br();
-        print_r(is_array($a));
-    }
-
-}
-
-$x = new X();
-$x->test(null);
-die;
-
-
-
 /*
 
   echo PsConnectionPool::params();
