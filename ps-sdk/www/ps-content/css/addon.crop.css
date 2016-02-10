@@ -1,0 +1,129 @@
+html, body {
+    text-align: center;
+}
+
+body {
+    background-color: #F0F0F0;
+    color: #333333;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.42857;
+}
+
+#carrier {
+    width: 960px;
+    margin: 0 auto;
+    text-align: justify;
+    background-color: #FFFFFF;
+}
+
+/* ЗАГОЛОВОК */
+#header {
+    border-top: 2px solid #339;
+    padding-bottom: 15px;
+    /*background:url(/ps-content/images/images4use/BG/Opera-Background-Lite.jpg) left center no-repeat;*/
+}
+
+#header a {
+    text-decoration: none;
+}
+
+#header a.logo {
+    color: #111;
+    font-size: 50px;
+    font-weight: bold;
+    display: inline-block;
+    margin: 40px 0px 0px 32px;
+    color: #1982D1;
+    /*font-family: "Comic Sans MS", "Brush Script MT", cursive;*/
+    letter-spacing: 2px;
+}
+
+#header a.logo:hover {
+}
+
+#header img.logo {
+    margin: 20px 0 0 20px;
+    float: left;
+}
+
+
+/* ССЫЛКИ В ЗАГОЛОВКЕ */
+#header ul.links{
+    float:right;
+    margin:20px 10px 0 0;
+    padding: 0;
+    text-align:center;
+    list-style-type:none;
+    font-weight:bold;
+    font-size:9pt;
+    line-height:1.5em;
+}
+
+#header ul.links li{
+    float: left;
+    margin: 0 0 0 18px;
+    width: 80px;
+}
+
+/*Цвет неактивной ссылки*/
+#header ul.links a {
+    color:#999;
+}
+
+/*Цвет активной ссылки*/
+#header ul.links a:hover, #header ul.links li.current a {
+    color: #033; 
+}
+
+h1.head {
+    background-color: #0074D9;
+    color: #FFFFFF;
+    padding: 30px 0px;
+    margin: 0px;
+    margin-bottom: 30px;
+    font-size: 50px;
+}
+
+.container {
+    width: 1000px;
+    margin: 10px auto;
+}
+
+.crop-holder {
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 10px;
+}
+
+.crop-holder img {
+    padding: 0px;
+    margin: 0px;
+}
+
+.crop-preview {
+    width: 300px;
+    height: 300px;
+    overflow:hidden;
+    float: left;
+}
+
+.crop-preview-table {
+    width: 490px;
+    height: 490px;
+    float: right;
+    border: 1px dashed #ccc;
+}
+
+.crop-preview-small {
+    width: 50px;
+    height: 50px;
+    overflow:hidden;
+    margin-top: 120px;
+    margin-left: 120px;
+}
+
+.crop-text {
+    padding: 20px;
+    margin: 10px;
+}
