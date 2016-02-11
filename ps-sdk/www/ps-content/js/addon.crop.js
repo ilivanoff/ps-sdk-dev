@@ -13,7 +13,6 @@ $(function () {
         },
         showError: function (error, img) {
             alert(error);
-
         }
     }
 
@@ -52,8 +51,15 @@ $(function () {
 
             CropUploadLogger.logInfo(" >> {}. Выбран файл: '{}' [{}]. Размер: {}.", readId, file.name, file.type, file.size);
 
+            var error = this.validateFile(file);
+            if (error) {
+                CropUploadLogger.logWarn(" << {}. Файл '{}' не может быть загружен: {}.", readId, file.name, error);
+                CropCore.showError(error);
+                return;//---
+            }
+
             FileAPI.getInfo(file, function (err, info) {
-                var error = err ? err : CropUpload.validateSelectedFile(file, info);
+                error = err ? err : CropUpload.validateFileInfo(file, info);
                 if (error) {
                     CropUploadLogger.logWarn(" << {}. Файл '{}' не может быть загружен: {}.", readId, file.name, error);
                     CropCore.showError(error, img);
@@ -68,14 +74,18 @@ $(function () {
                 }
             });
         },
-        //Метод проверяет выбранный файл - его тип и размер
-        validateSelectedFile: function (file, info) {
+        //Метод выполняет превалидацию файла
+        validateFile: function (file) {
             if (!file.size) {
                 return 'Пустой файл';
             }
             if (!file.type.startsWith('image/')) {
                 return 'Тип файлов [' + file.type + '] не поддерживается';
             }
+            return null;//---
+        },
+        //Метод проверяет выбранный файл - его тип и размер
+        validateFileInfo: function (file, info) {
             if (info.width <= 0 || info.height <= 0) {
                 return 'Некорректный размер картинки: [' + info.width + 'x' + info.height;
             }

@@ -2511,7 +2511,10 @@ $(function() {
         if(!isEmpty($cp)) {
             $cp.click();
         } else {
-            getTarget('input, textarea, select').focus();
+            $cp = getTarget('input, textarea, select');
+            if ($cp.isVisible()) {
+                $cp.focus();
+            }
         }
     }).disableSelection();
 
