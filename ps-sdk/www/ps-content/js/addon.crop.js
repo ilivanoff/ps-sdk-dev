@@ -16,6 +16,24 @@ $(function () {
         }
     }
 
+    $('.choose-file-label').button({
+        icons: {
+            primary: 'ui-icon-folder-open'
+        }
+    });
+
+    $('.top-buttons .close').button({
+        icons: {
+            primary: 'ui-icon-closethick'
+        }
+    }).button('disable');
+
+    $('.bottom-buttons button').button({
+        icons: {
+            primary: 'ui-icon-mail-closed'
+        }
+    });
+
     /*
      * Менеджер кнопки загрузки файла
      */

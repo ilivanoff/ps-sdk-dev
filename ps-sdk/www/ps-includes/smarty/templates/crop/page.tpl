@@ -12,10 +12,15 @@
 <div id="carrier">
 
     <div class="container">
-        <label for="choose-file" class="choose-file-label">
-            Загрузить фото
-        </label>
-        <input type="file" id="choose-file" accept="image/*" />
+
+        <div class="top-buttons">
+            <label for="choose-file" class="choose-file-label">
+                Загрузить фото
+            </label>
+            <input type="file" id="choose-file" accept="image/*" />
+
+            <button class="close">Закрыть</button>
+        </div>
 
         <br/>
 
@@ -36,6 +41,11 @@
         <div class="crop-text">
             <textarea></textarea>
         </div>
+
+        <div class="bottom-buttons">
+            <button>Опубликовать</button>
+        </div>
+
     </div>
 
     <div class="crop-menu">

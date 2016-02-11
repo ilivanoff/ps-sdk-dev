@@ -35,6 +35,16 @@ h1.head {
     padding-left: 36px;
 }
 
+.top-buttons {
+    margin: 10px;
+    font-size: 14px;
+}
+
+.bottom-buttons {
+    margin: 10px;
+    font-size: 14px;
+}
+
 #choose-file {
     display: none;
 }
@@ -153,24 +163,6 @@ h1.head {
     margin: 60px 0px 0px 60px;
 }
 
-.choose-file-label {
-    cursor: pointer;
-    background-color: #3BB3E0;
-    background-image: -moz-linear-gradient(center bottom , #2CA0CA 0%, #3EB8E5 100%);
-    border: 1px solid #186F8F;
-    border-radius: 5px 5px 5px 5px;
-    box-shadow: 0 1px 0 #7FD2F1 inset, 0 1px 0 #FFFFFF;
-    color: #FFFFFF;
-    font-family: 'Open Sans',sans-serif;
-    font-size: 14px;
-    padding: 10px;
-    position: relative;
-    text-decoration: none;
-    margin: 10px 0px;
-    display: inline-block;
-}
-.choose-file-label:hover {
-    background-image: -moz-linear-gradient(center bottom , #3EB8E5 0%, #2CA0CA 100%);
-    padding: 11px 10px 9px;
-    top: 1px;
+.choose-file-label, .choose-file-label .ui-button-text {
+    border-radius: 5px 5px 5px 5px !important;
 }

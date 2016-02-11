@@ -43,8 +43,8 @@
 <link rel="stylesheet" href="/ps-content/js-lib/jquery-ui-1.9.1.custom/css/smoothness/jquery-ui-1.9.1.custom.min.css" type="text/css" media="all"/>
 <script type="text/javascript" src="/ps-content/js-lib/jquery-ui-1.9.1.custom/js/jquery-ui-1.9.1.custom.min.js"></script>
 *}
-<link rel="stylesheet" href="/ps-content/js-lib/jquery-ui/jquery-ui-1.11.4.custom/jquery-ui.css" type="text/css" media="all"/>
-<script type="text/javascript" src="/ps-content/js-lib/jquery-ui/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
+<link rel="stylesheet" href="/ps-content/js-lib/jquery-ui/jquery-ui-1.11.4.custom.ExciteBike/jquery-ui.css" type="text/css" media="all"/>
+<script type="text/javascript" src="/ps-content/js-lib/jquery-ui/jquery-ui-1.11.4.custom.ExciteBike/jquery-ui.js"></script>
 
 
 <link rel="stylesheet" href="/ps-content/js-lib/color-picker/colorPicker.css" type="text/css" media="all" />
