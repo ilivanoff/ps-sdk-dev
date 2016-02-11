@@ -30,9 +30,13 @@
 <script type="text/javascript" src="/ps-content/js-lib/cropper/dist/cropper.js"></script>
 <link rel="stylesheet" href="/ps-content/js-lib/cropper/dist/cropper.css" />
 
-<script>window.FileAPI = { debug: true, staticPath: '/ps-content/js-lib/FileAPI/FileAPI 2.0.18/dist/' };</script>
-<script src="/ps-content/js-lib/FileAPI/FileAPI 2.0.18/dist/FileAPI.min.js"></script>
-<script src="/ps-content/js-lib/FileAPI/FileAPI 2.0.18/plugins/caman.full.min.js"></script>
+{literal}
+    <script>window.FileAPI = {debug: true,
+            media: true,
+            staticPath: '/ps-content/js-lib/FileAPI/FileAPI 2.0.18/dist/'};</script>
+    {/literal}
+<script src="/ps-content/js-lib/FileAPI/FileAPI 2.0.18/dist/FileAPI.js"></script>
+<script src="/ps-content/js-lib/FileAPI/FileAPI 2.0.18/plugins/caman.full.js"></script>
 
 {*jQuery UI*}
 {*
