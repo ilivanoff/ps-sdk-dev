@@ -225,6 +225,18 @@ $(function () {
 
     CropUpload.init();
 
+
+    $('#PresetFilters a').clickClbck(function() {
+        var disableFilters = this.is('.Active');
+        $('#PresetFilters a').removeClass('Active');
+        if (disableFilters) {
+        //Отключаем фильтры
+        } else {
+            this.addClass('Active'); 
+        //Включаем фильтры
+        }
+    });
+
     return;//---
     /*
      * Сделаем кнопку загрузки файлов
