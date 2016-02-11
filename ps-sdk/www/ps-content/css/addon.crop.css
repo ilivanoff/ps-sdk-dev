@@ -40,9 +40,15 @@ h1.head {
     font-size: 14px;
 }
 
+/* Блок с картинками */
+.box-editor {
+    display: none;
+}
+
 .bottom-buttons {
     margin: 10px;
     font-size: 14px;
+    display: none;
 }
 
 #choose-file {
@@ -61,10 +67,7 @@ h1.head {
 }
 
 .crop-preview {
-    width: 300px;
-    height: 300px;
     overflow:hidden;
-    float: left;
 }
 
 .crop-text {
@@ -160,6 +163,7 @@ h1.head {
 .crop-menu .crop-grid .crop-preview {
     width: 60px;
     height: 60px;
+    float: left;
     margin: 60px 0px 0px 60px;
 }
 

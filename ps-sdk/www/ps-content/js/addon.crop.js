@@ -3,7 +3,16 @@ $(function () {
     var CropUploadLogger = PsLogger.inst('CropUpload').setTrace();
 
     var CropCore = {
+        //Ширина контейнера
         ContainerWidth: $('.container').width(),
+        //Блок с панелью редактирования картинки
+        $boxEditor: $('.box-editor'),
+        //Холдер для блока редактирования картинки
+        $croppHolder: $('.crop-holder'),
+        //Верхняя панель кнопок
+        $buttonsTop: $('.top-buttons'),
+        //Нижняя панель кнопок
+        $buttonsBottom: $('.bottom-buttons'),
         //Метод вычисляет высоту холдера для картинки
         calcHolderHeight: function (img) {
             var ratio = this.ContainerWidth / img.info.width;
@@ -13,8 +22,24 @@ $(function () {
         },
         showError: function (error, img) {
             alert(error);
+        },
+        
+        init: function() {
+            this.updateModel = new PsUpdateModel(CropCore, CropCore.umStart, CropCore.umStop);
+        },
+        
+        loadingDiv: null,
+        updateModel: null,
+        
+        umStart: function() {
+            this.loadingDiv = loadingMessageDiv().insertAfter(this.$buttonsTop);
+        },
+        umStop: function() {
+            this.loadingDiv.remove();
         }
     }
+    
+    CropCore.init();
 
     $('.choose-file-label').button({
         icons: {
@@ -121,96 +146,80 @@ $(function () {
      * Менеджер редактора видимой области картинки
      */
     var CropEditor = {
-        //Холдер
-        $croppHolder: $('.crop-holder'),
+        //Тукущая картирка, загруженная в редактор
+        img: null,
         //Редактор
         $cropper: null,
+        //Код загрузки
+        loadId: 0,
         //Метод загружает картинку в редактор
         load: function (img) {
-
-            FileAPI.Image(img.file)
-                    .resize(CropCore.ContainerWidth, 600, 'width')
-                    //.filter('grungy')
-                    .get(function (err, canvas) {
-                        if (err) {
-                            CropUploadLogger.logWarn('Ошибка обработки картинки: {}', err);
-                            CropCore.showError(err, img);
-                        } else {
-                            img.html = canvas;
-                            CropEditor.makeCrop(img);
-                        }
-                    });
+            FileAPI.Image(img.file).resize(CropCore.ContainerWidth, 600, 'width')
+            .get(function (err, canvas) {
+                if (err) {
+                    CropUploadLogger.logWarn('Ошибка обработки картинки: {}', err);
+                    CropCore.showError(err, img);
+                } else {
+                    img.html = canvas;
+                    CropEditor.img = img;
+                    CropEditor.initEditor();
+                }
+            });
         },
         //Метод создаёт редактор для картинки
-        makeCrop: function (img) {
-            //Сначала закроем
-            this.close();
+        initEditor: function () {
+            this.startCrop();
+        },
+        
+        //Метод начинает редактирование картинки в crop
+        startCrop: function() {
+            //Уберём кнопку публикации
+            CropCore.$buttonsBottom.hide();
+            
+            //Сначала закроем текущий редактор
+            this.stopCrop();
+            
+            CropCore.updateModel.start();
 
-            $('.crop-upload').clickClbck(function () {
-                var canvas = CropEditor.$cropper.cropper('getCroppedCanvas');
-                Caman(canvas, function () {
-                    this.vintage();
-                    $('.container').append(canvas);
-                });
-
-                return;//--
-
-                // Uploading Files - TODO
-                FileAPI.upload({
-                    url: './ctrl.php',
-                    files: {
-                        images: []
-                    },
-                    progress: function (evt) { /* ... */
-                    },
-                    complete: function (err, xhr) { /* ... */
-                    }
-                });
-            });
-
-            this.$croppHolder.empty().css('height', CropCore.calcHolderHeight(img)).append(img.html);
-
-            //this.$cropper = $('<img>').attr('src', img.html.toDataURL()).appendTo();
-            this.$cropper = $(img.html).cropper({
+            //Покажем редактор
+            CropCore.$boxEditor.show();
+            
+            //Высота редактора должна быть равна высоте картинки
+            CropCore.$croppHolder.empty().css('height', CropCore.calcHolderHeight(this.img)).hide().append(this.img.html);
+            
+            //Код загрузки
+            var loadId = ++this.loadId;
+            
+            //Инициализируем панель
+            this.$cropper = $(this.img.html).cropper({
                 aspectRatio: 1,
-                preview: '.crop-preview, .crop-preview-small',
+                preview: '.crop-preview',
                 responsive: false,
                 background: true,
                 autoCropArea: 1,
                 movable: false,
                 zoomable: false,
                 viewMode: 1,
-                crop: function (data) {
-
-                    //$('.container').append($('<img>').attr('src', $cropper.cropper('getCroppedCanvas').toDataURL()));
-
-                },
                 built: function () {
-                    //$cropper.cropper('disable');
-
-                    return;//---
-                    PsUtil.scheduleDeferred(function () {
-
-                        $('.container').append($('<img>').attr('src', $cropper.cropper('getCroppedCanvas').toDataURL()));
-
-                        AjaxExecutor.executePost('CropUpload', {
-                            data: $cropper.cropper('getCroppedCanvas').toDataURL()
-                        },
-                                function (ok) {
-                                    alert('OK: ' + ok);
-                                })
-
-                    }, null, 1000);
+                    CropCore.updateModel.stop();
+                    if (loadId == CropEditor.loadId) {
+                        CropCore.$croppHolder.show();
+                        PsUtil.scheduleDeferred(CropEditor.onCropReady, CropEditor, 20);
+                    }
                 }
             });
-
         },
         //Метод закрывает редактор
-        close: function () {
+        stopCrop: function () {
             if (this.$cropper) {
                 this.$cropper.cropper('destroy');
                 this.$cropper = null;
             }
+        },
+
+        //Метод вызывается, когда редактор готов к работе
+        onCropReady: function() {
+            CropCore.$buttonsBottom.show();
         }
     }
 
@@ -233,6 +242,28 @@ $(function () {
      });
      */
 
+    $('.crop-upload').clickClbck(function () {
+        var canvas = CropEditor.$cropper.cropper('getCroppedCanvas');
+        Caman(canvas, function () {
+            this.vintage();
+            $('.container').append(canvas);
+        });
+
+        return;//--
+
+        // Uploading Files - TODO
+        FileAPI.upload({
+            url: './ctrl.php',
+            files: {
+                images: []
+            },
+            progress: function (evt) { /* ... */
+            },
+            complete: function (err, xhr) { /* ... */
+            }
+        });
+    });
+
 
     var $cropper = $('#image').cropper({
         aspectRatio: 1,
@@ -245,7 +276,7 @@ $(function () {
         viewMode: 1,
         crop: function (data) {
 
-            //$('.container').append($('<img>').attr('src', $cropper.cropper('getCroppedCanvas').toDataURL()));
+        //$('.container').append($('<img>').attr('src', $cropper.cropper('getCroppedCanvas').toDataURL()));
 
         },
         built: function () {
@@ -259,9 +290,9 @@ $(function () {
                 AjaxExecutor.executePost('CropUpload', {
                     data: $cropper.cropper('getCroppedCanvas').toDataURL()
                 },
-                        function (ok) {
-                            alert('OK: ' + ok);
-                        })
+                function (ok) {
+                    alert('OK: ' + ok);
+                })
 
             }, null, 1000);
         }

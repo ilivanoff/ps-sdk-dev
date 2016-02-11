@@ -559,6 +559,7 @@ function PsUpdateModel(ctxt, startImpl, stopImpl) {
     };
     
     this.stop = function() {
+        if (counter==0) return;//---
         --counter;
         if (counter==0 && $.isFunction(stopImpl)) {
             stopImpl.call(ctxt, _action);
