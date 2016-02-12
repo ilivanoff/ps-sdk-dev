@@ -271,7 +271,9 @@ $(function () {
                                 this.$cropper = $cropper;
                                 this.setEnabled(this.enabled);
                                 if (data) {
-                                    $cropper.cropper('setCropBoxData', data);
+                                    PsUtil.scheduleDeferred(function () {
+                                        $cropper.cropper('setCropBoxData', data);
+                                    }, null, 50);
                                 }
                                 CropCore.$croppHolder.show();
                                 CropController.onCropReady();
