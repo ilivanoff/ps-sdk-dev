@@ -99,6 +99,8 @@ $(function () {
             CropCore.hideError();
             //Останавливаем редактирование
             CropEditor.stopCrop();
+            //Очищаем редактор
+            CropCore.$croppHolder.empty();
             //Прячем редактор
             CropCore.$cropEditor.hide();
             //Прячем кнопку публикации
