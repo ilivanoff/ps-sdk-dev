@@ -126,13 +126,8 @@ $(function () {
         }
 
         //Применение фильтров
-        this.filterApply = function (filter, callback) {
-
-            if (filter) {
-
-            }
-
-            PsUtil.startTimerOnce(callback, 2000);
+        this.filterApply = function (callback) {
+            CropEditor.startCrop(img, callback, true);
         }
     }
 
@@ -238,7 +233,11 @@ $(function () {
             viewMode: 1
         },
         //Метод начинает редактирование картинки в crop
-        startCrop: function (img) {
+        startCrop: function (img, onDone, rebuild) {
+
+            //Если перестраиваем, то сохраним данные выделения
+            var data = rebuild ? this.$cropper.cropper('getCropBoxData') : null;
+
             //Сначала закроем текущий редактор
             this.stopCrop();
 
@@ -251,32 +250,57 @@ $(function () {
             //Клонируем canvas
             var canvas = img.canvasClone();
 
-            //Высота редактора должна быть равна высоте картинки
-            CropCore.$croppHolder.empty().css('height', CropCore.calcHolderHeight(img)).hide().append(canvas);
+            //Если есть фильтр - применим его
+            var filter = ImageFilters.filter();
 
-            var $cropper = null;
+            var onCanvasReady = function () {
+                //Высота редактора должна быть равна высоте картинки
+                CropCore.$croppHolder.empty().css('height', CropCore.calcHolderHeight(img)).hide().append(canvas);
 
-            //Инициализируем панель
-            var cropSettings = $.extend({}, this.cropSettings, {
-                build: function () {
-                    PsUtil.scheduleDeferred(function () {
-                        CropCore.progress.stop();
+                var $cropper = null;
 
-                        if (!this.$cropper && CropController.isCurrent(img)) {
-                            this.$cropper = $cropper;
-                            this.setEnabled(this.enabled);
-                            CropCore.$croppHolder.show();
-                            CropController.onCropReady();
-                        } else {
-                            $cropper.cropper('destroy');
-                            $cropper = null;
-                        }
+                //Инициализируем панель
+                var cropSettings = $.extend({}, CropEditor.cropSettings, {
+                    build: function () {
+                        PsUtil.scheduleDeferred(function () {
+                            CropCore.progress.stop();
 
-                    }, CropEditor, 20);
-                },
-            });
+                            if (!this.$cropper && CropController.isCurrent(img)) {
+                                this.$cropper = $cropper;
+                                this.setEnabled(this.enabled);
+                                if (data) {
+                                    $cropper.cropper('setCropBoxData', data);
+                                }
+                                CropCore.$croppHolder.show();
+                                CropController.onCropReady();
+                            } else {
+                                $cropper.cropper('destroy');
+                                $cropper = null;
+                            }
 
-            $cropper = $(canvas).cropper(cropSettings);
+                            if (onDone) {
+                                onDone();
+                            }
+
+                        }, CropEditor, 20);
+                    },
+                });
+
+                $cropper = $(canvas).cropper(cropSettings);
+
+            }
+
+            //Применяем фильтр
+            if (filter) {
+                Caman(canvas, function () {
+                    if (CropController.isCurrent(img)) {
+                        this[filter]();
+                        this.render(onCanvasReady);
+                    }
+                });
+            } else {
+                onCanvasReady();
+            }
         },
         //Метод закрывает редактор
         stopCrop: function () {
@@ -288,7 +312,8 @@ $(function () {
         setEnabled: function (enabled) {
             this.enabled = enabled;
             if (this.$cropper) {
-                this.$cropper.cropper(enabled ? 'enable' : 'disable');
+                //TODO
+                //this.$cropper.cropper(enabled ? 'enable' : 'disable');
             }
         },
         disable: function () {
@@ -302,17 +327,16 @@ $(function () {
     //Фильтры
     var ImageFilters = {
         init: function () {
-            CropCore.$presetFiltersA.clickClbck(function (href, $a) {
+            CropCore.$presetFiltersA.clickClbck(function () {
                 if (CropCore.progress.isStarted() || this.is('.disabled')) {
                     return;//---
                 }
-                var addFilter = !this.is('.active');
-                CropCore.$presetFiltersA.removeClass('active').not($a.toggleClass('active', addFilter)).addClass('disabled');
+                CropCore.$presetFiltersA.not(this.toggleClass('active')).removeClass('active').addClass('disabled');
 
                 CropCore.progress.start('filter');
 
                 //Отключаем фильтры
-                CropController.filterApply(addFilter ? null : href, function () {
+                CropController.filterApply(function () {
                     ImageFilters.enable();
                     CropCore.progress.stop();
                 });
@@ -324,6 +348,9 @@ $(function () {
         },
         enable: function () {
             CropCore.$presetFiltersA.removeClass('disabled');
+        },
+        filter: function () {
+            return getHrefAnchor(CropCore.$presetFiltersA.filter('.active'));
         }
     }
 
