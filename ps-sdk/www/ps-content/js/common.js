@@ -551,8 +551,7 @@ function PsUpdateModel(ctxt, startImpl, stopImpl) {
     var _action;
     
     this.start = function(action) {
-        ++counter;
-        if (counter==1 && $.isFunction(startImpl)) {
+        if (++counter==1 && $.isFunction(startImpl)) {
             _action = action;
             startImpl.call(ctxt, _action);
         }
@@ -560,11 +559,17 @@ function PsUpdateModel(ctxt, startImpl, stopImpl) {
     
     this.stop = function() {
         if (counter==0) return;//---
-        --counter;
-        if (counter==0 && $.isFunction(stopImpl)) {
+        if (--counter==0 && $.isFunction(stopImpl)) {
             stopImpl.call(ctxt, _action);
         }
     };
+    
+    this.clear = function() {
+        if (this.isStarted()) {
+            counter = 1;
+            this.stop();
+        }
+    }
     
     this.stopDeferred = function(){
         PsUtil.startTimerOnce(function(){

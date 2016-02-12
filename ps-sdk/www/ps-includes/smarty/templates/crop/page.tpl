@@ -1,7 +1,7 @@
 <h1 class="head">Публикатор мыслей</h1>
 
 <div id="carrier">
-
+    {* ЛЕВАЯ ПАНЕЛЬ *}
     <div class="container">
 
         <div class="top-buttons">
@@ -11,11 +11,17 @@
             <input type="file" id="choose-file" accept="image/*" />
         </div>
 
-        <div class="box-editor">
-            <div class="crop-holder"></div>
+        <div class="progress">
+            <img src="/ps-content/images/icons/page_loading.gif" alt="loading">
         </div>
 
-        <div class="clearall"></div>
+        <div class="info_box warn">
+            Error message
+        </div>
+
+        <div class="crop-editor">
+            <div class="crop-holder"></div>
+        </div>
 
         {*
         <div class="crop-text">
@@ -29,6 +35,7 @@
 
     </div>
 
+    {* ПРАВАЯ ПАНЕЛЬ *}
     <div class="crop-menu">
         <div id="PresetFilters">
             <a data-preset="vintage" class="Active">Vintage</a>

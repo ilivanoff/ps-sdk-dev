@@ -1,18 +1,35 @@
 $(function () {
 
-    var CropUploadLogger = PsLogger.inst('CropUpload').setTrace();
+    var CropLogger = PsLogger.inst('CropUpload').setTrace();
 
     var CropCore = {
+        //Номер выбора
+        selectId: 0,
+        nextId: function () {
+            return ++this.selectId;
+        },
+        //Контейнер левой части
+        $container: $('.container'),
         //Ширина контейнера
         ContainerWidth: $('.container').width(),
+        //Верхняя панель кнопок
+        $buttonsTop: $('.container .top-buttons'),
+        //Поле выбора файла
+        $fileInput: $('input#choose-file'),
+        //Поле выбора файла
+        $fileInputLabel: $('.container .choose-file-label'),
+        //Прогресс
+        $progress: $('.container .progress'),
+        //Блок для показа ошибки
+        $error: $('.container .info_box.warn'),
+        //Нижняя панель кнопок
+        $buttonsBottom: $('.container .bottom-buttons'),
+        //Кнопка отправки сообщения
+        $buttonSend: $('.container .bottom-buttons button'),
         //Блок с панелью редактирования картинки
-        $boxEditor: $('.box-editor'),
+        $cropEditor: $('.crop-editor'),
         //Холдер для блока редактирования картинки
         $croppHolder: $('.crop-holder'),
-        //Верхняя панель кнопок
-        $buttonsTop: $('.top-buttons'),
-        //Нижняя панель кнопок
-        $buttonsBottom: $('.bottom-buttons'),
         //Метод вычисляет высоту холдера для картинки
         calcHolderHeight: function (img) {
             var ratio = this.ContainerWidth / img.info.width;
@@ -20,100 +37,120 @@ $(function () {
                 return img.info.height;//---
             return img.info.height * ratio;
         },
-        showError: function (error, img) {
-            alert(error);
+        //Методы работы с ошибкой
+        showError: function (error) {
+            this.$error.text($.trim(error)).show();
         },
-        
-        init: function() {
-            this.updateModel = new PsUpdateModel(CropCore, CropCore.umStart, CropCore.umStop);
+        hideError: function () {
+            this.$error.hide();
         },
-        
-        loadingDiv: null,
-        updateModel: null,
-        
-        umStart: function() {
-            this.loadingDiv = loadingMessageDiv().insertAfter(this.$buttonsTop);
+        //Инициализация ядра
+        init: function () {
+            this.progress = new PsUpdateModel(this.$progress, this.$progress.show, this.$progress.hide);
         },
-        umStop: function() {
-            this.loadingDiv.remove();
-        }
+        //Прогресс
+        progress: null
     }
-    
+
     CropCore.init();
 
-    $('.choose-file-label').button({
-        icons: {
-            primary: 'ui-icon-folder-open'
+    //Контроллер всех элементов
+    var CropController = new function () {
+
+        //Текущая картинка
+        var img = null;
+
+        //
+        this.isCurrent = function (id) {
+            return PsIs.object(img) && img.id == (PsIs.object(id) && id.hasOwnProperty('id') ? id.id : id);
         }
-    });
 
-    $('.top-buttons .close').button({
-        icons: {
-            primary: 'ui-icon-closethick'
+        //Метод закрывает редактор
+        this.close = function () {
+            //Стираем информацию о текущем изображении
+            img = null;
+            //Прячем ошибку
+            CropCore.hideError();
+            //Останавливаем редактирование
+            CropEditor.stopCrop();
+            //Прячем редактор
+            CropCore.$cropEditor.hide();
+            //Прячем кнопку публикации
+            CropCore.$buttonsBottom.hide();
         }
-    }).button('disable');
 
-    $('.bottom-buttons button').button({
-        icons: {
-            primary: 'ui-icon-mail-closed'
+        //Метод вызывается при возниктовении ошибки
+        this.onError = function (error) {
+            CropCore.progress.clear();
+            CropCore.showError(error);
         }
-    });
 
-    /*
-     * Менеджер кнопки загрузки файла
-     */
-    var CropUpload = {
-        //Кнопка загрузки файла
-        $fileSelect: null,
-        //Счётчик выбора файлов
-        fileSelectCounter: 0,
-        //Инициализация менеджера
-        init: function () {
-            this.$fileSelect = $('#choose-file');
+        //Метод вызывается, когда была выбрана новая картинка
+        this.onImgSelected = function (selected) {
+            img = selected;
+            CropLogger.logInfo('Пользователь выбрал изображение: {}', selected.toString());
+            CropEditor.startCrop(selected);
+        }
 
-            if (this.$fileSelect.isEmptySet()) {
-                CropUploadLogger.logWarn('Не найдена кнопка загрузки картинки Crop');
-                return;//----
-            }
+        this.onCropReady = function () {
+            //CropCore.$buttonsBottom.show();
+        }
+    }
 
-            //TODO - проверять, поддерживается ли FileApi
-            FileAPI.event.on(this.$fileSelect[0], 'change', PsUtil.safeCall(CropUpload.onFileSelected, CropUpload));
-        },
-        //Метод вызывается при выборе файла в поле выбора
-        onFileSelected: function (evt) {
+    //Работа с новым выбранным файлом
+    var FileInput = {
+        //Обработка выбора
+        processSelection: function (evt) {
+
             var files = FileAPI.getFiles(evt); // Retrieve file list
 
             //Выбраны ли файлы?
             if (!files.length) {
-                CropUploadLogger.logWarn('Файл не выбран');
+                CropLogger.logWarn('Файл не выбран');
                 return;//---
             }
 
-            var readId = ++this.fileSelectCounter;
+            CropController.close();
+
+            CropCore.progress.start();
+
+            var id = CropCore.nextId();
             var file = files[0];
 
-            CropUploadLogger.logInfo(" >> {}. Выбран файл: '{}' [{}]. Размер: {}.", readId, file.name, file.type, file.size);
+            CropLogger.logInfo("$ {}. Выбран файл: '{}' [{}]. Размер: {}.", id, file.name, file.type, file.size);
 
             var error = this.validateFile(file);
             if (error) {
-                CropUploadLogger.logWarn(" << {}. Файл '{}' не может быть загружен: {}.", readId, file.name, error);
-                CropCore.showError(error);
+                CropLogger.logWarn(" ! {}. Файл '{}' не может быть загружен: {}.", id, file.name, error);
+                CropController.onError(error);
                 return;//---
             }
 
             FileAPI.getInfo(file, function (err, info) {
-                error = err ? err : CropUpload.validateFileInfo(file, info);
+                error = err ? err : FileInput.validateFileInfo(info);
                 if (error) {
-                    CropUploadLogger.logWarn(" << {}. Файл '{}' не может быть загружен: {}.", readId, file.name, error);
-                    CropCore.showError(error, img);
+                    CropLogger.logWarn(" ! {}. Файл '{}' не может быть загружен: {}.", id, file.name, error);
+                    CropController.onError(error);
                 } else {
-                    var img = {
-                        id: readId, //Код загрузки
-                        file: file, //Загруженный файл
-                        info: info, //Информация об изображении
-                        html: null  //Объект HTML
-                    };
-                    CropUpload.onImgReady(img);
+                    //Подгоним ширину изображения под редактор
+                    FileAPI.Image(file).resize(CropCore.ContainerWidth, 600, 'width')
+                            .get(function (err, canvas) {
+                                if (err) {
+                                    CropController.onError('Ошибка обработки изображения: ' + err);
+                                } else {
+                                    var img = {
+                                        id: id, //Код загрузки
+                                        file: file, //Загруженный файл
+                                        info: info, //Информация об изображении
+                                        html: canvas, //Объект HTML, по ширине подогнанный для редактора
+                                        toString: function () {
+                                            return this.id + ".'" + this.file.name + "' [" + this.file.type + "] (" + this.info.width + "x" + this.info.height + ")";
+                                        }
+                                    };
+                                    CropCore.progress.stop();
+                                    CropController.onImgSelected(img);
+                                }
+                            });
                 }
             });
         },
@@ -123,91 +160,75 @@ $(function () {
                 return 'Пустой файл';
             }
             if (!file.type.startsWith('image/')) {
-                return 'Тип файлов [' + file.type + '] не поддерживается';
+                return 'Данный тип файлов не поддерживается';
             }
             return null;//---
         },
         //Метод проверяет выбранный файл - его тип и размер
-        validateFileInfo: function (file, info) {
+        validateFileInfo: function (info) {
+            if (!PsIs.object(info) || !PsIs.number(info.width) || !PsIs.number(info.height)) {
+                return 'Не удалось получить размер изображения';
+            }
             if (info.width <= 0 || info.height <= 0) {
-                return 'Некорректный размер картинки: [' + info.width + 'x' + info.height;
+                return 'Некорректный размер изображения: [' + info.width + 'x' + info.height;
             }
             return null;//---
-        },
-        //Метод вызывается, когда файл картинки был успешно прочитан
-        onImgReady: function (img) {
-            CropUploadLogger.logInfo(" << {}. Картинка '{}' принята: {}x{}", img.id, img.file.name, img.info.width, img.info.height);
-            CropEditor.load(img);
         }
     }
-
 
     /*
      * Менеджер редактора видимой области картинки
      */
     var CropEditor = {
-        //Тукущая картирка, загруженная в редактор
-        img: null,
         //Редактор
         $cropper: null,
-        //Код загрузки
-        loadId: 0,
-        //Метод загружает картинку в редактор
-        load: function (img) {
-            FileAPI.Image(img.file).resize(CropCore.ContainerWidth, 600, 'width')
-            .get(function (err, canvas) {
-                if (err) {
-                    CropUploadLogger.logWarn('Ошибка обработки картинки: {}', err);
-                    CropCore.showError(err, img);
-                } else {
-                    img.html = canvas;
-                    CropEditor.img = img;
-                    CropEditor.initEditor();
-                }
-            });
+        //Настройки редактора
+        cropSettings: {
+            aspectRatio: 1,
+            preview: '.crop-preview',
+            responsive: false,
+            background: true,
+            autoCropArea: 1,
+            movable: false,
+            zoomable: false,
+            viewMode: 1
         },
-        //Метод создаёт редактор для картинки
-        initEditor: function () {
-            this.startCrop();
-        },
-        
         //Метод начинает редактирование картинки в crop
-        startCrop: function() {
-            //Уберём кнопку публикации
-            CropCore.$buttonsBottom.hide();
-            
+        startCrop: function (img) {
             //Сначала закроем текущий редактор
             this.stopCrop();
-            
-            CropCore.updateModel.start();
+
+            //Запускаем прогресс
+            CropCore.progress.start();
 
             //Покажем редактор
-            CropCore.$boxEditor.show();
-            
+            CropCore.$cropEditor.show();
+
             //Высота редактора должна быть равна высоте картинки
-            CropCore.$croppHolder.empty().css('height', CropCore.calcHolderHeight(this.img)).hide().append(this.img.html);
-            
-            //Код загрузки
-            var loadId = ++this.loadId;
-            
+            CropCore.$croppHolder.empty().css('height', CropCore.calcHolderHeight(img)).hide().append(img.html);
+
+            var $cropper = null;
+
             //Инициализируем панель
-            this.$cropper = $(this.img.html).cropper({
-                aspectRatio: 1,
-                preview: '.crop-preview',
-                responsive: false,
-                background: true,
-                autoCropArea: 1,
-                movable: false,
-                zoomable: false,
-                viewMode: 1,
-                built: function () {
-                    CropCore.updateModel.stop();
-                    if (loadId == CropEditor.loadId) {
-                        CropCore.$croppHolder.show();
-                        PsUtil.scheduleDeferred(CropEditor.onCropReady, CropEditor, 20);
-                    }
-                }
+            var cropSettings = $.extend({}, this.cropSettings, {
+                build: function () {
+                    PsUtil.scheduleDeferred(function () {
+                        CropCore.progress.stop();
+
+                        if (!this.$cropper && CropController.isCurrent(img)) {
+                            this.$cropper = $cropper;
+                            CropCore.$croppHolder.show();
+                            CropController.onCropReady();
+                        } else {
+                            $cropper.cropper('destroy');
+                            $cropper = null;
+                        }
+
+                    }, CropEditor, 20);
+                },
             });
+
+            $cropper = $(img.html).cropper(cropSettings);
         },
         //Метод закрывает редактор
         stopCrop: function () {
@@ -215,25 +236,35 @@ $(function () {
                 this.$cropper.cropper('destroy');
                 this.$cropper = null;
             }
-        },
-
-        //Метод вызывается, когда редактор готов к работе
-        onCropReady: function() {
-            CropCore.$buttonsBottom.show();
         }
     }
 
-    CropUpload.init();
+
+    //Стилизуем label
+    CropCore.$fileInputLabel.button({
+        icons: {
+            primary: 'ui-icon-folder-open'
+        }
+    });
+
+    //Слушатель выбора файла
+    CropCore.$fileInput.change(PsUtil.safeCall(FileInput.processSelection, FileInput));
+
+    CropCore.$buttonSend.button({
+        icons: {
+            primary: 'ui-icon-mail-closed'
+        }
+    });
 
 
-    $('#PresetFilters a').clickClbck(function() {
+    $('#PresetFilters a').clickClbck(function () {
         var disableFilters = this.is('.Active');
         $('#PresetFilters a').removeClass('Active');
         if (disableFilters) {
-        //Отключаем фильтры
+            //Отключаем фильтры
         } else {
-            this.addClass('Active'); 
-        //Включаем фильтры
+            this.addClass('Active');
+            //Включаем фильтры
         }
     });
 
@@ -288,7 +319,7 @@ $(function () {
         viewMode: 1,
         crop: function (data) {
 
-        //$('.container').append($('<img>').attr('src', $cropper.cropper('getCroppedCanvas').toDataURL()));
+            //$('.container').append($('<img>').attr('src', $cropper.cropper('getCroppedCanvas').toDataURL()));
 
         },
         built: function () {
@@ -302,9 +333,9 @@ $(function () {
                 AjaxExecutor.executePost('CropUpload', {
                     data: $cropper.cropper('getCroppedCanvas').toDataURL()
                 },
-                function (ok) {
-                    alert('OK: ' + ok);
-                })
+                        function (ok) {
+                            alert('OK: ' + ok);
+                        })
 
             }, null, 1000);
         }

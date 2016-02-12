@@ -35,35 +35,38 @@ h1.head {
     padding-left: 36px;
 }
 
-.top-buttons {
-    margin: 10px;
+.container .top-buttons {
+    margin: 10px 0px;
     font-size: 14px;
 }
 
-/* Блок с картинками */
-.box-editor {
+input#choose-file {
     display: none;
 }
 
-.bottom-buttons {
-    margin: 10px;
+.choose-file-label, .choose-file-label .ui-button-text {
+    border-radius: 5px 5px 5px 5px !important;
+}
+
+.container .progress {
+    display: none;
+    margin: 20px 0px;
+}
+
+.container .info_box {
+    display: none;
+    font-weight: bold;
+}
+
+.container .crop-editor {
+    margin: 10px 0px;
+    display: none;
+}
+
+.container .bottom-buttons {
+    margin: 10px  0px;
     font-size: 14px;
     display: none;
-}
-
-#choose-file {
-    display: none;
-}
-
-.crop-holder {
-    padding: 0px;
-    margin: 0px;
-    margin-bottom: 10px;
-}
-
-.crop-holder img {
-    padding: 0px;
-    margin: 0px;
 }
 
 .crop-preview {
@@ -73,41 +76,6 @@ h1.head {
 .crop-text {
     padding: 20px;
     margin: 10px;
-}
-
-
-.upload-btn {
-    width: 130px;
-    height: 25px;
-    overflow: hidden;
-    position: relative;
-    border: 3px solid #06c;
-    border-radius: 5px;
-    background: #0cf;
-
-}
-.upload-btn:hover {
-    background: #09f;
-}
-.upload-btn__txt {
-    z-index: 1;
-    position: relative;
-    color: #fff;
-    font-size: 18px;
-    font-family: "Helvetica Neue";
-    line-height: 24px;
-    text-align: center;
-    text-shadow: 0 1px 1px #000;
-}
-.upload-btn input {
-    top: -10px;
-    right: -40px;
-    z-index: 2;
-    position: absolute;
-    cursor: pointer;
-    opacity: 0;
-    filter: alpha(opacity=0);
-    font-size: 50px;
 }
 
 
@@ -125,7 +93,6 @@ h1.head {
     height: 240px;
     margin: 15px 0px;
 }
-
 
 #PresetFilters {
     clear: both;
@@ -165,8 +132,4 @@ h1.head {
     height: 60px;
     float: left;
     margin: 60px 0px 0px 60px;
-}
-
-.choose-file-label, .choose-file-label .ui-button-text {
-    border-radius: 5px 5px 5px 5px !important;
 }
