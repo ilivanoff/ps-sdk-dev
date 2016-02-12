@@ -36,6 +36,7 @@ h1.head {
 }
 
 .container .top-buttons {
+    display: none;
     margin: 10px 0px;
     font-size: 14px;
 }
@@ -86,6 +87,7 @@ input#choose-file {
     width: 240px;
     background-color: #F5F5F5;
     padding: 10px;
+    visibility: hidden;
 }
 
 .crop-menu .crop-preview {
@@ -117,8 +119,12 @@ input#choose-file {
     text-decoration: none;
 }
 
-#PresetFilters a.Active {
+#PresetFilters a.active {
     background-color: #e69751;
+}
+
+#PresetFilters a.disabled {
+    opacity: 0.3;
 }
 
 .crop-grid {

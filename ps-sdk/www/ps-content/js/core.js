@@ -15,6 +15,8 @@ var PsCore = {
     
     hasWorker: typeof(Worker) !== 'undefined',
     
+    hasFileApi: typeof(FileReader) !== 'undefined',
+    
     //Английский алфавит
     EN_ALPHABET: 'abcdefghijklmnopqrstuxyvwz',
     

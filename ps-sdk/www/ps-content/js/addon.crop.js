@@ -30,6 +30,12 @@ $(function () {
         $cropEditor: $('.crop-editor'),
         //Холдер для блока редактирования картинки
         $croppHolder: $('.crop-holder'),
+        //Фильтры
+        $presetFilters: $('#PresetFilters'),
+        //Кнопки фильтров
+        $presetFiltersA: $('#PresetFilters>a'),
+        //Меню редактора
+        $cropMenu: $('.crop-menu'),
         //Метод вычисляет высоту холдера для картинки
         calcHolderHeight: function (img) {
             var ratio = this.ContainerWidth / img.info.width;
@@ -39,14 +45,20 @@ $(function () {
         },
         //Методы работы с ошибкой
         showError: function (error) {
-            this.$error.text($.trim(error)).show();
+            this.$error.html($.trim(error)).show();
         },
         hideError: function () {
             this.$error.hide();
         },
         //Инициализация ядра
         init: function () {
-            this.progress = new PsUpdateModel(this.$progress, this.$progress.show, this.$progress.hide);
+            this.progress = new PsUpdateModel(this, function () {
+                this.$progress.show()
+                this.$fileInputLabel.uiButtonDisable();
+            }, function () {
+                this.$progress.hide()
+                this.$fileInputLabel.uiButtonEnable();
+            });
         },
         //Прогресс
         progress: null
@@ -54,13 +66,19 @@ $(function () {
 
     CropCore.init();
 
+    //Если браузер не поддерживает FileApi - показываем ошибку и выходим
+    if (!PsCore.hasFileApi) {
+        CropCore.showError('К сожалению Ваш браузер устарел и не поддерживает FileApi:(');
+        return;//---
+    }
+
     //Контроллер всех элементов
     var CropController = new function () {
 
         //Текущая картинка
         var img = null;
 
-        //
+        //Проверка, является ли картинка текущей
         this.isCurrent = function (id) {
             return PsIs.object(img) && img.id == (PsIs.object(id) && id.hasOwnProperty('id') ? id.id : id);
         }
@@ -69,6 +87,8 @@ $(function () {
         this.close = function () {
             //Стираем информацию о текущем изображении
             img = null;
+            //Прекращает прогресс
+            CropCore.progress.clear();
             //Прячем ошибку
             CropCore.hideError();
             //Останавливаем редактирование
@@ -77,11 +97,13 @@ $(function () {
             CropCore.$cropEditor.hide();
             //Прячем кнопку публикации
             CropCore.$buttonsBottom.hide();
+            //Отключаем фильтры
+            ImageFilters.disable();
         }
 
         //Метод вызывается при возниктовении ошибки
         this.onError = function (error) {
-            CropCore.progress.clear();
+            this.close();
             CropCore.showError(error);
         }
 
@@ -93,6 +115,7 @@ $(function () {
         }
 
         this.onCropReady = function () {
+            ImageFilters.enable()
             //CropCore.$buttonsBottom.show();
         }
     }
@@ -239,6 +262,34 @@ $(function () {
         }
     }
 
+    //Фильтры
+    var ImageFilters = {
+        init: function () {
+            CropCore.$presetFiltersA.clickClbck(function (href) {
+                if (CropCore.progress.isStarted() || this.is('.disabled')) {
+                    return;//---
+                }
+                var disableFilters = this.is('.active');
+                CropCore.$presetFiltersA.removeClass('active');
+                if (disableFilters) {
+                    //Отключаем фильтры
+                } else {
+                    this.addClass('active');
+                }
+            });
+        },
+        disable: function () {
+            CropCore.$presetFiltersA.addClass('disabled');
+        },
+        enable: function () {
+            CropCore.$presetFiltersA.removeClass('disabled');
+        }
+    }
+
+    ImageFilters.init();
+
+    //Показываем меню справа
+    CropCore.$cropMenu.setVisibility(true);
 
     //Стилизуем label
     CropCore.$fileInputLabel.button({
@@ -250,40 +301,19 @@ $(function () {
     //Слушатель выбора файла
     CropCore.$fileInput.change(PsUtil.safeCall(FileInput.processSelection, FileInput));
 
+    //Закрываем
+    CropController.close();
+
+    //Покажем кнопку загрузки файла
+    CropCore.$buttonsTop.show();
+
+    return;//---
+
     CropCore.$buttonSend.button({
         icons: {
             primary: 'ui-icon-mail-closed'
         }
     });
-
-
-    $('#PresetFilters a').clickClbck(function () {
-        var disableFilters = this.is('.Active');
-        $('#PresetFilters a').removeClass('Active');
-        if (disableFilters) {
-            //Отключаем фильтры
-        } else {
-            this.addClass('Active');
-            //Включаем фильтры
-        }
-    });
-
-    return;//---
-    /*
-     * Сделаем кнопку загрузки файлов
-     * TODO - использовать в случае не поддержки FileApi
-     */
-    /*
-     $('#file_upload').psUploadify({
-     formData: {
-     type: 'Crop'
-     },
-     onSuccess: function (ok, file) {
-     alert('The file ' + file.name + ' was successfully uploaded with a response: ' + ok.path);
-     },
-     buttonText: 'Загрузить картинку'
-     });
-     */
 
     $('.crop-upload').clickClbck(function () {
         var canvas = CropEditor.$cropper.cropper('getCroppedCanvas');
@@ -306,40 +336,5 @@ $(function () {
             }
         });
     });
-
-
-    var $cropper = $('#image').cropper({
-        aspectRatio: 1,
-        preview: '.crop-preview, .crop-preview-small',
-        responsive: false,
-        background: true,
-        autoCropArea: 1,
-        movable: false,
-        zoomable: false,
-        viewMode: 1,
-        crop: function (data) {
-
-            //$('.container').append($('<img>').attr('src', $cropper.cropper('getCroppedCanvas').toDataURL()));
-
-        },
-        built: function () {
-            //$cropper.cropper('disable');
-
-            return;//---
-            PsUtil.scheduleDeferred(function () {
-
-                $('.container').append($('<img>').attr('src', $cropper.cropper('getCroppedCanvas').toDataURL()));
-
-                AjaxExecutor.executePost('CropUpload', {
-                    data: $cropper.cropper('getCroppedCanvas').toDataURL()
-                },
-                        function (ok) {
-                            alert('OK: ' + ok);
-                        })
-
-            }, null, 1000);
-        }
-    });
-
 
 });
