@@ -124,7 +124,7 @@ $(function () {
 
         this.onCropReady = function () {
             ImageFilters.enable()
-            //CropCore.$buttonsBottom.show();
+        //CropCore.$buttonsBottom.show();
         }
 
         //Применение фильтров
@@ -170,26 +170,26 @@ $(function () {
                 } else {
                     //Подгоним ширину изображения под редактор
                     FileAPI.Image(file).resize(CropCore.ContainerWidth, 600, 'width')
-                            .get(function (err, canvas) {
-                                if (err) {
-                                    CropController.onError('Ошибка обработки изображения: ' + err);
-                                } else {
-                                    var img = {
-                                        id: id,     //Код загрузки
-                                        file: file,   //Загруженный файл
-                                        info: info,   //Информация об изображении
-                                        canvas: canvas, //Объект HTML, по ширине подогнанный для редактора
-                                        canvasClone: function () {
-                                            return PsCanvas.clone(this.canvas);
-                                        },
-                                        toString: function () {
-                                            return this.id + ".'" + this.file.name + "' [" + this.file.type + "] (" + this.info.width + "x" + this.info.height + ")";
-                                        }
-                                    };
-                                    CropCore.progress.stop();
-                                    CropController.onImgSelected(img);
+                    .get(function (err, canvas) {
+                        if (err) {
+                            CropController.onError('Ошибка обработки изображения: ' + err);
+                        } else {
+                            var img = {
+                                id: id,     //Код загрузки
+                                file: file,   //Загруженный файл
+                                info: info,   //Информация об изображении
+                                canvas: canvas, //Объект HTML, по ширине подогнанный для редактора
+                                canvasClone: function () {
+                                    return PsCanvas.clone(this.canvas);
+                                },
+                                toString: function () {
+                                    return this.id + ".'" + this.file.name + "' [" + this.file.type + "] (" + this.info.width + "x" + this.info.height + ")";
                                 }
-                            });
+                            };
+                            CropCore.progress.stop();
+                            CropController.onImgSelected(img);
+                        }
+                    });
                 }
             });
         },
@@ -238,7 +238,7 @@ $(function () {
         startCrop: function (img, onDone, rebuild) {
 
             //Если перестраиваем, то сохраним данные выделения
-            var data = rebuild ? this.$cropper.cropper('getCropBoxData') : null;
+            var cropBoxData = rebuild ? this.$cropper.cropper('getCropBoxData') : null;
 
             //Сначала закроем текущий редактор
             this.stopCrop();
@@ -263,17 +263,15 @@ $(function () {
 
                 //Инициализируем панель
                 var cropSettings = $.extend({}, CropEditor.cropSettings, {
-                    build: function () {
+                    built: function () {
                         PsUtil.scheduleDeferred(function () {
                             CropCore.progress.stop();
-
+                            
                             if (!this.$cropper && CropController.isCurrent(img)) {
                                 this.$cropper = $cropper;
                                 this.setEnabled(this.enabled);
-                                if (data) {
-                                    PsUtil.scheduleDeferred(function () {
-                                        $cropper.cropper('setCropBoxData', data);
-                                    }, null, 50);
+                                if (cropBoxData) {
+                                    $cropper.cropper('setCropBoxData', cropBoxData);
                                 }
                                 CropCore.$croppHolder.show();
                                 CropController.onCropReady();
@@ -286,10 +284,10 @@ $(function () {
                                 onDone();
                             }
 
-                        }, CropEditor, 20);
-                    },
+                        }, CropEditor);
+                    }
                 });
-
+                
                 $cropper = $(canvas).cropper(cropSettings);
 
             }
@@ -316,8 +314,8 @@ $(function () {
         setEnabled: function (enabled) {
             this.enabled = enabled;
             if (this.$cropper) {
-                //TODO
-                //this.$cropper.cropper(enabled ? 'enable' : 'disable');
+            //TODO
+            //this.$cropper.cropper(enabled ? 'enable' : 'disable');
             }
         },
         disable: function () {
