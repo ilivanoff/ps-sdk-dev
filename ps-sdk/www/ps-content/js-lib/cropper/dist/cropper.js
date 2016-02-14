@@ -1070,7 +1070,50 @@
         this.output();
       }
     },
+    
+    /*
+     * Azazello
+     */
+    initCropBox: function () {
+      var options = this.options;
+      var canvas = this.canvas;
+      var cropBox = options.cropBoxData;
+      if (cropBox && cropBox.hasOwnProperty('width')) {
+            this.cropBox = cropBox;
+            this.limitCropBox(true, true);
+      } else {
+            var aspectRatio = options.aspectRatio;
+            var autoCropArea = num(options.autoCropArea) || 0.8;
+            cropBox = {
+                  width: canvas.width,
+                  height: canvas.height
+                };
 
+            if (aspectRatio) {
+              if (canvas.height * aspectRatio > canvas.width) {
+                cropBox.height = cropBox.width / aspectRatio;
+              } else {
+                cropBox.width = cropBox.height * aspectRatio;
+              }
+            }
+
+            this.cropBox = cropBox;
+            this.limitCropBox(true, true);
+
+            // Initialize auto crop area
+            cropBox.width = min(max(cropBox.width, cropBox.minWidth), cropBox.maxWidth);
+            cropBox.height = min(max(cropBox.height, cropBox.minHeight), cropBox.maxHeight);
+
+            // The width of auto crop area must large than "minWidth", and the height too. (#164)
+            cropBox.width = max(cropBox.minWidth, cropBox.width * autoCropArea);
+            cropBox.height = max(cropBox.minHeight, cropBox.height * autoCropArea);
+            cropBox.oldLeft = cropBox.left = canvas.left + (canvas.width - cropBox.width) / 2;
+            cropBox.oldTop = cropBox.top = canvas.top + (canvas.height - cropBox.height) / 2;
+      }
+
+      this.initialCropBox = $.extend({}, cropBox);
+    },
+    /*
     initCropBox: function () {
       var options = this.options;
       var canvas = this.canvas;
@@ -1104,7 +1147,7 @@
 
       this.initialCropBox = $.extend({}, cropBox);
     },
-
+    */
     limitCropBox: function (isSizeLimited, isPositionLimited) {
       var options = this.options;
       var aspectRatio = options.aspectRatio;
@@ -2558,7 +2601,20 @@
      * Get the crop box position and size data
      *
      * @return {Object} data
+     * Azazello
      */
+    getCropBoxData: function () {
+      var cropBox = this.cropBox;
+      var data;
+
+      if (this.isBuilt && this.isCropped) {
+          data = $.extend({}, cropBox)
+      }
+
+      return data || {};
+    },
+
+    /*
     getCropBoxData: function () {
       var cropBox = this.cropBox;
       var data;
@@ -2574,7 +2630,7 @@
 
       return data || {};
     },
-
+    */
     /**
      * Set the crop box position and size with new data
      *

@@ -37,6 +37,8 @@
 
     {* ПРАВАЯ ПАНЕЛЬ *}
     <div class="crop-menu">
+        <div class="rotate"></div>
+
         <div id="PresetFilters">
             <a href="#vintage">Vintage</a>
             <a href="#lomo">Lomo</a>
@@ -61,8 +63,6 @@
         <div class="clearall"></div>
 
         <div class="crop-preview"></div>
-
-        <div class="clearall"></div>
 
         <div class="crop-grid">
             <div class="crop-preview"></div>
