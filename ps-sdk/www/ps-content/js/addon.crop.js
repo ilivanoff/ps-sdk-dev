@@ -62,7 +62,7 @@ $(function () {
                     this.$progress.show()
                 }
                 this.$fileInputLabel.uiButtonDisable();
-                this.$cropText.disable();
+                this.$cropTextArea.disable();
                 this.$buttonSend.uiButtonDisable();
             }, function (action) {
                 if (action !== 'filter') {

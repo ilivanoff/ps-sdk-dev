@@ -950,7 +950,7 @@ function PsTextareaManager($ta){
         //РАЗМЕРЫ ПОЛЯ ВВОДА
         var scrollHeight = ta.scrollHeight;
         if (scrollHeight > minHeight) {
-            $ta.height(minHeight); //Сбрасываем размер поля, чтобы вычислить величину скролла, твк как мы могли и стереть текст
+            $ta.height(minHeight); //Сбрасываем размер поля, чтобы вычислить величину скролла, так как мы могли и стереть текст
             scrollHeight = ta.scrollHeight;
         }
         var height = Math.max(minHeight, Math.min(scrollHeight, maxHeight));

@@ -26,7 +26,7 @@
         <div class="crop-text">
             <div class="crop-preview"></div>
             <div class="crop-textarea-holder">
-                <textarea></textarea>
+                <textarea ml='160'></textarea>
             </div>
         </div>
 

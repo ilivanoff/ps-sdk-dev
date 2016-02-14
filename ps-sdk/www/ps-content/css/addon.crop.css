@@ -85,6 +85,7 @@ input#choose-file {
 }
 
 .crop-text .crop-textarea-holder {
+    text-align: left;
     margin-left: 70px;
 }
 
