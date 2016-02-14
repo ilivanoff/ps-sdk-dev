@@ -75,8 +75,20 @@ input#choose-file {
 }
 
 .crop-text {
-    padding: 20px;
-    margin: 10px;
+    margin: 10px 0px;
+}
+
+.crop-text .crop-preview {
+    width: 60px;
+    height: 60px;
+    float: left;
+}
+
+.crop-text .crop-textarea-holder {
+    margin-left: 70px;
+}
+
+.crop-text textarea {
 }
 
 

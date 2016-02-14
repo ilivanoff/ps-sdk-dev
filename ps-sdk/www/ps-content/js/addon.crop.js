@@ -28,6 +28,9 @@ $(function () {
         $buttonSend: $('.container .bottom-buttons button'),
         //Блок с панелью редактирования картинки
         $cropEditor: $('.crop-editor'),
+        //Текст
+        $cropText: $('.crop-text'),
+        $cropTextArea: $('.crop-text textarea'),
         //Холдер для блока редактирования картинки
         $croppHolder: $('.crop-holder'),
         //Слайдбар переворот
@@ -59,11 +62,15 @@ $(function () {
                     this.$progress.show()
                 }
                 this.$fileInputLabel.uiButtonDisable();
+                this.$cropText.disable();
+                this.$buttonSend.uiButtonDisable();
             }, function (action) {
                 if (action !== 'filter') {
                     this.$progress.hide()
                 }
                 this.$fileInputLabel.uiButtonEnable();
+                this.$cropTextArea.enable();
+                this.$buttonSend.uiButtonEnable();
             });
         },
         //Прогресс
@@ -101,6 +108,8 @@ $(function () {
             CropEditor.stopCrop();
             //Прячем редактор
             CropCore.$cropEditor.hide();
+            //Тукст для ввода сообщения
+            CropCore.$cropText.hide();
             //Прячем кнопку публикации
             CropCore.$buttonsBottom.hide();
             //Отключаем фильтры
@@ -121,8 +130,9 @@ $(function () {
         }
 
         this.onCropReady = function () {
-            ImageFilters.enable()
-        //CropCore.$buttonsBottom.show();
+            ImageFilters.enable();
+            CropCore.$cropText.show();
+            CropCore.$buttonsBottom.show();
         }
 
         //Применение фильтров
@@ -231,6 +241,12 @@ $(function () {
             movable: false,
             zoomable: false,
             viewMode: 1
+        /*
+            ,crop: function(e) {
+                $('.crop-preview').empty().each(function() {
+                    $(this).append($(e.target).cropper('getCroppedCanvas'));
+                });
+            }*/
         },
         //Метод начинает редактирование картинки в crop
         startCrop: function (img, onDone, rebuild) {
@@ -243,9 +259,8 @@ $(function () {
                 cropBoxData = this.$cropper.cropper('getCropBoxData')
                 this.$cropper.cropper('disable');
             } else {
-                this.stopCrop();
                 //Высота редактора должна быть равна высоте картинки
-                CropCore.$croppHolder.css('height', CropCore.calcHolderHeight(img));
+                this.stopCrop().css('height', CropCore.calcHolderHeight(img));
             }
 
             //Запускаем прогресс
@@ -259,7 +274,10 @@ $(function () {
 
             //Если есть фильтр - применим его
             var filter = ImageFilters.filter();
-
+            
+            //Обезопасим функцию обратного вызова
+            onDone = PsUtil.safeCall(onDone);
+            
             var onCanvasReady = function () {
                 var $cropper = null;
 
@@ -271,25 +289,21 @@ $(function () {
                             CropCore.progress.stop();
                             
                             if (CropController.isCurrent(img)) {
-                                this.stopCrop();
                                 this.$cropper = $cropper;
                                 CropCore.$croppHolder.show();
+                                onDone();
                                 CropController.onCropReady();
                             } else {
                                 $cropper.cropper('destroy');
                                 $cropper = null;
-                            }
-
-                            if (onDone) {
                                 onDone();
                             }
-
+                            
                         }, CropEditor);
                     }
                 });
                 
-                CropEditor.stopCrop();
-                CropCore.$croppHolder.append(canvas);
+                CropEditor.stopCrop().append(canvas);
                 
                 $cropper = $(canvas).cropper(cropSettings);
 
@@ -312,8 +326,8 @@ $(function () {
             if (this.$cropper) {
                 this.$cropper.cropper('destroy');
                 this.$cropper = null;
-                CropCore.$croppHolder.hide().empty();
             }
+            return CropCore.$croppHolder.hide().empty();
         }
     }
 
@@ -387,14 +401,15 @@ $(function () {
 
     //Покажем кнопку загрузки файла
     CropCore.$buttonsTop.show();
-
-    return;//---
-
+    
+    //Кнопка отправки сообщения
     CropCore.$buttonSend.button({
         icons: {
             primary: 'ui-icon-mail-closed'
         }
     });
+
+    return;//---
 
     $('.crop-upload').clickClbck(function () {
         var canvas = CropEditor.$cropper.cropper('getCroppedCanvas');

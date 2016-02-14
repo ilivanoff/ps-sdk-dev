@@ -23,11 +23,12 @@
             <div class="crop-holder"></div>
         </div>
 
-        {*
         <div class="crop-text">
-        <textarea></textarea>
+            <div class="crop-preview"></div>
+            <div class="crop-textarea-holder">
+                <textarea></textarea>
+            </div>
         </div>
-        *}
 
         <div class="bottom-buttons">
             <button>Опубликовать</button>
