@@ -99,8 +99,6 @@ $(function () {
             CropCore.hideError();
             //Останавливаем редактирование
             CropEditor.stopCrop();
-            //Очищаем редактор
-            CropCore.$croppHolder.empty();
             //Прячем редактор
             CropCore.$cropEditor.hide();
             //Прячем кнопку публикации
@@ -238,11 +236,16 @@ $(function () {
         startCrop: function (img, onDone, rebuild) {
 
             //Если перестраиваем, то сохраним данные выделения
-            var cropBoxData = rebuild ? this.$cropper.cropper('getCropBoxData') : null;
+            var cropBoxData = null;
 
             //Задизейблим все изменения
-            if (this.$cropper) {
+            if (rebuild) {
+                cropBoxData = this.$cropper.cropper('getCropBoxData')
                 this.$cropper.cropper('disable');
+            } else {
+                this.stopCrop();
+                //Высота редактора должна быть равна высоте картинки
+                CropCore.$croppHolder.css('height', CropCore.calcHolderHeight(img));
             }
 
             //Запускаем прогресс
@@ -258,9 +261,6 @@ $(function () {
             var filter = ImageFilters.filter();
 
             var onCanvasReady = function () {
-                //Высота редактора должна быть равна высоте картинки
-                CropCore.$croppHolder.empty().css('height', CropCore.calcHolderHeight(img)).setVisible(rebuild).append(canvas);
-
                 var $cropper = null;
 
                 //Инициализируем панель
@@ -288,6 +288,9 @@ $(function () {
                     }
                 });
                 
+                CropEditor.stopCrop();
+                CropCore.$croppHolder.append(canvas);
+                
                 $cropper = $(canvas).cropper(cropSettings);
 
             }
@@ -309,6 +312,7 @@ $(function () {
             if (this.$cropper) {
                 this.$cropper.cropper('destroy');
                 this.$cropper = null;
+                CropCore.$croppHolder.hide().empty();
             }
         }
     }
