@@ -71,6 +71,7 @@
   // Data keys
   var DATA_PREVIEW = 'preview';
   var DATA_ACTION = 'action';
+  var DATA_CROP_ID = 'crop_id';
 
   // Actions
   var ACTION_EAST = 'e';
@@ -103,7 +104,7 @@
 
   // Utilities
   var fromCharCode = String.fromCharCode;
-
+  
   function isNumber(n) {
     return typeof n === 'number' && !isNaN(n);
   }
@@ -412,6 +413,8 @@
   }
 
   function Cropper(element, options) {
+    //Azaz
+    this.id = new Date().getTime() + '-' + Math.ceil(Math.random()*Math.pow(10, 3));
     this.$element = $(element);
     this.options = $.extend({}, Cropper.DEFAULTS, $.isPlainObject(options) && options);
     this.isLoaded = false;
@@ -1279,15 +1282,19 @@
 
       this.$preview = $(this.options.preview);
       this.$viewBox.html('<img' + crossOrigin + ' src="' + url + '">');
-      this.$preview.each(function () {
+      // Azaz
+      this.$preview.data(DATA_CROP_ID, this.id).each(function () {
         var $this = $(this);
-
+        
         // Save the original size for recover
-        $this.data(DATA_PREVIEW, {
-          width: $this.width(),
-          height: $this.height(),
-          html: $this.html()
-        });
+        // Azaz
+        if(!$this.data(DATA_PREVIEW)) {
+            $this.data(DATA_PREVIEW, {
+              width: $this.width(),
+              height: $this.height(),
+              html: $this.html()
+            });
+        }
 
         /**
          * Override img element styles
@@ -1305,8 +1312,13 @@
     },
 
     resetPreview: function () {
+      var id = this.id;
       this.$preview.each(function () {
         var $this = $(this);
+        //Azaz
+        if ($this.data(DATA_CROP_ID)!=id) {
+            return;//---
+        }
         var data = $this.data(DATA_PREVIEW);
 
         $this.css({
@@ -1317,6 +1329,7 @@
     },
 
     preview: function () {
+      var id = this.id;
       var image = this.image;
       var canvas = this.canvas;
       var cropBox = this.cropBox;
@@ -1341,6 +1354,10 @@
 
       this.$preview.each(function () {
         var $this = $(this);
+        //Azaz
+        if ($this.data(DATA_CROP_ID)!=id) {
+            return;//---
+        }
         var data = $this.data(DATA_PREVIEW);
         var originalWidth = data.width;
         var originalHeight = data.height;

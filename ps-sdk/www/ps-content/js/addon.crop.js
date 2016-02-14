@@ -227,8 +227,8 @@ $(function () {
      * Менеджер редактора видимой области картинки
      */
     var CropEditor = {
-        //Редактор
-        $cropper: null,
+        //Объект {$cropper, $holder}
+        crop: null,
         //Включено ли редактирование
         enabled: true,
         //Настройки редактора
@@ -251,51 +251,61 @@ $(function () {
         //Метод начинает редактирование картинки в crop
         startCrop: function (img, onDone, rebuild) {
 
-            //Если перестраиваем, то сохраним данные выделения
-            var cropBoxData = null;
-
-            //Задизейблим все изменения
-            if (rebuild) {
-                cropBoxData = this.$cropper.cropper('getCropBoxData')
-                this.$cropper.cropper('disable');
-            } else {
-                //Высота редактора должна быть равна высоте картинки
-                this.stopCrop().css('height', CropCore.calcHolderHeight(img));
-            }
-
             //Запускаем прогресс
             CropCore.progress.start();
-
-            //Покажем редактор
-            CropCore.$cropEditor.show();
 
             //Клонируем canvas
             var canvas = img.canvasClone();
 
             //Если есть фильтр - применим его
             var filter = ImageFilters.filter();
-            
+
             //Обезопасим функцию обратного вызова
             onDone = PsUtil.safeCall(onDone);
-            
-            var onCanvasReady = function () {
-                var $cropper = null;
 
+            //У нас может быть старый crop, с которого копируются настройки
+            var cropOld = null;
+            
+            //Перестраиваем? Тогда сохраним старый crop, с которого скопируем потом настройки
+            if (rebuild) {
+                cropOld = this.crop;
+                cropOld.$cropper.cropper('disable');
+            } else {
+                //Уничтожаем текущий crop
+                this.stopCrop();
+            }
+            
+            //Инициализируем новый
+            var cropNew = {
+                $cropper: null,
+                $holder: $('<div>').addClass('crop-holder').hide().appendTo(CropCore.$cropEditor).css('height', CropCore.calcHolderHeight(img)).append(canvas),
+                destroy: function() {
+                    if (this.$cropper) {
+                        this.$cropper.cropper('destroy');
+                    }
+                    this.$holder.remove();
+                }
+            };
+
+            //Покажем редактор
+            CropCore.$cropEditor.show();
+
+            var onCanvasReady = function () {
                 //Инициализируем панель
                 var cropSettings = $.extend({}, CropEditor.cropSettings, {
-                    cropBoxData: cropBoxData,
+                    cropBoxData: cropOld ? cropOld.$cropper.cropper('getCropBoxData') : null,
                     built: function () {
                         PsUtil.scheduleDeferred(function () {
                             CropCore.progress.stop();
                             
                             if (CropController.isCurrent(img)) {
-                                this.$cropper = $cropper;
-                                CropCore.$croppHolder.show();
+                                this.stopCrop();
+                                this.crop = cropNew;
+                                this.crop.$holder.show();
                                 onDone();
                                 CropController.onCropReady();
                             } else {
-                                $cropper.cropper('destroy');
-                                $cropper = null;
+                                cropNew.destroy();
                                 onDone();
                             }
                             
@@ -303,10 +313,7 @@ $(function () {
                     }
                 });
                 
-                CropEditor.stopCrop().append(canvas);
-                
-                $cropper = $(canvas).cropper(cropSettings);
-
+                cropNew.$cropper = $(canvas).cropper(cropSettings);
             }
 
             //Применяем фильтр
@@ -323,11 +330,10 @@ $(function () {
         },
         //Метод закрывает редактор
         stopCrop: function () {
-            if (this.$cropper) {
-                this.$cropper.cropper('destroy');
-                this.$cropper = null;
+            if (this.crop) {
+                this.crop.destroy();
+                this.crop = null;
             }
-            return CropCore.$croppHolder.hide().empty();
         }
     }
 

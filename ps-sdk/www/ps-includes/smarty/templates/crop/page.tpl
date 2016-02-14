@@ -20,11 +20,11 @@
         </div>
 
         <div class="crop-editor">
-            <div class="crop-holder"></div>
+            {*<div class="crop-holder"></div>*}
         </div>
 
         <div class="crop-text">
-            <div class="crop-preview"></div>
+            {*<div class="crop-preview"></div>*}
             <div class="crop-textarea-holder">
                 <textarea ml='160'></textarea>
             </div>
