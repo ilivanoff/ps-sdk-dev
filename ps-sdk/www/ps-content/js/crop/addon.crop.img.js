@@ -141,6 +141,24 @@ $(function () {
         this.filterApply = function (callback) {
             CropEditor.startCrop(img, callback, true);
         }
+
+        //Сабмит формы
+        this.submit = function (text) {
+            CropLogger.logInfo("Submitting {} with text: '{}'", img.toString(), text);
+
+            CropCore.progress.start();
+
+            AjaxExecutor.executePost('CropUpload', {
+                //img: img.file,
+                crop: CropEditor.getCropCanvas().toDataURL()
+            },
+                    function (ok) {
+                    }, function (err) {
+                CropCore.showError(err);
+            }, function () {
+                CropCore.progress.stop();
+            });
+        }
     }
 
     //Работа с новым выбранным файлом
@@ -349,6 +367,10 @@ $(function () {
             if (this.crop) {
                 this.crop.setEnabled(enabled);
             }
+        },
+        //Метод получает canvas с данными
+        getCropCanvas: function () {
+            return this.crop.$cropper.cropper('getCroppedCanvas');
         }
     }
 
@@ -432,9 +454,9 @@ $(function () {
         var text = CropCore.$cropTextArea.val();
         if (PsIs.empty(text)) {
             CropCore.$cropTextArea.focus();
-        } else {
-            CropCore.progress.start();
+            return;//---
         }
+        CropController.submit(text);
     });
 
     return;//---
