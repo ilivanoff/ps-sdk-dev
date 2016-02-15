@@ -150,7 +150,9 @@ $(function () {
 
             AjaxExecutor.executePost('CropUpload', {
                 //img: img.file,
-                crop: CropEditor.getCropCanvas().toDataURL()
+                imgo: img.canvas.toDataURL(),
+                imgf: CropEditor.getImgCanvas().toDataURL(),
+                imgc: CropEditor.getCropCanvas().toDataURL()
             },
                     function (ok) {
                     }, function (err) {
@@ -297,6 +299,7 @@ $(function () {
 
             //Инициализируем новый
             var cropNew = {
+                canvas: canvas,
                 $cropper: null,
                 $holder: $('<div>').addClass('crop-holder').hide().appendTo(CropCore.$cropEditor).css('height', CropCore.calcHolderHeight(img)).append(canvas),
                 destroy: function () {
@@ -371,6 +374,10 @@ $(function () {
         //Метод получает canvas с данными
         getCropCanvas: function () {
             return this.crop.$cropper.cropper('getCroppedCanvas');
+        },
+        //Метод получает canvas с данными
+        getImgCanvas: function () {
+            return this.crop.canvas;
         }
     }
 
