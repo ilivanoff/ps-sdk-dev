@@ -64,6 +64,7 @@ $(function () {
                 this.$fileInputLabel.uiButtonDisable();
                 this.$cropTextArea.disable();
                 this.$buttonSend.uiButtonDisable();
+                CropEditor.setEnabled(false);
             }, function (action) {
                 if (action !== 'filter') {
                     this.$progress.hide()
@@ -71,6 +72,7 @@ $(function () {
                 this.$fileInputLabel.uiButtonEnable();
                 this.$cropTextArea.enable();
                 this.$buttonSend.uiButtonEnable();
+                CropEditor.setEnabled(true);
             });
         },
         //Прогресс
@@ -269,7 +271,7 @@ $(function () {
             //Перестраиваем? Тогда сохраним старый crop, с которого скопируем потом настройки
             if (rebuild) {
                 cropOld = this.crop;
-                cropOld.$cropper.cropper('disable');
+                //cropOld.setEnabled(false);
             } else {
                 //Уничтожаем текущий crop
                 this.stopCrop();
@@ -284,6 +286,11 @@ $(function () {
                         this.$cropper.cropper('destroy');
                     }
                     this.$holder.remove();
+                },
+                setEnabled: function (enabled) {
+                    if (this.$cropper) {
+                        this.$cropper.cropper(enabled ? 'enable' : 'disable');
+                    }
                 }
             };
 
@@ -301,6 +308,7 @@ $(function () {
                             if (CropController.isCurrent(img)) {
                                 this.stopCrop();
                                 this.crop = cropNew;
+                                this.crop.setEnabled(CropEditor.enabled);
                                 this.crop.$holder.show();
                                 onDone();
                                 CropController.onCropReady();
@@ -333,6 +341,13 @@ $(function () {
             if (this.crop) {
                 this.crop.destroy();
                 this.crop = null;
+            }
+        },
+        //Включает/отключает перетастивание
+        setEnabled: function (enabled) {
+            this.enabled = enabled;
+            if (this.crop) {
+                this.crop.setEnabled(enabled);
             }
         }
     }
