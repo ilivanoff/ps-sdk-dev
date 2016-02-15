@@ -8,23 +8,55 @@ body {
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 14px;
     line-height: 1.42857;
+    margin: 0px;
 }
 
-#carrier {
+.top-container {
     width: 960px;
-    margin: 0 auto;
-    text-align: justify;
-    background-color: white;
-    background: white url("/ps-content/images/background-right.gif") right top repeat-y scroll;
+    margin: 3px auto;
 }
+
 
 h1.head {
     background-color: #368AD2;
     color: #FFFFFF;
-    padding: 30px 0px;
+    padding: 20px 0px;
     margin: 0px;
-    margin-bottom: 30px;
-    font-size: 50px;
+    font-size: 40px;
+}
+
+h1.head a {
+    color: white;
+    text-decoration: none;
+}
+
+/* МЕНЮ */
+.navigation {
+    background-color: #388CD4;
+    border-bottom: 4px solid #CCCCCC;
+    text-align: center;
+    /*font-size: 12px;*/
+    text-transform: uppercase;
+    font: 400 14px/20px "Roboto",sans-serif;
+}
+
+.navigation a {
+    color: white;
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+}
+
+.navigation a.active {
+    color: black;
+    background-color: #EFC62C;
+}
+
+/* CROP */
+#carrier {
+    text-align: justify;
+    background-color: white;
+    background: white url("/ps-content/images/background-right.gif") right top repeat-y scroll;
 }
 
 /* Crop */
@@ -37,8 +69,8 @@ h1.head {
 
 .container .top-buttons {
     display: none;
-    margin: 10px 0px;
-    font-size: 14px;
+    margin: 20px 0px;
+    font-size: 16px;
 }
 
 input#choose-file {
@@ -86,7 +118,7 @@ input#choose-file {
 
 .crop-text .crop-textarea-holder {
     text-align: left;
-    margin-left: 70px;
+    /*margin-left: 70px;*/
 }
 
 .crop-text textarea {
@@ -144,14 +176,25 @@ input#choose-file {
     opacity: 0.3;
 }
 
+/*
 .crop-grid {
     background: url(/ps-content/images/bg/crop-bg3.png) left top no-repeat;
     width: 240px;
     height: 240px;
 }
+*/
 
 .crop-menu .crop-grid .crop-preview {
     width: 60px;
     height: 60px;
     margin: 0px 0px 0px 0px;
+}
+
+/* СТЕНА */
+.wall {
+    height: 100%;
+    min-height: 100%;
+    background-color: white;
+    line-height: 0px;
+    text-align: right;
 }

@@ -121,4 +121,4 @@
 <link rel="stylesheet" href="/ps-content/css/common.dev.or.admin.css" type="text/css" media="all" />
 {/devmodeOrAdmin}
 
-<script type="text/javascript" src="/ps-content/js/addon.crop.js"></script>
+<script type="text/javascript" src="/ps-content/js/crop/addon.crop.{$CROP_SUFFIX}.js"></script>
