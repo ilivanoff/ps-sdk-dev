@@ -8,6 +8,8 @@ header('Content-Type: text/html; charset=utf-8');
 
 require_once 'ps-includes/MainImportAdmin.php';
 
+die();
+
 ExceptionHandler::registerPretty();
 
 //print_r(ConfigIni::smartyPlugins());

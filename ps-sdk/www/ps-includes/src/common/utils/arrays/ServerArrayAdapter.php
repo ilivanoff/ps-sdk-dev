@@ -37,7 +37,7 @@ final class ServerArrayAdapter extends ArrayAdapter {
 
     //blog.php
     public static function PHP_SELF() {
-        return basename(self::CONST_STR(__FUNCTION__));
+        return next_level_dir(DIR_SEPARATOR, self::CONST_STR(__FUNCTION__));
     }
 
     //80

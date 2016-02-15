@@ -134,7 +134,7 @@ var AjaxExecutor = {
             num: -1,
             data: {},
             dataStr: '{}',
-            url: 'ps-ajax.php',
+            url: '/ps-includes/ps-ajax.php',
             ctxt: null,
             type: 'GET',
             group: null,
