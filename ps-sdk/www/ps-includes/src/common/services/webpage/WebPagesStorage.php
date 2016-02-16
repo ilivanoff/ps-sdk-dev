@@ -32,7 +32,7 @@ class WebPagesStorage {
         $this->register('ps-env.php', 'Страница рабочего окружения', PAGE_ENV);
         $this->register('/ps-includes/ps-admin.php', 'Консоль администратора', PAGE_ADMIN, PB_admin::getIdent());
         $this->register('/ps-includes/ps-test.php', 'Тестовая страница', PAGE_TEST, PB_test::getIdent(), AuthManager::AUTH_TYPE_NO_MATTER, null, false);
-        $this->register('ps-popup.php', 'Всплывающее окно', PAGE_POPUP, PB_popup::getIdent());
+        $this->register('/ps-includes/ps-popup.php', 'Всплывающее окно', PAGE_POPUP, PB_popup::getIdent());
     }
 
     /**

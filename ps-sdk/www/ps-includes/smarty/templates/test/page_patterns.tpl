@@ -289,9 +289,9 @@
 ===Новые окна [pageIdent]===
 {text}
 <a href="#" pageIdent="">Пустой</a>
-<a href="#" pageIdent="Plugin?name=trigcalc">Plugin?name=trigcalc</a>
-<a href="#" pageIdent="window=Plugin&name=trigcalc">window=Plugin&name=trigcalc</a>
-<a href="#" pageIdent="ps-popup.php?window=Plugin&name=trigcalc">ps-popup.php?window=Plugin&name=trigcalc</a>
+<a href="#" pageIdent="plugin?name=trigcalc">Plugin?name=trigcalc</a>
+<a href="#" pageIdent="window=plugin&name=trigcalc">window=Plugin&name=trigcalc</a>
+<a href="#" pageIdent="/ps-includes/ps-popup.php?window=plugin&name=trigcalc">/ps-includes/ps-popup.php?window=plugin&name=trigcalc</a>
 {/text}
 
 
